@@ -1,0 +1,71 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
+export default function CartList({ items, total }: any) {
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  async function removeItem(id: string) {
+    setLoading(true);
+
+    await fetch(`/api/cart?id=${id}`, {
+      method: "DELETE",
+    });
+
+    setLoading(false);
+    location.reload();
+  }
+
+  async function handleCheckout() {
+    setLoading(true);
+    const response = await fetch("/api/checkout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ items, total }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      router.push(`/checkout-confirmation/${data.orderId}`);
+    } else {
+      alert("Error al procesar la compra");
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div>
+      <div className="space-y-4">
+        {items.map((item: any) => (
+          <div key={item.id} className="border p-4 rounded-xl">
+            <h2 className="text-xl">{item.name}</h2>
+            <p>${item.price}</p>
+            <p>Cantidad: {item.quantity}</p>
+            <button
+              onClick={() => removeItem(item.id)}
+              className="mt-2 bg-red-600 text-white px-4 py-2 rounded"
+              disabled={loading}
+            >
+              Eliminar
+            </button>
+          </div>
+        ))}
+      </div>
+      <div className="mt-8 border-t pt-6">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-2xl font-bold">Total:</h3>
+          <p className="text-3xl font-bold text-green-600">${total.toFixed(2)}</p>
+        </div>
+        <button
+          onClick={handleCheckout}
+          className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition"
+          disabled={loading}
+        >
+          {loading ? "Procesando..." : "Proceder al Pago"}
+        </button>
+      </div>
+    </div>
+  );
+}
