@@ -2,13 +2,15 @@ export async function GET() {
   const products = [
     {
       id: "1",
-      name: "Nike Air Force 1",
-      price: 120,
+      name: "Nike Vomero Premium",
+      price: 449.999,
+      image: "/images/nike.jpg",
     },
     {
       id: "2",
-      name: "Adidas Forum Low",
-      price: 95,
+      name: "Adizero Adios PRO 4",
+      price: 419.999,
+      image: "/images/adidas.jpg",
     },
   ];
 

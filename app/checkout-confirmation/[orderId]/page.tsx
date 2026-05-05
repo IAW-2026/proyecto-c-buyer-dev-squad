@@ -1,26 +1,32 @@
 import Link from "next/link";
+import { Order } from "../../types/order";
 
-async function getOrder(orderId: string) {
-  const res = await fetch(
-    `http://localhost:3000/api/checkout?id=${orderId}`,
-    {
-      cache: "no-store",
-    }
-  );
+async function getOrder(orderId: string): Promise<Order | null> {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
+
+  const res = await fetch(`${baseUrl}/api/checkout?id=${orderId}`, {
+    cache: "no-store",
+  });
+
+  if (!res.ok) return null;
+
   return res.json();
 }
 
 export default async function CheckoutConfirmation({
   params,
 }: {
-  params: { orderId: string };
+  params: Promise<{ orderId: string }>;
 }) {
-  const order = await getOrder(params.orderId);
+  const { orderId } = await params;
+  const order = await getOrder(orderId);
 
   if (!order) {
     return (
       <main className="p-10">
-        <h1 className="text-3xl font-bold mb-6 text-red-600">Orden no encontrada</h1>
+        <h1 className="text-3xl font-bold mb-6 text-red-600">
+          Orden no encontrada
+        </h1>
         <Link href="/" className="text-blue-600 hover:underline">
           Volver al inicio
         </Link>
@@ -32,8 +38,12 @@ export default async function CheckoutConfirmation({
     <main className="p-10">
       <div className="max-w-2xl mx-auto">
         <div className="bg-green-50 border border-green-200 rounded-lg p-8 mb-8">
-          <h1 className="text-4xl font-bold text-green-600 mb-2">¡Compra Exitosa!</h1>
-          <p className="text-gray-700">Tu orden ha sido procesada correctamente</p>
+          <h1 className="text-4xl font-bold text-green-600 mb-2">
+            ¡Compra Exitosa!
+          </h1>
+          <p className="text-gray-700">
+            Tu orden ha sido procesada correctamente
+          </p>
         </div>
 
         <div className="bg-white border rounded-lg p-6 mb-8">
@@ -51,13 +61,13 @@ export default async function CheckoutConfirmation({
             </p>
             <p className="text-gray-600">
               <span className="font-semibold">Fecha:</span>{" "}
-              {new Date(order.createdAt).toLocaleDateString()}
+              {new Date(order.createdAt).toLocaleDateString("es-AR")}
             </p>
           </div>
 
           <h3 className="text-xl font-bold mb-4">Productos</h3>
           <div className="space-y-3 mb-6">
-            {order.items.map((item: any) => (
+            {order.items.map((item) => (
               <div
                 key={item.id}
                 className="flex justify-between items-center p-3 bg-gray-50 rounded"
@@ -66,7 +76,9 @@ export default async function CheckoutConfirmation({
                   <p className="font-semibold">{item.name}</p>
                   <p className="text-gray-600">Cantidad: {item.quantity}</p>
                 </div>
-                <p className="font-semibold">${(item.price * item.quantity).toFixed(2)}</p>
+                <p className="font-semibold">
+                  ${(item.price * item.quantity).toFixed(2)}
+                </p>
               </div>
             ))}
           </div>

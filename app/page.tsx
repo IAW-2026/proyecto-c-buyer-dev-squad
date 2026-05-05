@@ -11,7 +11,6 @@ async function getProducts() {
 
 export default async function Home() {
   const products = await getProducts();
-
   return (
     <main className="p-10">
       <Link href="/cart" className="underline">
