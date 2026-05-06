@@ -13,7 +13,6 @@ export default function CartList({ items, total }: any) {
     await fetch(`/api/cart?id=${id}`, {
       method: "DELETE",
     });
-
     setLoading(false);
     router.refresh();
   }

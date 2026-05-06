@@ -20,7 +20,7 @@ export default function ProductList({ products }: any) {
 
     const cart = JSON.parse(localStorage.getItem("cart") || "[]");
     const existing = cart.find((item: any) => item.productId === productId);
-
+    console.log("🚀 ~ file: ProductList.tsx:34 ~ addToCart ~ existing:", existing);
     if (existing) {
       existing.quantity += 1;
     } else {

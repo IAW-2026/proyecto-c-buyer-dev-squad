@@ -80,9 +80,27 @@ export async function DELETE(req: Request) {
       );
     }
 
-    await prisma.cartItem.delete({
+    const existingItem = await prisma.cartItem.findUnique({
       where: { id },
     });
+
+    if (!existingItem) {
+      return Response.json(
+        { error: "Cart item not found" },
+        { status: 404 }
+      );
+    }
+
+    if (existingItem.quantity > 1) {
+      await prisma.cartItem.update({
+        where: { id },
+        data: { quantity: existingItem.quantity - 1 },
+      });
+    } else {
+      await prisma.cartItem.delete({
+        where: { id },
+      });
+    }
 
     return Response.json({ ok: true });
   } catch (error) {

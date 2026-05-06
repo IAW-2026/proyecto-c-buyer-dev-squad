@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { SignInButton } from "@clerk/nextjs";
 
 export default function Navbar() {
