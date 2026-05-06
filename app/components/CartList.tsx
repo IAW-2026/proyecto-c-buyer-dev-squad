@@ -15,7 +15,7 @@ export default function CartList({ items, total }: any) {
     });
 
     setLoading(false);
-    location.reload();
+    router.refresh();
   }
 
   async function handleCheckout() {

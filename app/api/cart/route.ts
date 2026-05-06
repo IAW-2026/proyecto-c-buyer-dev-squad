@@ -1,25 +1,94 @@
-let cart: any[] = [];
+import { prisma } from "@/lib/prisma";
+import { getProducts } from "@/lib/products";
 
 export async function GET() {
-  return Response.json(cart);
+  try {
+    const cart = await prisma.cartItem.findMany();
+    return Response.json(cart);
+  } catch (error) {
+    return Response.json(
+      { error: "Failed to fetch cart" },
+      { status: 500 }
+    );
+  }
 }
 
 export async function POST(req: Request) {
-  const body = await req.json();
+  try {
+    const body = await req.json();
+    const { productId, quantity } = body;
+    const PRODUCTS = await getProducts();
+    if (!productId || quantity == null) {
+      return Response.json(
+        { error: "Missing productId or quantity" },
+        { status: 400 }
+      );
+    }
+    const product = PRODUCTS.find((p) => p.id === productId);
 
-  cart.push({
-    id: Date.now().toString(),
-    productId: body.productId,
-    quantity: body.quantity,
-  });
+    if (!product) {
+      return Response.json(
+        { error: "Product not found" },
+        { status: 404 }
+      );
+    }
 
-  return Response.json({ ok: true });
+    const existingItem = await prisma.cartItem.findFirst({
+      where: { productId },
+    });
+
+    if (existingItem) {
+      const updated = await prisma.cartItem.update({
+        where: { id: existingItem.id },
+        data: {
+          quantity: existingItem.quantity + quantity,
+        },
+      });
+
+      return Response.json(updated);
+    }
+
+    const cartItem = await prisma.cartItem.create({
+      data: {
+        productId,
+        quantity,
+      },
+    });
+
+    return Response.json({
+      ...cartItem,
+      product, // 🔥 devolvemos info del mock
+    });
+  } catch (error) {
+  console.error("ERROR REAL:", error);
+  return Response.json(
+    { error: "Failed to add to cart" },
+    { status: 500 }
+  );
 }
+}
+
 export async function DELETE(req: Request) {
-  const { searchParams } = new URL(req.url);
-  const id = searchParams.get("id");
+  try {
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
 
-  cart = cart.filter((item) => item.id !== id);
+    if (!id) {
+      return Response.json(
+        { error: "Missing cart item id" },
+        { status: 400 }
+      );
+    }
 
-  return Response.json({ ok: true });
+    await prisma.cartItem.delete({
+      where: { id },
+    });
+
+    return Response.json({ ok: true });
+  } catch (error) {
+    return Response.json(
+      { error: "Failed to remove from cart" },
+      { status: 500 }
+    );
+  }
 }

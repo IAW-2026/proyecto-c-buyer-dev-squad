@@ -1,17 +1,5 @@
 import Link from "next/link";
-import { Order } from "../../types/order";
-
-async function getOrder(orderId: string): Promise<Order | null> {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
-
-  const res = await fetch(`${baseUrl}/api/checkout?id=${orderId}`, {
-    cache: "no-store",
-  });
-
-  if (!res.ok) return null;
-
-  return res.json();
-}
+import { prisma } from "@/lib/prisma";
 
 export default async function CheckoutConfirmation({
   params,
@@ -19,7 +7,11 @@ export default async function CheckoutConfirmation({
   params: Promise<{ orderId: string }>;
 }) {
   const { orderId } = await params;
-  const order = await getOrder(orderId);
+
+  const order = await prisma.order.findUnique({
+    where: { id: orderId },
+    include: { items: true },
+  });
 
   if (!order) {
     return (
