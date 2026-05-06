@@ -61,12 +61,8 @@ export default async function Home(props: {
       </h1>
 
       <ProductList products={products} />
-      <Link
-        href="/cart"
-        className="fixed bottom-6 right-6 bg-black text-white px-5 py-3 rounded-full shadow-lg hover:bg-gray-800 transition"
-      >
-        <CartButton />
-      </Link>
+      
+      <CartButton />
     </main>
   );
 }
