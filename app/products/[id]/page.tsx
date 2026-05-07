@@ -1,3 +1,4 @@
+import AddToCartButton from "@/app/components/AddToCartButton";
 import SizeSelector from "@/app/components/SizeSelector";
 import { getProducts } from "@/lib/products";
 import Link from "next/link";
@@ -62,10 +63,7 @@ export default async function ProductPage({ params }: Props) {
         </div>
         <SizeSelector sizes={product.sizes} />
         <div className="mt-6 flex gap-3">
-          <button className="bg-black text-white px-5 py-2 rounded">
-            Agregar al carrito
-          </button>
-
+          <AddToCartButton productId={product.id} />
           <button className="border px-5 py-2 rounded">
             Comprar ahora
           </button>

@@ -4,6 +4,7 @@ import Tabs from "./components/Tabs";
 import Filters from "./components/Filters";
 import Link from "next/link";
 import CartButton from "./components/CartButton";
+import { prisma } from "@/lib/prisma";
 
 const categoryTitles: Record<string, string> = {
   hombre: "Zapatillas para Hombres",
@@ -11,6 +12,7 @@ const categoryTitles: Record<string, string> = {
   nino: "Zapatillas para Niños/as",
   zapatillas: "Zapatillas",
 };
+const cartCount = await prisma.cartItem.count();
 const baseUrl =
   process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
 
@@ -62,7 +64,7 @@ export default async function Home(props: {
 
       <ProductList products={products} />
       
-      <CartButton />
+      <CartButton/>
     </main>
   );
 }

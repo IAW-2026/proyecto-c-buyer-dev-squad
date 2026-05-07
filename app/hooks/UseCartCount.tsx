@@ -4,20 +4,28 @@ import { useEffect, useState } from "react";
 
 export function useCartCount() {
   const [count, setCount] = useState(0);
+  const [loading, setLoading] = useState(true);
 
-  const update = () => {
-    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-    const total = cart.reduce((acc: number, item: any) => acc + item.quantity, 0);
-    setCount(total);
+  const update = async () => {
+    try {
+      const response = await fetch("/api/cart");
+      if (response.ok) {
+        const cart = await response.json();
+        const total = cart.reduce((acc: number, item: any) => acc + item.quantity, 0);
+        setCount(total);
+      }
+    } catch (error) {
+      console.error("Error fetching cart count:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    update(); 
-
+    update();
     window.addEventListener("cartUpdated", update);
-
     return () => window.removeEventListener("cartUpdated", update);
   }, []);
 
-  return count;
+  return { count, loading };
 }
