@@ -2,7 +2,7 @@ import AddToCartButton from "@/app/components/AddToCartButton";
 import SizeSelector from "@/app/components/SizeSelector";
 import { getProducts } from "@/lib/products";
 import Link from "next/link";
-
+import { Product } from "@/app/types/product";  
 type Props = {
   params: {
     id: string;
@@ -12,7 +12,7 @@ type Props = {
 export default async function ProductPage({ params }: Props) {
     const { id } = await params; //con la nueva forma de recibir params se debe hacer de esta forma
     const PRODUCTS = await getProducts();
-    const product = PRODUCTS.find((p) => p.id === id);
+    const product = PRODUCTS.find((p: Product) => p.id === id);
     console.log("Producto seleccionado:", product);
   if (!product) {
     return (
