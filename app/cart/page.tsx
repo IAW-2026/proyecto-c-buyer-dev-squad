@@ -24,14 +24,22 @@ export default async function CartPage() {
     include: { product: true },
   });
 
-  const cartWithProducts = cart.map((item) => ({
+  const cartWithProducts = cart.map((item: {
+    id: string;
+    quantity: number;
+    product: {
+      name: string;
+      price: number;
+      image: string;
+    };
+  }) => ({
     id: item.id,
     name: item.product.name,
     price: item.product.price,
     image: item.product.image,
     quantity: item.quantity,
   }));
-
+//DPS CAMBIARRR
   const total = cartWithProducts.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0
