@@ -83,20 +83,25 @@ export default async function CheckoutConfirmation({
 
           <h3 className="text-xl font-bold mb-4">Productos</h3>
           <div className="space-y-3 mb-6">
-            {order.items.map((item) => (
-              <div
-                key={item.id}
-                className="flex justify-between items-center p-3 bg-surface-alt rounded"
-              >
-                <div>
-                  <p className="font-semibold">{item.name}</p>
-                  <p className="text-muted">Cantidad: {item.quantity}</p>
-                </div>
-                <p className="font-semibold">
-                  ${(item.price * item.quantity).toFixed(2)}
-                </p>
+          {order.items.map((item: {
+            id: string;
+            name: string;
+            price: number;
+            quantity: number;
+          }) => (
+            <div
+              key={item.id}
+              className="flex justify-between items-center p-3 bg-surface-alt rounded"
+            >
+              <div>
+                <p className="font-semibold">{item.name}</p>
+                <p className="text-muted">Cantidad: {item.quantity}</p>
               </div>
-            ))}
+              <p className="font-semibold">
+                ${(item.price * item.quantity).toFixed(2)}
+              </p>
+            </div>
+          ))}
           </div>
 
           <div className="border-t pt-4">
