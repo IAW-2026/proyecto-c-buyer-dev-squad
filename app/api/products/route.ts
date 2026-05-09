@@ -1,6 +1,7 @@
+import { Product } from "@/app/types/product";
 import { getProducts } from "@/lib/products";
 import { getSellerById } from "@/lib/sellers";
-import { Product } from "@/app/types/product";
+
 //si se le pasa un filtro, devuelve solo los productos de esa filtro,
 // sino devuelve todos los productos
 export async function GET(req: Request) {
