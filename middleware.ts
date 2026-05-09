@@ -1,18 +1,26 @@
-import { clerkMiddleware } from "@clerk/nextjs/server";
+//protected routes: dashboard
+//public api routes: /api/products, /api/sales, /api/sales/:id  
 
-export default clerkMiddleware();
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+
+const isProtectedRoute = createRouteMatcher([
+  "/dashboard(.*)",
+]);
+
+const isPublicApiRoute = createRouteMatcher([
+  "/api/products(.*)",
+  "/api/sales",
+  "/api/sales/(.*)",
+]);
+
+export default clerkMiddleware(async (auth, req) => {
+  if (isPublicApiRoute(req)) return;
+  if (isProtectedRoute(req)) await auth.protect();
+});
 
 export const config = {
-  matcher: ["/api/:path*", "/((?!.*\\..*|_next).*)"],
+  matcher: [
+    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
+    "/(api|trpc)(.*)",
+  ],
 };
-//fue creado x este error
-/*
-
-Clerk: auth() was called but Clerk can't detect usage of clerkMiddleware(). Please ensure the following:
-- Your middleware or proxy file exists at ./middleware.(ts|js) or proxy.(ts|js)
-- clerkMiddleware() is used in your Next.js middleware or proxy file.
-- Your middleware or proxy matcher is configured to match this route or page.
-- If you are using the src directory, make sure the middleware or proxy file is inside of it.
-El middleware hace que Clerk pueda saber:
-
-quién está usando la app*/
