@@ -39,11 +39,10 @@ export default async function CartPage() {
     image: item.product.image,
     quantity: item.quantity,
   }));
-//DPS CAMBIARRR
   const total = cartWithProducts.reduce(
-    (acc, item) => acc + item.price * item.quantity,
-    0
-  );
+  (acc: number, item) => acc + item.price * item.quantity,
+  0
+);
 
   return (
     <main className="p-10">
