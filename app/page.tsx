@@ -2,7 +2,6 @@ import ProductList from "./components/ProductList";
 import Navbar from "./components/Navbar";
 import Tabs from "./components/Tabs";
 import Filters from "./components/Filters";
-import Link from "next/link";
 import CartButton from "./components/CartButton";
 import { prisma } from "@/lib/prisma";
 
@@ -12,8 +11,6 @@ const categoryTitles: Record<string, string> = {
   nino: "Zapatillas para Niños/as",
   zapatillas: "Zapatillas",
 };
-const baseUrl =
-  process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
 
 async function getProducts(searchParams: {
   category?: string;
@@ -21,20 +18,29 @@ async function getProducts(searchParams: {
   minPrice?: string;
   maxPrice?: string;
 }) {
-  const params = new URLSearchParams();
+  return prisma.product.findMany({
+    where: {
+      ...(searchParams.category && {
+        category: searchParams.category,
+      }),
 
-  if (searchParams.category) params.set("category", searchParams.category);
-  if (searchParams.brand) params.set("brand", searchParams.brand);
-  if (searchParams.minPrice) params.set("minPrice", searchParams.minPrice);
-  if (searchParams.maxPrice) params.set("maxPrice", searchParams.maxPrice);
+      ...(searchParams.brand && {
+        brand: searchParams.brand,
+      }),
 
-  const url = new URL(`/api/products?${params.toString()}`, baseUrl).toString();
+      ...((searchParams.minPrice || searchParams.maxPrice) && {
+        price: {
+          ...(searchParams.minPrice && {
+            gte: Number(searchParams.minPrice),
+          }),
 
-  const res = await fetch(url, {
-    cache: "no-store",
+          ...(searchParams.maxPrice && {
+            lte: Number(searchParams.maxPrice),
+          }),
+        },
+      }),
+    },
   });
-
-  return res.json();
 }
 
 export default async function Home(props: {
@@ -45,7 +51,8 @@ export default async function Home(props: {
     maxPrice?: string;
   }>;
 }) {
-  const searchParams = await props.searchParams; 
+  const searchParams = await props.searchParams;
+
   const products = await getProducts(searchParams);
 
   return (
@@ -61,8 +68,8 @@ export default async function Home(props: {
       </h1>
 
       <ProductList products={products} />
-      
-      <CartButton/>
+
+      <CartButton />
     </main>
   );
 }
