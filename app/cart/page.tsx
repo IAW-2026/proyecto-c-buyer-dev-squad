@@ -24,26 +24,26 @@ export default async function CartPage() {
     include: { product: true },
   });
 
-  type CartItem = {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
-  quantity: number;
-};
+  const cartWithProducts = cart.map((item: {
+    id: string;
+    quantity: number;
+    product: {
+      name: string;
+      price: number;
+      image: string;
+    };
+  }) => ({
+    id: item.id,
+    name: item.product.name,
+    price: item.product.price,
+    image: item.product.image,
+    quantity: item.quantity,
+  }));
 
-const cartWithProducts: CartItem[] = cart.map((item) => ({
-  id: item.id,
-  name: item.product.name,
-  price: item.product.price,
-  image: item.product.image,
-  quantity: item.quantity,
-}));
-  
-  const total = cartWithProducts.reduce(
-  (acc: number, item) => acc + item.price * item.quantity,
-  0
-);
+let total = 0;
+for (const item of cartWithProducts) {
+  total += item.price * item.quantity;
+}
 
   return (
     <main className="p-10">
