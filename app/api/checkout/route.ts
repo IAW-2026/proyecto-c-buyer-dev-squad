@@ -2,7 +2,7 @@
 import type { OrderItem } from "../../types/order";
 
 import { prisma } from "@/lib/prisma";
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 
 export async function POST(req: Request): Promise<Response> {
   try {
@@ -22,13 +22,12 @@ export async function POST(req: Request): Promise<Response> {
       return Response.json({ error: "Invalid body" }, { status: 400 });
     }
 
-    // Get or create user in our database
     let user = await prisma.user.findUnique({
       where: { clerkId: userId },
     });
 
     if (!user) {
-      const { user: clerkUser } = await auth();
+      const clerkUser = await currentUser();
       user = await prisma.user.create({
         data: {
           clerkId: userId,
