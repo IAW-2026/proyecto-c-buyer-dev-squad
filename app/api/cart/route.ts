@@ -1,11 +1,40 @@
 import { prisma } from "@/lib/prisma";
-import { getProducts } from "@/lib/products";
+import { auth, currentUser } from "@clerk/nextjs/server";
 
 export async function GET() {
   try {
-    const cart = await prisma.cartItem.findMany();
+    const { userId } = await auth();
+    if (!userId) {
+      return Response.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
+    let user = await prisma.user.findUnique({
+      where: { clerkId: userId },
+    });
+
+    if (!user) {
+      const clerkUser = await currentUser();
+      user = await prisma.user.create({
+        data: {
+          clerkId: userId,
+          email: clerkUser?.emailAddresses[0]?.emailAddress || "",
+          firstName: clerkUser?.firstName || "",
+          lastName: clerkUser?.lastName || "",
+        },
+      });
+    }
+
+    const cart = await prisma.cartItem.findMany({
+      where: { userId: user.id },
+      include: { product: true },
+    });
+
     return Response.json(cart);
   } catch (error) {
+    console.error("Error fetching cart:", error);
     return Response.json(
       { error: "Failed to fetch cart" },
       { status: 500 }
@@ -15,16 +44,44 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      return Response.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
     const body = await req.json();
     const { productId, quantity } = body;
-    const PRODUCTS = await getProducts();
+
     if (!productId || quantity == null) {
       return Response.json(
         { error: "Missing productId or quantity" },
         { status: 400 }
       );
     }
-    const product = PRODUCTS.find((p) => p.id === productId);
+
+    let user = await prisma.user.findUnique({
+      where: { clerkId: userId },
+    });
+
+    if (!user) {
+      const clerkUser = await currentUser();
+      user = await prisma.user.create({
+        data: {
+          clerkId: userId,
+          email: clerkUser?.emailAddresses[0]?.emailAddress || "",
+          firstName: clerkUser?.firstName || "",
+          lastName: clerkUser?.lastName || "",
+        },
+      });
+    }
+
+    const product = await prisma.product.findUnique({
+      where: { id: productId },
+    });
 
     if (!product) {
       return Response.json(
@@ -34,7 +91,10 @@ export async function POST(req: Request) {
     }
 
     const existingItem = await prisma.cartItem.findFirst({
-      where: { productId },
+      where: {
+        productId,
+        userId: user.id,
+      },
     });
 
     if (existingItem) {
@@ -43,6 +103,7 @@ export async function POST(req: Request) {
         data: {
           quantity: existingItem.quantity + quantity,
         },
+        include: { product: true },
       });
 
       return Response.json(updated);
@@ -51,25 +112,33 @@ export async function POST(req: Request) {
     const cartItem = await prisma.cartItem.create({
       data: {
         productId,
+        userId: user.id,
         quantity,
       },
+      include: { product: true },
     });
 
-    return Response.json({
-      ...cartItem,
-      product, // 🔥 devolvemos info del mock
-    });
+    return Response.json(cartItem);
   } catch (error) {
-  console.error("ERROR REAL:", error);
-  return Response.json(
-    { error: "Failed to add to cart" },
-    { status: 500 }
-  );
-}
+    console.error("Error adding to cart:", error);
+    return Response.json(
+      { error: "Failed to add to cart" },
+      { status: 500 }
+    );
+  }
 }
 
 export async function DELETE(req: Request) {
   try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      return Response.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
 
@@ -80,8 +149,22 @@ export async function DELETE(req: Request) {
       );
     }
 
-    const existingItem = await prisma.cartItem.findUnique({
-      where: { id },
+    const user = await prisma.user.findUnique({
+      where: { clerkId: userId },
+    });
+
+    if (!user) {
+      return Response.json(
+        { error: "User not found" },
+        { status: 404 }
+      );
+    }
+
+    const existingItem = await prisma.cartItem.findFirst({
+      where: {
+        id,
+        userId: user.id,
+      },
     });
 
     if (!existingItem) {
@@ -104,6 +187,7 @@ export async function DELETE(req: Request) {
 
     return Response.json({ ok: true });
   } catch (error) {
+    console.error("Error removing from cart:", error);
     return Response.json(
       { error: "Failed to remove from cart" },
       { status: 500 }

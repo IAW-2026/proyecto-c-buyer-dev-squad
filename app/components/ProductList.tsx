@@ -36,7 +36,7 @@ async function addToCart(productId: string) {
               onClick={() => router.push(`/products/${p.id}`)}
               className="cursor-pointer"
             >
-              <div className="mb-4 h-48 overflow-hidden rounded-xl bg-gray-100">
+              <div className="mb-4 h-48 overflow-hidden rounded-xl bg-surface-alt">
                 <img
                   src={p.image}
                   alt={p.name}

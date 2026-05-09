@@ -12,7 +12,6 @@ const categoryTitles: Record<string, string> = {
   nino: "Zapatillas para Niños/as",
   zapatillas: "Zapatillas",
 };
-const cartCount = await prisma.cartItem.count();
 const baseUrl =
   process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
 
@@ -47,7 +46,6 @@ export default async function Home(props: {
   }>;
 }) {
   const searchParams = await props.searchParams; 
-
   const products = await getProducts(searchParams);
 
   return (

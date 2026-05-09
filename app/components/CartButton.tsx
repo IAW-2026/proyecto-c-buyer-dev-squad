@@ -8,7 +8,7 @@ export default function CartButton() {
 
   if (loading) {
   return (
-    <div className="fixed bottom-6 right-6 bg-black text-white px-5 py-3 rounded-full shadow-lg flex items-center gap-2">
+    <div className="fixed bottom-6 right-6 btn-primary px-5 py-3 rounded-full shadow-lg flex items-center gap-2">
       🛒
 
       <svg
@@ -38,9 +38,9 @@ export default function CartButton() {
   return (
     <Link
       href="/cart"
-      className="fixed bottom-6 right-6 bg-black text-white px-5 py-3 rounded-full shadow-lg hover:bg-gray-800 transition"
+      className="fixed bottom-6 right-6 btn-primary px-5 py-3 rounded-full shadow-lg transition"
     >
-      🛒<span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold min-w-[22px] h-[22px] px-1 flex items-center justify-center rounded-full">
+      🛒<span className="absolute -top-2 -right-2 badge-danger text-xs font-bold min-w-[22px] h-[22px] px-1 flex items-center justify-center rounded-full">
         {count}
       </span>
     </Link>

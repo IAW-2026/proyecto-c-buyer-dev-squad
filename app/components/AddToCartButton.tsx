@@ -12,25 +12,31 @@ export default function AddToCartButton({ productId }: { productId: string }) {
   async function addToCart(productId: string) {
     setLoadingId(productId);
 
-    await fetch("/api/cart", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ productId, quantity: 1 }),
-    });
+    try {
+      const response = await fetch("/api/cart", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productId, quantity: 1 }),
+      });
 
-    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-    const existing = cart.find((item: any) => item.productId === productId);
-    if (existing) {
-      existing.quantity += 1;
-    } else {
-      cart.push({ productId, quantity: 1 });
+      if (!response.ok) {
+        const error = await response.json();
+        console.error("Error adding to cart:", error);
+        alert("Error: " + (error.error || "No se pudo agregar al carrito"));
+        setLoadingId(null);
+        return;
+      }
+
+      // Actualizar el contador del carrito
+      window.dispatchEvent(new Event("cartUpdated"));
+      setLoadingId(null);
+      setAddedId(productId);
+      setTimeout(() => setAddedId(null), 2200);
+    } catch (error) {
+      console.error("Request failed:", error);
+      alert("Error de conexión");
+      setLoadingId(null);
     }
-
-    localStorage.setItem("cart", JSON.stringify(cart));
-    window.dispatchEvent(new Event("cartUpdated"));
-    setLoadingId(null);
-    setAddedId(productId);
-    setTimeout(() => setAddedId(null), 2200);
   }
 
   return (
@@ -38,7 +44,7 @@ export default function AddToCartButton({ productId }: { productId: string }) {
       onClick={() => addToCart(productId)}
       disabled={isDisabled}
       className={`flex items-center gap-2 px-5 py-2 rounded font-medium transition-colors duration-200
-        ${isAdded ? "bg-green-600 text-white" : "bg-black text-white disabled:opacity-50"}`}
+        ${isAdded ? "btn-success" : "btn-primary disabled:opacity-50"}`}
     >
       {isLoading && (
         <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">

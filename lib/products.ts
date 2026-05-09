@@ -1,3 +1,5 @@
+import { prisma } from "@/lib/prisma";
+import { syncSellers } from "@/lib/sellers";
 const PRODUCTS = [
   {
     id: "1",
@@ -7,7 +9,8 @@ const PRODUCTS = [
     image: "/images/nike.jpg",
     description: "Zapatilla deportiva de alta calidad ideal para uso diario y rendimiento.",
     category: "mujer",
-    sizes: [36, 37, 38, 39, 40, 41]
+    sizes: [36, 37, 38, 39, 40, 41],
+    sellerId: "seller-1",
   },
   {
     id: "2",
@@ -17,7 +20,8 @@ const PRODUCTS = [
     image: "/images/adidas.jpg",
     description: "Zapatilla de running de alto rendimiento diseñada para corredores serios.",
     category: "mujer",
-    sizes: [36, 37, 38, 39, 40, 41]
+    sizes: [36, 37, 38, 39, 40, 41],
+    sellerId: "seller-2",
   },
   {
     id: "3",
@@ -28,6 +32,7 @@ const PRODUCTS = [
     description: "Zapatilla icónica de estilo urbano con diseño retro y comodidad moderna.",
     category: "hombre",
     sizes: [40, 41, 42, 43, 44, 45],
+    sellerId: "seller-1",
   },
   {
     id: "4",
@@ -38,6 +43,7 @@ const PRODUCTS = [
     description: "Zapatilla urbana clásica con diseño moderno y detalles premium.",
     category: "mujer",
     sizes: [36, 37, 38, 39, 40, 41],
+    sellerId: "seller-1",
   },
   {
     id: "5",
@@ -48,6 +54,7 @@ const PRODUCTS = [
     description: "Zapatilla de baloncesto clásica con diseño moderno y detalles premium.",
     category: "nino",
     sizes: [28, 29, 30, 31, 32, 33],
+    sellerId: "seller-1",
   },
   {
     id: "6",
@@ -58,6 +65,7 @@ const PRODUCTS = [
     description: "Zapatilla de running ligera y reactiva diseñada para corredores de nivel intermedio.",
     category: "mujer",
     sizes: [36, 37, 38, 39, 40, 41],
+    sellerId: "seller-2",
   },
   {
     id: "7",
@@ -68,6 +76,7 @@ const PRODUCTS = [
     description: "Zapatilla de running de alto rendimiento diseñada para corredores serios.",
     category: "hombre",
     sizes: [40, 41, 42, 43, 44, 45],
+    sellerId: "seller-2",
   },
   {
     id: "8",
@@ -78,9 +87,44 @@ const PRODUCTS = [
     description: "Zapatilla urbana de estilo retro con cierre de cordones elásticos para niños.",
     category: "nino",
     sizes: [28, 29, 30, 31, 32, 33],
+    sellerId: "seller-2",
   },
 ];
+
+async function syncProducts() {
+  await syncSellers(); //necesitamos asegurarnos de que los 
+  // sellers existan antes de crear los productos
+  for (const p of PRODUCTS) {
+    await prisma.product.upsert({
+      where: { id: p.id },
+      update: {
+        name: p.name,
+        price: p.price,
+        brand: p.brand,
+        image: p.image,
+        description: p.description,
+        category: p.category,
+        sizes: p.sizes,
+        sellerId: p.sellerId,
+      },
+      create: {
+        id: p.id,
+        name: p.name,
+        price: p.price,
+        brand: p.brand,
+        image: p.image,
+        description: p.description,
+        category: p.category,
+        sizes: p.sizes,
+        sellerId: p.sellerId,
+      },
+    });
+  }
+}
+
+// Se ejecuta automáticamente cuando Next.js carga este archivo
+syncProducts().catch(console.error);
+
 export async function getProducts() {
-  return PRODUCTS;
-}// para simular una consulta a una base de datos o 
-// a una API, se devuelve una promesa que resuelve con el array de productos.
+  return prisma.product.findMany(); // ahora lee de la BD
+}

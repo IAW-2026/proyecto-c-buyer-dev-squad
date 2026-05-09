@@ -38,13 +38,13 @@ export default function CartList({ items, total }: any) {
     <div>
       <div className="space-y-4">
         {items.map((item: any) => (
-          <div key={item.id} className="border p-4 rounded-xl">
+          <div key={item.id} className="border border-muted p-4 rounded-xl bg-surface">
             <h2 className="text-xl">{item.name}</h2>
             <p>${item.price}</p>
             <p>Cantidad: {item.quantity}</p>
             <button
               onClick={() => removeItem(item.id)}
-              className="mt-2 bg-red-600 text-white px-4 py-2 rounded"
+              className="mt-2 btn-danger px-4 py-2 rounded"
               disabled={loading}
             >
               Eliminar
@@ -55,11 +55,11 @@ export default function CartList({ items, total }: any) {
       <div className="mt-8 border-t pt-6">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-2xl font-bold">Total:</h3>
-          <p className="text-3xl font-bold text-green-600">${total.toFixed(2)}</p>
+          <p className="text-3xl font-bold text-success">${total.toFixed(2)}</p>
         </div>
         <button
           onClick={handleCheckout}
-          className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition"
+          className="w-full btn-success font-bold py-3 px-4 rounded-lg transition"
           disabled={loading}
         >
           {loading ? "Procesando..." : "Proceder al Pago"}

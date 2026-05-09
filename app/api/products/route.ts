@@ -1,4 +1,6 @@
 import { getProducts } from "@/lib/products";
+import { getSellerById } from "@/lib/sellers";
+
 //si se le pasa un filtro, devuelve solo los productos de esa filtro,
 // sino devuelve todos los productos
 export async function GET(req: Request) {
@@ -27,5 +29,16 @@ export async function GET(req: Request) {
     filtered = filtered.filter(p => p.price <= Number(maxPrice));
   }
 
-  return Response.json(filtered);
+  // Agregar información del vendedor
+  const productsWithSellers = await Promise.all(
+    filtered.map(async (product: any) => {
+      const seller = await getSellerById(product.sellerId);
+      return {
+        ...product,
+        seller,
+      };
+    })
+  );
+
+  return Response.json(productsWithSellers);
 }

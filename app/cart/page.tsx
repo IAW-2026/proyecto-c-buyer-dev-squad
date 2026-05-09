@@ -1,20 +1,36 @@
 import CartList from "../components/CartList";
 import { prisma } from "@/lib/prisma";
-import { getProducts } from "@/lib/products";
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 
 export default async function CartPage() {
-  const cart = await prisma.cartItem.findMany();
-  const PRODUCTS = await getProducts();
-  const cartWithProducts = cart.map((item) => {
-    const product = PRODUCTS.find((p) => p.id === item.productId);
+  const { userId } = await auth();
 
-    return {
-      ...item,
-      name: product?.name ?? "Producto",
-      price: product?.price ?? 0,
-      image: product?.image ?? "",
-    };
+  if (!userId) {
+    redirect("/");
+  }
+
+  // Get user from our database
+  const user = await prisma.user.findUnique({
+    where: { clerkId: userId },
   });
+
+  if (!user) {
+    redirect("/");
+  }
+
+  const cart = await prisma.cartItem.findMany({
+    where: { userId: user.id },
+    include: { product: true },
+  });
+
+  const cartWithProducts = cart.map((item) => ({
+    id: item.id,
+    name: item.product.name,
+    price: item.product.price,
+    image: item.product.image,
+    quantity: item.quantity,
+  }));
 
   const total = cartWithProducts.reduce(
     (acc, item) => acc + item.price * item.quantity,

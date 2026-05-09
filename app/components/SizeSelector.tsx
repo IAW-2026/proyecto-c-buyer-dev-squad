@@ -19,8 +19,8 @@ export default function SizeSelector({ sizes }: Props) {
             onClick={() => setSelected(size)}
             className={`w-12 h-12 border rounded-lg font-medium transition-colors
               ${selected === size
-                ? "bg-black text-white border-black"
-                : "bg-white text-black hover:border-gray-400"
+                ? "bg-primary text-secondary border-primary"
+                : "bg-secondary text-primary hover:border-muted"
               }`}
           >
             {size}

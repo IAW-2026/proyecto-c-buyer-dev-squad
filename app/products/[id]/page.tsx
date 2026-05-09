@@ -19,7 +19,7 @@ export default async function ProductPage({ params }: Props) {
       <div className="p-10">
         <h1 className="text-2xl font-bold">Producto no encontrado</h1>
 
-        <Link href="/" className="text-blue-500 underline mt-4 block">
+        <Link href="/" className="text-info underline mt-4 block">
           Volver al inicio
         </Link>
       </div>
@@ -28,7 +28,7 @@ export default async function ProductPage({ params }: Props) {
 
   return (
     <main className="p-10 max-w-3xl mx-auto">
-      <Link href="/" className="text-sm text-gray-500 underline">
+      <Link href="/" className="text-sm text-muted underline">
         ← Volver
       </Link>
 
@@ -43,11 +43,11 @@ export default async function ProductPage({ params }: Props) {
           {product.name}
         </h1>
 
-        <p className="text-gray-600 mt-2 capitalize">
+        <p className="text-muted mt-2 capitalize">
           Marca: {product.brand}
         </p>
 
-        <p className="text-gray-600 capitalize">
+        <p className="text-muted capitalize">
           Categoría: {product.category}
         </p>
 
@@ -55,9 +55,9 @@ export default async function ProductPage({ params }: Props) {
           ${product.price}
         </p>
 
-        <div className="mt-6 p-4 border rounded-xl">
+        <div className="mt-6 p-4 border rounded-xl bg-surface">
           <h2 className="font-semibold mb-2">Descripción</h2>
-          <p className="text-gray-700">
+          <p className="text-muted">
             {product.description}
           </p>
         </div>
