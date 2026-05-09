@@ -1,6 +1,6 @@
 import { getProducts } from "@/lib/products";
 import { getSellerById } from "@/lib/sellers";
-
+import { Product } from "../../types/product";
 //si se le pasa un filtro, devuelve solo los productos de esa filtro,
 // sino devuelve todos los productos
 export async function GET(req: Request) {
@@ -11,27 +11,27 @@ export async function GET(req: Request) {
   const minPrice = searchParams.get("minPrice");
   const maxPrice = searchParams.get("maxPrice");
   const PRODUCTS = await getProducts();
-  let filtered = PRODUCTS;
+  let filtered: Product[] = PRODUCTS;
 
   if (category) {
-    filtered = filtered.filter(p => p.category === category);
+    filtered = filtered.filter((p: Product) => p.category === category);
   }
 
   if (brand) {
-    filtered = filtered.filter(p => p.brand === brand);
+    filtered = filtered.filter((p: Product) => p.brand === brand);
   }
 
   if (minPrice) {
-    filtered = filtered.filter(p => p.price >= Number(minPrice));
+    filtered = filtered.filter((p: Product) => p.price >= Number(minPrice));
   }
 
   if (maxPrice) {
-    filtered = filtered.filter(p => p.price <= Number(maxPrice));
+    filtered = filtered.filter((p: Product) => p.price <= Number(maxPrice));
   }
 
   // Agregar información del vendedor
   const productsWithSellers = await Promise.all(
-    filtered.map(async (product: any) => {
+    filtered.map(async (product: Product) => {
       const seller = await getSellerById(product.sellerId);
       return {
         ...product,
