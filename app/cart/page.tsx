@@ -28,12 +28,14 @@ export default async function CartPage() {
     id: string;
     quantity: number;
     product: {
+      id: string;
       name: string;
       price: number;
       image: string;
     };
   }) => ({
     id: item.id,
+    productId: item.product.id,
     name: item.product.name,
     price: item.product.price,
     image: item.product.image,

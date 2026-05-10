@@ -16,7 +16,6 @@ export default async function CheckoutConfirmation({
 
   const { orderId } = await params;
 
-  // Get user from our database
   const user = await prisma.user.findUnique({
     where: { clerkId: userId },
   });
