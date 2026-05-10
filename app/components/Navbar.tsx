@@ -11,7 +11,7 @@ function Logo() {
         alt="ZapasYa logo"
         width={180}
         height={40}
-        className="object-contain"
+        className="w-32 md:w-44 h-auto object-contain"
         priority
       />
     </Link>
@@ -24,7 +24,7 @@ export default async function Navbar() {
 return (
   <nav className="w-full sticky top-0 z-50 border-b border-muted bg-surface-alt shadow-sm">
     
-    <div className="max-w-6xl mx-auto flex items-center justify-between px-6 h-20">
+    <div className="max-w-6xl mx-auto flex items-center justify-between px-4 md:px-6 h-16 md:h-20">
       
       <div className="scale-110">
         <Logo />
@@ -36,14 +36,14 @@ return (
             <img
               src={user.imageUrl}
               alt={user.fullName ?? "Avatar"}
-              className="w-10 h-10 rounded-full object-cover border border-muted shadow-sm"
+              className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover border border-muted shadow-sm"
             />
 
           <LogOutButton />
           </div>
         ) : (
           <SignInButton>
-            <button className="text-sm px-5 py-2.5 rounded-xl btn-primary shadow-sm transition font-medium">
+            <button className="text-sm px-3 py-2 md:px-5 md:py-2.5 rounded-xl btn-primary shadow-sm transition font-medium">
               Sign In
             </button>
           </SignInButton>

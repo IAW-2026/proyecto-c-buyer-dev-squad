@@ -21,7 +21,7 @@ export default function Filters({ brands }: FiltersProps) {
   };
 
   return (
-    <div className="flex gap-4 px-10 mt-4">
+    <div className="flex flex-col sm:flex-row gap-4">
       <select
         onChange={(e) => updateFilter("brand", e.target.value)}
         className="bg-black text-white border border-white p-2"

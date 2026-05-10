@@ -46,8 +46,8 @@ for (const item of cartWithProducts) {
 }
 
   return (
-    <main className="p-10">
-      <h1 className="text-3xl font-bold mb-6">Carrito</h1>
+    <main className="p-6 md:p-10">
+      <h1 className="text-2xl md:text-3xl font-bold mb-6">Carrito</h1>
 
       {cartWithProducts.length === 0 ? (
         <p>El carrito está vacío</p>

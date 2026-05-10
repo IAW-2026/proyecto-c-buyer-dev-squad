@@ -16,7 +16,7 @@ export default async function ProductPage({ params }: Props) {
     console.log("Producto seleccionado:", product);
   if (!product) {
     return (
-      <div className="p-10">
+      <div className="p-6 md:p-10">
         <h1 className="text-2xl font-bold">Producto no encontrado</h1>
 
         <Link href="/" className="text-info underline mt-4 block">
@@ -27,7 +27,7 @@ export default async function ProductPage({ params }: Props) {
   }
 
   return (
-    <main className="p-10 max-w-3xl mx-auto">
+    <main className="p-6 md:p-10 max-w-3xl mx-auto">
       <Link href="/" className="text-sm text-muted underline">
         ← Volver
       </Link>
@@ -36,10 +36,10 @@ export default async function ProductPage({ params }: Props) {
         <img
           src={product.image}
           alt={product.name}
-          className="w-full max-h-[400px] object-cover rounded-xl"
+          className="w-full max-h-[300px] md:max-h-[400px] object-cover rounded-xl"
         />
 
-        <h1 className="text-3xl font-bold mt-6">
+        <h1 className="text-2xl md:text-3xl font-bold mt-6">
           {product.name}
         </h1>
 
@@ -51,7 +51,7 @@ export default async function ProductPage({ params }: Props) {
           Categoría: {product.category}
         </p>
 
-        <p className="text-2xl font-bold mt-4">
+        <p className="text-xl md:text-2xl font-bold mt-4">
           ${product.price}
         </p>
 

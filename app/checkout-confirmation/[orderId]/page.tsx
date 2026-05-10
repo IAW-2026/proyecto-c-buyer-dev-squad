@@ -39,8 +39,8 @@ export default async function CheckoutConfirmation({
 
   if (!order) {
     return (
-      <main className="p-10">
-        <h1 className="text-3xl font-bold mb-6 text-danger">
+      <main className="p-6 md:p-10">
+        <h1 className="text-2xl md:text-3xl font-bold mb-6 text-danger">
           Orden no encontrada
         </h1>
         <Link href="/" className="text-info hover:underline">
@@ -51,10 +51,10 @@ export default async function CheckoutConfirmation({
   }
 
   return (
-    <main className="p-10">
+    <main className="p-6 md:p-10">
       <div className="max-w-2xl mx-auto">
-        <div className="bg-success-light border border-success rounded-lg p-8 mb-8">
-          <h1 className="text-4xl font-bold text-success mb-2">
+        <div className="bg-success-light border border-success rounded-lg p-6 md:p-8 mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold text-success mb-2">
             ¡Compra Exitosa!
           </h1>
           <p className="text-muted">
@@ -62,8 +62,8 @@ export default async function CheckoutConfirmation({
           </p>
         </div>
 
-        <div className="bg-surface border rounded-lg p-6 mb-8">
-          <h2 className="text-2xl font-bold mb-4">Detalles de la Orden</h2>
+        <div className="bg-surface border rounded-lg p-4 md:p-6 mb-8">
+          <h2 className="text-xl md:text-2xl font-bold mb-4">Detalles de la Orden</h2>
 
           <div className="mb-4 pb-4 border-b">
             <p className="text-muted">

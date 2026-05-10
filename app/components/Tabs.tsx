@@ -18,7 +18,7 @@ export default function Tabs() {
   ];
 
   return (
-    <div className="flex gap-6 border-b px-10 mt-4">
+    <div className="flex gap-4 md:gap-6 border-b px-4 md:px-10 mt-4 overflow-x-auto">
       {tabs.map((tab) => {
         const isActive = tab.category === currentCategory;
         return (
