@@ -64,9 +64,6 @@ export default async function ProductPage({ params }: Props) {
         <SizeSelector sizes={product.sizes} />
         <div className="mt-6 flex gap-3">
           <AddToCartButton productId={product.id} />
-          <button className="border px-5 py-2 rounded">
-            Comprar ahora
-          </button>
         </div>
       </div>
     </main>

@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
+import Navbar from "./Navbar";
+import Filters from "./Filters";
 
 export default function Tabs() {
   const pathname = usePathname();
@@ -23,9 +25,9 @@ export default function Tabs() {
           <Link
             key={tab.name}
             href={tab.category ? `/?category=${tab.category}` : "/"}
-            className={`pb-2 text-sm font-medium transition-colors ${
+            className={`pb-2 text-lg font-medium transition-colors ${
               isActive
-                ? "border-b-2 border-primary text-primary"
+                ? "border-b-2 border-primary text-secondary"
                 : "text-muted hover:text-primary"
             }`}
           >

@@ -19,8 +19,8 @@ export default function SizeSelector({ sizes }: Props) {
             onClick={() => setSelected(size)}
             className={`w-12 h-12 border rounded-lg font-medium transition-colors
               ${selected === size
-                ? "bg-primary text-secondary border-primary"
-                : "bg-secondary text-primary hover:border-muted"
+                ? "bg-primary text-secondary border-secondary"
+                : "bg-secondary text-muted hover:border-muted"
               }`}
           >
             {size}
@@ -28,7 +28,7 @@ export default function SizeSelector({ sizes }: Props) {
         ))}
       </div>
       {selected && (
-        <p className="text-sm text-gray-500 mt-2">Talle seleccionado: {selected}</p>
+        <p className="text-sm text-secondary mt-2">Talle seleccionado: {selected}</p>
       )}
     </div>
   );
