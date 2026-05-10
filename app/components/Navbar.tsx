@@ -3,6 +3,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import Image from "next/image";
 import Link from "next/link";
 import { LogOutButton } from "./LogOutButton";
+import { LogInButton } from "./LogInButton";
 function Logo() {
   return (
     <Link href="/" className="flex items-center gap-3">
@@ -42,11 +43,7 @@ return (
           <LogOutButton />
           </div>
         ) : (
-          <SignInButton>
-            <button className="text-sm px-3 py-2 md:px-5 md:py-2.5 rounded-xl btn-primary shadow-sm transition font-medium">
-              Sign In
-            </button>
-          </SignInButton>
+          <LogInButton />
         )}
       </div>
     </div>
