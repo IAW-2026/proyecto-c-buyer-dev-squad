@@ -1,14 +1,12 @@
 "use client";
 
-import { useState } from "react";
-
 type Props = {
   sizes: number[];
+  selected: number | null;
+  onSelect: (size: number) => void;
 };
 
-export default function SizeSelector({ sizes }: Props) {
-  const [selected, setSelected] = useState<number | null>(null);
-
+export default function SizeSelector({ sizes, selected, onSelect }: Props) {
   return (
     <div className="mt-6">
       <h2 className="font-semibold mb-2">Talle</h2>
@@ -16,7 +14,7 @@ export default function SizeSelector({ sizes }: Props) {
         {sizes.map((size) => (
           <button
             key={size}
-            onClick={() => setSelected(size)}
+            onClick={() => onSelect(size)}
             className={`w-12 h-12 border rounded-lg font-medium transition-colors
               ${selected === size
                 ? "bg-primary text-on-primary border-primary"

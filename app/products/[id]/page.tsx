@@ -1,8 +1,10 @@
+//server component
 import AddToCartButton from "@/app/components/AddToCartButton";
 import SizeSelector from "@/app/components/SizeSelector";
 import { getProducts } from "@/lib/products";
 import Link from "next/link";
 import { Product } from "@/app/types/product";  
+import ProductActions from "@/app/components/ProductActions";
 type Props = {
   params: {
     id: string;
@@ -61,10 +63,7 @@ export default async function ProductPage({ params }: Props) {
             {product.description}
           </p>
         </div>
-        <SizeSelector sizes={product.sizes} />
-        <div className="mt-6 flex gap-3">
-          <AddToCartButton productId={product.id} />
-        </div>
+        <ProductActions sizes={product.sizes} productId={product.id} />
       </div>
     </main>
   );

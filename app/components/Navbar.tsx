@@ -4,21 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { LogOutButton } from "./LogOutButton";
 import { LogInButton } from "./LogInButton";
+import ThemedLogo from "./ThemedLogo";
 import ThemeToggle from "./ThemeToggle";
-function Logo() {
-  return (
-    <Link href="/" className="flex items-center gap-3">
-      <Image
-        src="/logo.jpg"
-        alt="ZapasYa logo"
-        width={180}
-        height={40}
-        className="w-32 md:w-44 h-auto object-contain"
-        priority
-      />
-    </Link>
-  );
-}
 
 export default async function Navbar() {
   const user = await currentUser();
@@ -29,7 +16,7 @@ return (
     <div className="max-w-6xl mx-auto flex items-center justify-between px-4 md:px-6 h-16 md:h-20">
       
       <div className="scale-110">
-        <Logo />
+        <ThemedLogo />
       </div>
 
       <div className="flex items-center gap-4">

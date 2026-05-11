@@ -18,6 +18,7 @@ export default function ThemeToggle() {
     setIsDark(newIsDark);
     document.documentElement.classList.toggle("dark", newIsDark);
     localStorage.setItem("theme", newIsDark ? "dark" : "light");
+    window.dispatchEvent(new Event("theme-change"));
   };
 
   return (
