@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { LogOutButton } from "./LogOutButton";
 import { LogInButton } from "./LogInButton";
+import ThemeToggle from "./ThemeToggle";
 function Logo() {
   return (
     <Link href="/" className="flex items-center gap-3">
@@ -32,6 +33,7 @@ return (
       </div>
 
       <div className="flex items-center gap-4">
+        <ThemeToggle />
         {user ? (
           <div className="flex items-center gap-3">
             <img

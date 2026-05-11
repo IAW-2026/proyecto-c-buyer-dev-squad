@@ -27,8 +27,8 @@ export default function Tabs() {
             href={tab.category ? `/?category=${tab.category}` : "/"}
             className={`pb-2 text-lg font-medium transition-colors ${
               isActive
-                ? "border-b-2 border-primary text-secondary"
-                : "text-muted hover:text-primary"
+                ? "border-b-2 border-primary text-foreground"
+                : "text-muted hover:text-foreground"
             }`}
           >
             {tab.name}

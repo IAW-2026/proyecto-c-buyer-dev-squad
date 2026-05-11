@@ -20,8 +20,8 @@
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--color-background);
+  color: var(--color-foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -48,6 +48,31 @@ body {
   --color-border: #d1d5db;
   --color-surface: #6b72802d;
   --color-surface-alt: #f8fafc;
+}
+
+.dark {
+  --color-background: #0a0a0a;
+  --color-foreground: #ededed;
+  --color-primary: #ffffff;
+  --color-on-primary: #000000;
+  --color-primary-dark: #d1d5db;
+  --color-secondary: #000000;
+  --color-secondary-bg: #374151;
+  --color-secondary-dark: #4b5563;
+  --color-success: #22c55e;
+  --color-success-dark: #16a34a;
+  --color-success-light: #14532d;
+  --color-danger: #ef4444;
+  --color-danger-dark: #dc2626;
+  --color-danger-light: #450a0a;
+  --color-info: #3b82f6;
+  --color-info-dark: #2563eb;
+  --color-info-light: #1e3a8a;
+  --color-muted: #9ca3af;
+  --color-muted-light: #1f2937;
+  --color-border: #374151;
+  --color-surface: #374151;
+  --color-surface-alt: #111827;
 }
 
 .btn-primary {
@@ -130,6 +155,10 @@ body {
 
 .text-muted {
   color: var(--color-muted);
+}
+
+.text-foreground {
+  color: var(--color-foreground);
 }
 
 .border-primary {

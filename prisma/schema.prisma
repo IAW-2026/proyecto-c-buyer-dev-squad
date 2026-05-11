@@ -14,6 +14,7 @@ model User {
   email     String   @unique
   firstName String?
   lastName  String?
+  role      Role     @default(USER)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -105,6 +106,11 @@ model OrderItem {
   @@index([orderId])
   @@index([productId])
   @@map("order_items")
+}
+
+enum Role {
+  USER
+  ADMIN
 }
 
 enum OrderStatus {

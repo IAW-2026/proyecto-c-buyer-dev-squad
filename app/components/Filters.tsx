@@ -24,18 +24,18 @@ export default function Filters({ brands }: FiltersProps) {
     <div className="flex flex-col sm:flex-row gap-4">
       <select
         onChange={(e) => updateFilter("brand", e.target.value)}
-        className="bg-black text-white border border-white p-2"
+        className="bg-surface-alt text-foreground border border-muted p-2"
       >
-        <option value="" className="bg-black text-white">
+        <option value="" className="bg-surface-alt text-foreground">
           Todas las marcas </option>
         {brands.map((brand) => (
-          <option key={brand} value={brand}>
+          <option key={brand} value={brand} className="bg-surface-alt text-foreground">
             {brand.charAt(0).toUpperCase() + brand.slice(1)}
           </option>
         ))}
       </select>
       <div className="relative">
-        <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-500">
+        <span className="absolute left-2 top-1/2 -translate-y-1/2 text-muted">
           $
         </span>
         <input
@@ -43,11 +43,11 @@ export default function Filters({ brands }: FiltersProps) {
           min={0}
           placeholder="Precio mínimo"
           onChange={(e) => updateFilter("minPrice", e.target.value)}
-          className="border p-2 pl-6"
+          className="border border-muted bg-surface-alt text-foreground p-2 pl-6"
         />
       </div>
       <div className="relative">
-        <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-500">
+        <span className="absolute left-2 top-1/2 -translate-y-1/2 text-muted">
           $
         </span>
         <input
@@ -55,7 +55,7 @@ export default function Filters({ brands }: FiltersProps) {
           min={0}
           placeholder="Precio máximo"
           onChange={(e) => updateFilter("maxPrice", e.target.value)}
-          className="border p-2 pl-6"
+          className="border border-muted bg-surface-alt text-foreground p-2 pl-6"
         />
       </div>
     </div>
