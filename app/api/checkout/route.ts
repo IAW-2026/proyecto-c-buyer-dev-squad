@@ -50,6 +50,8 @@ export async function POST(req: Request): Promise<Response> {
             name: item.name,
             quantity: item.quantity,
             price: item.price,
+            size: item.size,
+            color: item.color,
           })),
         },
       },

@@ -40,20 +40,21 @@ model Seller {
 }
 
 model Product {
-  id        String   @id @default(uuid())
-  name      String
-  price     Float
-  image     String
-  brand     String
-  category  String
+  id         String   @id @default(uuid())
+  name       String
+  price      Float
+  image      String
+  brand      String
+  category   String
   description String
-  sizes     Int[]
-  sellerId  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  sizes      Int[]
+  colors     String[]
+  sellerId   String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
-  seller    Seller    @relation(fields: [sellerId], references: [id], onDelete: Cascade)
-  cartItems CartItem[]
+  seller     Seller    @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  cartItems  CartItem[]
   orderItems OrderItem[]
 
   @@index([sellerId])
@@ -65,6 +66,8 @@ model CartItem {
   productId String
   userId    String
   quantity  Int
+  size      Int
+  color     String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -73,6 +76,7 @@ model CartItem {
 
   @@index([productId])
   @@index([userId])
+  @@unique([userId, productId, size, color])
   @@map("cart_items")
 }
 
@@ -98,6 +102,8 @@ model OrderItem {
   name      String
   quantity  Int
   price     Float
+  size      Int?
+  color     String?
   createdAt DateTime @default(now())
 
   order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)

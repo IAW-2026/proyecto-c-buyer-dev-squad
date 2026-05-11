@@ -17,22 +17,23 @@ export default function CartList({ items, total }: any) {
     router.refresh();
   }
 
-  async function handleCheckout() {
-    setLoading(true);
-    const response = await fetch("/api/checkout", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ items, total }),
-    });
+async function handleCheckout() {
+  setLoading(true);
 
-    if (response.ok) {
-      const data = await response.json();
-      router.push(`/checkout-confirmation/${data.orderId}`);
-    } else {
-      alert("Error al procesar la compra");
-      setLoading(false);
-    }
+  const response = await fetch("/api/checkout", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ items: items, total }),
+  });
+
+  if (response.ok) {
+    const data = await response.json();
+    router.push(`/checkout-confirmation/${data.orderId}`);
+  } else {
+    alert("Error al procesar la compra");
+    setLoading(false);
   }
+}
 
   return (
     <div>
@@ -42,6 +43,8 @@ export default function CartList({ items, total }: any) {
             <h2 className="text-xl">{item.name}</h2>
             <p>${item.price}</p>
             <p>Cantidad: {item.quantity}</p>
+            <p>Talle: {item.size}</p>
+            <p>Color: {item.color}</p>
             <button
               onClick={() => removeItem(item.id)}
               className="mt-2 btn-danger px-4 py-2 rounded"

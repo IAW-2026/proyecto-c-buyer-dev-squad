@@ -27,6 +27,8 @@ export default async function CartPage() {
   const cartWithProducts = cart.map((item: {
     id: string;
     quantity: number;
+    size: number;
+    color: string;
     product: {
       id: string;
       name: string;
@@ -40,6 +42,8 @@ export default async function CartPage() {
     price: item.product.price,
     image: item.product.image,
     quantity: item.quantity,
+    size: item.size,
+    color: item.color,
   }));
 
 let total = 0;

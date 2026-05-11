@@ -5,9 +5,10 @@ import { useUser, useClerk } from "@clerk/nextjs";
 type Props = {
   productId: string;
   selectedSize: number | null;
+  selectedColor: string | null;
 };
 
-export default function AddToCartButton({ productId, selectedSize }: Props) {
+export default function AddToCartButton({ productId, selectedSize, selectedColor }: Props) {
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [addedId, setAddedId] = useState<string | null>(null);
 
@@ -16,37 +17,47 @@ export default function AddToCartButton({ productId, selectedSize }: Props) {
 
   const isLoading = loadingId === productId;
   const isAdded = addedId === productId;
-  const isDisabled = isLoading || isAdded || !selectedSize; // bloqueado sin talle
+  const isDisabled = isLoading || isAdded || !selectedSize || !selectedColor;
 
   useEffect(() => {
     if (isSignedIn) {
       const pendingProduct = localStorage.getItem("pendingCartProduct");
       if (pendingProduct) {
-        addToCart(pendingProduct);
+        const parsed = JSON.parse(pendingProduct);
+        if (parsed?.productId && parsed?.size && parsed?.color) {
+          addToCart(parsed.productId, parsed.size, parsed.color);
+        }
         localStorage.removeItem("pendingCartProduct");
       }
     }
   }, [isSignedIn]);
 
   async function handleClick() {
-    if (!selectedSize) return; //doble chequeo
+    if (!selectedSize || !selectedColor) return; // doble chequeo
     if (!isSignedIn) {
-      localStorage.setItem("pendingCartProduct", productId);
+      localStorage.setItem(
+        "pendingCartProduct",
+        JSON.stringify({ productId, size: selectedSize, color: selectedColor })
+      );
       openSignIn();
       return;
     }
-    addToCart(productId);
+    addToCart(productId, selectedSize, selectedColor);
   }
 
-  async function addToCart(productId: string) {
+  async function addToCart(productId: string, size: number, color: string) {
     setLoadingId(productId);
     try {
       const response = await fetch("/api/cart", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productId, quantity: 1, size: selectedSize }), // mando el talle
+        body: JSON.stringify({
+          productId,
+          quantity: 1,
+          size,
+          color,
+        }),
       });
-
       if (!response.ok) {
         const error = await response.json();
         alert("Error: " + (error.error || "No se pudo agregar al carrito"));
@@ -74,10 +85,9 @@ export default function AddToCartButton({ productId, selectedSize }: Props) {
       >
         {isLoading ? "Agregando..." : isAdded ? "¡Agregado!" : "Agregar al carrito"}
       </button>
-      {/* Mensaje si no seleccionó talle */}
-      {!selectedSize && (
+      {(!selectedSize || !selectedColor) && (
         <p className="text-xs text-center text-red-500">
-          Seleccioná un talle para continuar
+          Seleccioná talle y color para continuar
         </p>
       )}
     </div>

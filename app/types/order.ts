@@ -4,6 +4,8 @@ export interface OrderItem {
   name: string;
   quantity: number;
   price: number;
+  size?: number;
+  color?: string;
 }
 
 export interface Order {

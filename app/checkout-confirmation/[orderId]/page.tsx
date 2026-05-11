@@ -87,6 +87,8 @@ export default async function CheckoutConfirmation({
             name: string;
             price: number;
             quantity: number;
+            size?: number;
+            color?: string;
           }) => (
             <div
               key={item.id}
@@ -95,6 +97,8 @@ export default async function CheckoutConfirmation({
               <div>
                 <p className="font-semibold">{item.name}</p>
                 <p className="text-muted">Cantidad: {item.quantity}</p>
+                {item.size && <p className="text-muted">Talle: {item.size}</p>}
+                {item.color && <p className="text-muted">Color: {item.color}</p>}
               </div>
               <p className="font-semibold">
                 ${(item.price * item.quantity).toFixed(2)}

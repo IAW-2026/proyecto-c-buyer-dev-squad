@@ -38,6 +38,7 @@ CREATE TABLE "products" (
     "category" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "sizes" INTEGER[],
+    "colors" TEXT[],
     "sellerId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -51,6 +52,8 @@ CREATE TABLE "cart_items" (
     "productId" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "quantity" INTEGER NOT NULL,
+    "size" INTEGER NOT NULL,
+    "color" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -77,6 +80,8 @@ CREATE TABLE "order_items" (
     "name" TEXT NOT NULL,
     "quantity" INTEGER NOT NULL,
     "price" DOUBLE PRECISION NOT NULL,
+    "size" INTEGER,
+    "color" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "order_items_pkey" PRIMARY KEY ("id")
@@ -102,6 +107,9 @@ CREATE INDEX "cart_items_productId_idx" ON "cart_items"("productId");
 
 -- CreateIndex
 CREATE INDEX "cart_items_userId_idx" ON "cart_items"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "cart_items_userId_productId_size_color_key" ON "cart_items"("userId", "productId", "size", "color");
 
 -- CreateIndex
 CREATE INDEX "orders_userId_idx" ON "orders"("userId");

@@ -63,7 +63,11 @@ export default async function ProductPage({ params }: Props) {
             {product.description}
           </p>
         </div>
-        <ProductActions sizes={product.sizes} productId={product.id} />
+        <ProductActions
+          sizes={product.sizes}
+          colors={product.colors}
+          productId={product.id}
+        />
       </div>
     </main>
   );
