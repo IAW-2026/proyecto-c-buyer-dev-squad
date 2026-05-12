@@ -17,6 +17,7 @@ async function getProducts(searchParams: {
   brand?: string;
   minPrice?: string;
   maxPrice?: string;
+  search?: string; 
 }) {
   return prisma.product.findMany({
     where: {
@@ -26,6 +27,13 @@ async function getProducts(searchParams: {
 
       ...(searchParams.brand && {
         brand: searchParams.brand,
+      }),
+
+      ...(searchParams.search && {
+        name: {
+          contains: searchParams.search,
+          mode: "insensitive", // no distingue mayúsculas
+        },
       }),
 
       ...((searchParams.minPrice || searchParams.maxPrice) && {
@@ -42,7 +50,6 @@ async function getProducts(searchParams: {
     },
   });
 }
-
 export default async function Home(props: {
   searchParams: Promise<{
     category?: string;
