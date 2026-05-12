@@ -35,6 +35,13 @@ export default function Tabs() {
           </Link>
         );
       })}
+            <div className="flex-1" />
+      <Link
+        href="/pedidos"
+        className="mb-2 whitespace-nowrap px-4 py-1.5 rounded-full border border-primary text-primary text-sm font-medium hover:bg-primary hover:text-white transition-colors"
+      >
+        📦 Ver mis pedidos
+      </Link>
     </div>
   );
 }
