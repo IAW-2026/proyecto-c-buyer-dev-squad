@@ -4,8 +4,9 @@ import { redirect } from "next/navigation";
 export default async function PedidoDetallePage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
   const { userId } = await auth();
   if (!userId) redirect("/");
 
@@ -21,7 +22,7 @@ export default async function PedidoDetallePage({
 
       <div className="bg-surface-alt border border-muted rounded-2xl p-6">
         <p className="text-muted">
-          Acá se va a mostrar el estado del pedido #{params.id}
+          Acá se muestra el estado del pedido #{id}
         </p>
       </div>
     </main>
