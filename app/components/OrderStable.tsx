@@ -1,6 +1,6 @@
 "use client";
 
-import { OrderStatus } from "@prisma/client";
+import { OrderStatus } from "@/generated/prisma/client";
 import { useState, useTransition } from "react";
 import { updateOrderStatus } from "../admin/actions";
 import OrderStatusBadge from "./OrderStatusBadge";

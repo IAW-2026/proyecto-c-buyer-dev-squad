@@ -1,5 +1,4 @@
-import { OrderStatus } from "@prisma/client";
-
+import { OrderStatus } from "@/generated/prisma/client";
 const statusConfig: Record<OrderStatus, { label: string; className: string }> = {
   PENDING: { label: "Pendiente", className: "badge-pending" },
   COMPLETED: { label: "Completado", className: "badge-completed" },
