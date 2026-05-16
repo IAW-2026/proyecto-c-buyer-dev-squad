@@ -50,6 +50,21 @@ async function getProducts(searchParams: {
     },
   });
 }
+async function getBrands(category?: string) {
+  const products = await prisma.product.findMany({
+    where: {
+      ...(category && {
+        category,
+      }),
+    },
+
+    select: {
+      brand: true,
+    },
+  });
+
+  return [...new Set(products.map((p) => p.brand))]; // obtener marcas únicas
+}
 export default async function Home(props: {
   searchParams: Promise<{
     category?: string;
@@ -60,7 +75,7 @@ export default async function Home(props: {
 }) {
   const searchParams = await props.searchParams;
   const products = await getProducts(searchParams);
-  const brandList = [...new Set(products.map((p) => p.brand))];
+  const brandList = await getBrands(searchParams.category);
 return (
   <main className="p-6 md:p-10 space-y-6">
     <Navbar />
