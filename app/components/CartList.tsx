@@ -31,13 +31,15 @@ export default function CartList({ items, total }: any) {
       body: JSON.stringify({ items: items, total }),
     });
 
-    if (response.ok) {
-      const data = await response.json();
-      router.push(`/checkout-confirmation/${data.orderId}`);
-    } else {
-      alert("Error al procesar la compra");
-      setLoading(false);
-    }
+    if (!response.ok) {
+    alert("Error al crear la orden");
+    setLoading(false);
+    return;
+  }
+  const data = await response.json();
+  // Acá después iría la API real de pagos
+  //const payment = await fetch("/api/payments/create-session");
+  router.push(`/payments/${data.orderId}`);
   }
 
   return (
