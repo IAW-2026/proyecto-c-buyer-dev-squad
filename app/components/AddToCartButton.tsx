@@ -1,63 +1,95 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useUser, useClerk } from "@clerk/nextjs";
 
-export default function AddToCartButton({ productId }: { productId: string }) {
+type Props = {
+  productId: string;
+  selectedSize: number | null;
+  selectedColor: string | null;
+};
+
+export default function AddToCartButton({ productId, selectedSize, selectedColor }: Props) {
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [addedId, setAddedId] = useState<string | null>(null);
 
+  const { isSignedIn } = useUser();
+  const { openSignIn } = useClerk();
+
   const isLoading = loadingId === productId;
   const isAdded = addedId === productId;
-  const isDisabled = isLoading || isAdded;
+  const isDisabled = isLoading || isAdded || !selectedSize || !selectedColor;
 
-  async function addToCart(productId: string) {
+  useEffect(() => {
+    if (isSignedIn) {
+      const pendingProduct = localStorage.getItem("pendingCartProduct");
+      if (pendingProduct) {
+        const parsed = JSON.parse(pendingProduct);
+        if (parsed?.productId && parsed?.size && parsed?.color) {
+          addToCart(parsed.productId, parsed.size, parsed.color);
+        }
+        localStorage.removeItem("pendingCartProduct");
+      }
+    }
+  }, [isSignedIn]);
+
+  async function handleClick() {
+    if (!selectedSize || !selectedColor) return; // doble chequeo
+    if (!isSignedIn) {
+      localStorage.setItem(
+        "pendingCartProduct",
+        JSON.stringify({ productId, size: selectedSize, color: selectedColor })
+      );
+      openSignIn();
+      return;
+    }
+    addToCart(productId, selectedSize, selectedColor);
+  }
+
+  async function addToCart(productId: string, size: number, color: string) {
     setLoadingId(productId);
-
     try {
       const response = await fetch("/api/cart", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productId, quantity: 1 }),
+        body: JSON.stringify({
+          productId,
+          quantity: 1,
+          size,
+          color,
+        }),
       });
-
       if (!response.ok) {
         const error = await response.json();
-        console.error("Error adding to cart:", error);
         alert("Error: " + (error.error || "No se pudo agregar al carrito"));
         setLoadingId(null);
         return;
       }
 
-      // Actualizar el contador del carrito
       window.dispatchEvent(new Event("cartUpdated"));
       setLoadingId(null);
       setAddedId(productId);
       setTimeout(() => setAddedId(null), 2200);
-    } catch (error) {
-      console.error("Request failed:", error);
+    } catch {
       alert("Error de conexión");
       setLoadingId(null);
     }
   }
 
   return (
-    <button
-      onClick={() => addToCart(productId)}
-      disabled={isDisabled}
-      className={`flex items-center gap-2 px-5 py-2 rounded font-medium transition-colors duration-200
-        ${isAdded ? "btn-success" : "btn-primary disabled:opacity-50"}`}
-    >
-      {isLoading && (
-        <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
-          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
-        </svg>
+    <div className="w-full flex flex-col gap-1">
+      <button
+        onClick={handleClick}
+        disabled={isDisabled}
+        className={`w-full flex items-center justify-center gap-2 px-5 py-2 rounded font-medium transition-colors duration-200
+          ${isAdded ? "btn-success" : "btn-primary"} disabled:opacity-40 disabled:cursor-not-allowed`}
+      >
+        {isLoading ? "Agregando..." : isAdded ? "¡Agregado!" : "Agregar al carrito"}
+      </button>
+      {(!selectedSize || !selectedColor) && (
+        <p className="text-xs text-center text-red-500">
+          Seleccioná talle y color para continuar
+        </p>
       )}
-      {isAdded && (
-        <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-        </svg>
-      )}
-      {isLoading ? "Agregando..." : isAdded ? "¡Agregado!" : "Agregar al carrito"}
-    </button>
+    </div>
   );
 }

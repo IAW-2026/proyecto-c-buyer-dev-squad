@@ -2,10 +2,12 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function Filters() {
+interface FiltersProps {
+    brands: string[];
+}
+export default function Filters({ brands }: FiltersProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-
   const updateFilter = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
 
@@ -19,30 +21,43 @@ export default function Filters() {
   };
 
   return (
-    <div className="flex gap-4 px-10 mt-4">
-
+    <div className="flex flex-col sm:flex-row gap-4">
       <select
         onChange={(e) => updateFilter("brand", e.target.value)}
-        className="border p-2"
+        className="bg-surface-alt text-foreground border border-muted p-2"
       >
-        <option value="">Todas las marcas</option>
-        <option value="nike">Nike</option>
-        <option value="adidas">Adidas</option>
+        <option value="" className="bg-surface-alt text-foreground">
+          Todas las marcas </option>
+        {brands.map((brand) => (
+          <option key={brand} value={brand} className="bg-surface-alt text-foreground">
+            {brand.charAt(0).toUpperCase() + brand.slice(1)}
+          </option>
+        ))}
       </select>
-
-      <input
-        type="number"
-        placeholder="Precio mínimo"
-        onChange={(e) => updateFilter("minPrice", e.target.value)}
-        className="border p-2"
-      />
-
-      <input
-        type="number"
-        placeholder="Precio máximo"
-        onChange={(e) => updateFilter("maxPrice", e.target.value)}
-        className="border p-2"
-      />
+      <div className="relative">
+        <span className="absolute left-2 top-1/2 -translate-y-1/2 text-muted">
+          $
+        </span>
+        <input
+          type="number"
+          min={0}
+          placeholder="Precio mínimo"
+          onChange={(e) => updateFilter("minPrice", e.target.value)}
+          className="border border-muted bg-surface-alt text-foreground p-2 pl-6"
+        />
+      </div>
+      <div className="relative">
+        <span className="absolute left-2 top-1/2 -translate-y-1/2 text-muted">
+          $
+        </span>
+        <input
+          type="number"
+          min={0}
+          placeholder="Precio máximo"
+          onChange={(e) => updateFilter("maxPrice", e.target.value)}
+          className="border border-muted bg-surface-alt text-foreground p-2 pl-6"
+        />
+      </div>
     </div>
   );
 }

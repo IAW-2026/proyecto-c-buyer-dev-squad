@@ -27,17 +27,23 @@ export default async function CartPage() {
   const cartWithProducts = cart.map((item: {
     id: string;
     quantity: number;
+    size: number;
+    color: string;
     product: {
+      id: string;
       name: string;
       price: number;
       image: string;
     };
   }) => ({
     id: item.id,
+    productId: item.product.id,
     name: item.product.name,
     price: item.product.price,
     image: item.product.image,
     quantity: item.quantity,
+    size: item.size,
+    color: item.color,
   }));
 
 let total = 0;
@@ -46,8 +52,8 @@ for (const item of cartWithProducts) {
 }
 
   return (
-    <main className="p-10">
-      <h1 className="text-3xl font-bold mb-6">Carrito</h1>
+    <main className="p-6 md:p-10">
+      <h1 className="text-2xl md:text-3xl font-bold mb-6">Carrito</h1>
 
       {cartWithProducts.length === 0 ? (
         <p>El carrito está vacío</p>

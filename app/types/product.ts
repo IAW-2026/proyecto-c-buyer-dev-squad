@@ -7,5 +7,6 @@ export type Product = {
   description: string;
   category: string;
   sizes: number[];
+  colors: string[];
   sellerId: string;
 };

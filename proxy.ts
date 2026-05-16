@@ -1,11 +1,9 @@
-//protected routes: dashboard
-//public api routes: /api/products, /api/sales, /api/sales/:id  
-
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 
-const isProtectedRoute = createRouteMatcher([
-  "/dashboard(.*)",
-]);
+const isProtectedRoute = createRouteMatcher(["/dashboard(.*)"]);
+const isAdminRoute = createRouteMatcher(["/admin(.*)"]);
 
 const isPublicApiRoute = createRouteMatcher([
   "/api/products(.*)",
@@ -16,6 +14,19 @@ const isPublicApiRoute = createRouteMatcher([
 export default clerkMiddleware(async (auth, req) => {
   if (isPublicApiRoute(req)) return;
   if (isProtectedRoute(req)) await auth.protect();
+
+  if (isAdminRoute(req)) {
+    const { userId } = await auth.protect();
+
+    const user = await prisma.user.findUnique({
+      where: { clerkId: userId },
+      select: { role: true },
+    });
+
+    if (!user || user.role !== "ADMIN") {
+      return NextResponse.redirect(new URL("/", req.url));
+    }
+  }
 });
 
 export const config = {

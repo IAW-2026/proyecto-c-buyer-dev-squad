@@ -16,7 +16,6 @@ export default async function CheckoutConfirmation({
 
   const { orderId } = await params;
 
-  // Get user from our database
   const user = await prisma.user.findUnique({
     where: { clerkId: userId },
   });
@@ -39,8 +38,8 @@ export default async function CheckoutConfirmation({
 
   if (!order) {
     return (
-      <main className="p-10">
-        <h1 className="text-3xl font-bold mb-6 text-danger">
+      <main className="p-6 md:p-10">
+        <h1 className="text-2xl md:text-3xl font-bold mb-6 text-danger">
           Orden no encontrada
         </h1>
         <Link href="/" className="text-info hover:underline">
@@ -51,10 +50,10 @@ export default async function CheckoutConfirmation({
   }
 
   return (
-    <main className="p-10">
+    <main className="p-6 md:p-10">
       <div className="max-w-2xl mx-auto">
-        <div className="bg-success-light border border-success rounded-lg p-8 mb-8">
-          <h1 className="text-4xl font-bold text-success mb-2">
+        <div className="bg-success-light border border-success rounded-lg p-6 md:p-8 mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold text-success mb-2">
             ¡Compra Exitosa!
           </h1>
           <p className="text-muted">
@@ -62,8 +61,8 @@ export default async function CheckoutConfirmation({
           </p>
         </div>
 
-        <div className="bg-surface border rounded-lg p-6 mb-8">
-          <h2 className="text-2xl font-bold mb-4">Detalles de la Orden</h2>
+        <div className="bg-surface border rounded-lg p-4 md:p-6 mb-8">
+          <h2 className="text-xl md:text-2xl font-bold mb-4">Detalles de la Orden</h2>
 
           <div className="mb-4 pb-4 border-b">
             <p className="text-muted">
@@ -83,19 +82,16 @@ export default async function CheckoutConfirmation({
 
           <h3 className="text-xl font-bold mb-4">Productos</h3>
           <div className="space-y-3 mb-6">
-          {order.items.map((item: {
-            id: string;
-            name: string;
-            price: number;
-            quantity: number;
-          }) => (
+          {order.items.map((item) => (
             <div
               key={item.id}
               className="flex justify-between items-center p-3 bg-surface-alt rounded"
             >
               <div>
-                <p className="font-semibold">{item.name}</p>
+                <p className="font-semibold">{item.product.name}</p>
                 <p className="text-muted">Cantidad: {item.quantity}</p>
+                {item.size && <p className="text-muted">Talle: {item.size}</p>}
+                {item.color && <p className="text-muted">Color: {item.color}</p>}
               </div>
               <p className="font-semibold">
                 ${(item.price * item.quantity).toFixed(2)}

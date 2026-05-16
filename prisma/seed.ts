@@ -29,6 +29,7 @@ const PRODUCTS = [
     description: "Zapatilla deportiva de alta calidad ideal para uso diario y rendimiento.",
     category: "mujer",
     sizes: [36, 37, 38, 39, 40, 41],
+    colors: ["Blanco", "Negro", "Rosa"],
     sellerId: "seller-1",
   },
   {
@@ -40,6 +41,7 @@ const PRODUCTS = [
     description: "Zapatilla de running de alto rendimiento diseñada para corredores serios.",
     category: "mujer",
     sizes: [36, 37, 38, 39, 40, 41],
+    colors: ["Blanco", "Azul", "Negro"],
     sellerId: "seller-2",
   },
   {
@@ -51,6 +53,7 @@ const PRODUCTS = [
     description: "Zapatilla icónica de estilo urbano con diseño retro y comodidad moderna.",
     category: "hombre",
     sizes: [40, 41, 42, 43, 44, 45],
+    colors: ["Blanco", "Negro", "Rojo"],
     sellerId: "seller-1",
   },
   {
@@ -62,6 +65,7 @@ const PRODUCTS = [
     description: "Zapatilla urbana clásica con diseño moderno y detalles premium.",
     category: "mujer",
     sizes: [36, 37, 38, 39, 40, 41],
+    colors: ["Blanco", "Negro", "Dorado"],
     sellerId: "seller-1",
   },
   {
@@ -73,6 +77,7 @@ const PRODUCTS = [
     description: "Zapatilla de baloncesto clásica con diseño moderno y detalles premium.",
     category: "nino",
     sizes: [28, 29, 30, 31, 32, 33],
+    colors: ["Rojo", "Blanco", "Negro"],
     sellerId: "seller-1",
   },
   {
@@ -84,6 +89,7 @@ const PRODUCTS = [
     description: "Zapatilla de running ligera y reactiva diseñada para corredores de nivel intermedio.",
     category: "mujer",
     sizes: [36, 37, 38, 39, 40, 41],
+    colors: ["Blanco", "Azul", "Rosado"],
     sellerId: "seller-2",
   },
   {
@@ -95,6 +101,7 @@ const PRODUCTS = [
     description: "Zapatilla de running de alto rendimiento diseñada para corredores serios.",
     category: "hombre",
     sizes: [40, 41, 42, 43, 44, 45],
+    colors: ["Negro", "Gris", "Blanco"],
     sellerId: "seller-2",
   },
   {
@@ -106,6 +113,7 @@ const PRODUCTS = [
     description: "Zapatilla urbana de estilo retro con cierre de cordones elásticos para niños.",
     category: "nino",
     sizes: [28, 29, 30, 31, 32, 33],
+    colors: ["Blanco", "Azul", "Verde"],
     sellerId: "seller-2",
   },
 ];
@@ -138,6 +146,7 @@ async function main() {
         description: product.description,
         category: product.category,
         sizes: product.sizes,
+        colors: product.colors,
         sellerId: product.sellerId,
       },
       create: product,

@@ -6,9 +6,9 @@ import CartButton from "./components/CartButton";
 import { prisma } from "@/lib/prisma";
 
 const categoryTitles: Record<string, string> = {
-  hombre: "Zapatillas para Hombres",
-  mujer: "Zapatillas para Mujeres",
-  nino: "Zapatillas para Niños/as",
+  hombre: "Zapatillas/Hombres",
+  mujer: "Zapatillas/Mujeres",
+  nino: "Zapatillas/Niños/as",
   zapatillas: "Zapatillas",
 };
 
@@ -17,6 +17,7 @@ async function getProducts(searchParams: {
   brand?: string;
   minPrice?: string;
   maxPrice?: string;
+  search?: string; 
 }) {
   return prisma.product.findMany({
     where: {
@@ -26,6 +27,13 @@ async function getProducts(searchParams: {
 
       ...(searchParams.brand && {
         brand: searchParams.brand,
+      }),
+
+      ...(searchParams.search && {
+        name: {
+          contains: searchParams.search,
+          mode: "insensitive", // no distingue mayúsculas
+        },
       }),
 
       ...((searchParams.minPrice || searchParams.maxPrice) && {
@@ -42,7 +50,21 @@ async function getProducts(searchParams: {
     },
   });
 }
+async function getBrands(category?: string) {
+  const products = await prisma.product.findMany({
+    where: {
+      ...(category && {
+        category,
+      }),
+    },
 
+    select: {
+      brand: true,
+    },
+  });
+
+  return [...new Set(products.map((p) => p.brand))]; // obtener marcas únicas
+}
 export default async function Home(props: {
   searchParams: Promise<{
     category?: string;
@@ -52,24 +74,25 @@ export default async function Home(props: {
   }>;
 }) {
   const searchParams = await props.searchParams;
-
   const products = await getProducts(searchParams);
-
-  return (
-    <main className="p-10">
-      <Navbar />
-      <Tabs />
-      <Filters />
-
-      <h1 className="text-3xl font-bold mb-6">
+  const brandList = await getBrands(searchParams.category);
+return (
+  <main className="p-6 md:p-10 space-y-6">
+    <Navbar />
+    <Tabs />
+    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <h1 className="text-2xl md:text-2xl font-bold">
         {searchParams.category
           ? categoryTitles[searchParams.category] ?? "Productos"
           : "Zapatillas"}
       </h1>
 
+      <Filters brands={brandList} />
+    </div>
+    <section>
       <ProductList products={products} />
-
-      <CartButton />
-    </main>
-  );
+    </section>
+    <CartButton />
+  </main>
+);
 }

@@ -11,6 +11,7 @@ export async function GET(req: Request) {
   const brand = searchParams.get("brand");
   const minPrice = searchParams.get("minPrice");
   const maxPrice = searchParams.get("maxPrice");
+  const search = searchParams.get("search");
   const PRODUCTS = await getProducts();
   let filtered: Product[] = PRODUCTS;
 
@@ -28,6 +29,13 @@ export async function GET(req: Request) {
 
   if (maxPrice) {
     filtered = filtered.filter((p: Product) => p.price <= Number(maxPrice));
+  }
+
+  if (search) {
+  filtered = filtered.filter((p: Product) =>
+    p.name.toLowerCase().includes(search.toLowerCase()) ||
+    p.brand.toLowerCase().includes(search.toLowerCase())
+  ); //busca por nombre o por marca, lo que incluya el texto de búsqueda, sin importar mayúsculas o minúsculas
   }
 
   // Agregar información del vendedor

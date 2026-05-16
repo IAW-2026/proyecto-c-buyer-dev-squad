@@ -54,11 +54,11 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { productId, quantity } = body;
+    const { productId, quantity, size, color } = body;
 
-    if (!productId || quantity == null) {
+    if (!productId || quantity == null || size == null || !color) {
       return Response.json(
-        { error: "Missing productId or quantity" },
+        { error: "Missing productId, quantity, size or color" },
         { status: 400 }
       );
     }
@@ -94,6 +94,8 @@ export async function POST(req: Request) {
       where: {
         productId,
         userId: user.id,
+        size,
+        color,
       },
     });
 
@@ -114,6 +116,8 @@ export async function POST(req: Request) {
         productId,
         userId: user.id,
         quantity,
+        size,
+        color,
       },
       include: { product: true },
     });

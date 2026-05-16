@@ -46,10 +46,12 @@ export async function POST(req: Request): Promise<Response> {
         status: "PENDING",
         items: {
           create: items.map((item) => ({
-            productId: item.id,
+            productId: item.productId,
             name: item.name,
             quantity: item.quantity,
             price: item.price,
+            size: item.size,
+            color: item.color,
           })),
         },
       },
