@@ -39,7 +39,8 @@ export default function CartList({ items, total }: any) {
   const data = await response.json();
   // Acá después iría la API real de pagos
   //const payment = await fetch("/api/payments/create-session");
-  router.push(`/payments/${data.orderId}`);
+  router.push(`/payments/${data.orderId}`); //le estoy mandando el id de la orden para que
+  //  lo use en la página de pagos, ahí se simula el proceso de pago y se redirige a la confirmación
   }
 
   return (
