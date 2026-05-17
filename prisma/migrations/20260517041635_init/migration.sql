@@ -1,4 +1,7 @@
 -- CreateEnum
+CREATE TYPE "Role" AS ENUM ('USER', 'ADMIN');
+
+-- CreateEnum
 CREATE TYPE "OrderStatus" AS ENUM ('PENDING', 'COMPLETED', 'CANCELLED');
 
 -- CreateTable
@@ -8,6 +11,7 @@ CREATE TABLE "users" (
     "email" TEXT NOT NULL,
     "firstName" TEXT,
     "lastName" TEXT,
+    "role" "Role" NOT NULL DEFAULT 'USER',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -18,10 +22,10 @@ CREATE TABLE "users" (
 CREATE TABLE "sellers" (
     "id" TEXT NOT NULL,
     "clerkId" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "businessName" TEXT NOT NULL,
-    "firstName" TEXT,
-    "lastName" TEXT,
+    "description" TEXT NOT NULL,
+    "avatar_url" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
