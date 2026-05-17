@@ -3,6 +3,7 @@ import Navbar from "./components/Navbar";
 import Tabs from "./components/Tabs";
 import Filters from "./components/Filters";
 import CartButton from "./components/CartButton";
+import Recommendations  from "./components/Recommendations";
 import { prisma } from "@/lib/prisma";
 
 const categoryTitles: Record<string, string> = {
@@ -86,13 +87,13 @@ return (
           ? categoryTitles[searchParams.category] ?? "Productos"
           : "Zapatillas"}
       </h1>
-
       <Filters brands={brandList} />
     </div>
     <section>
       <ProductList products={products} />
     </section>
     <CartButton />
+    <Recommendations limit={6} productBasePath="/products" />
   </main>
 );
 }

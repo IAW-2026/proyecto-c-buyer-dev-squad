@@ -1,16 +1,42 @@
-import { auth } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
+"use client";
 
-export default async function PaymentsPage({
+import { useRouter } from "next/navigation";
+import { useState, use} from "react";
+
+export default function PaymentsPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
-    
-const { id } = await params;
-const { userId } = await auth();
+  const router = useRouter();
+  const { id } = use(params);
+  const [loading, setLoading] = useState(false);
 
-  if (!userId) redirect("/");
+  async function handlePayment() {
+    try {
+      setLoading(true);
+
+      const res = await fetch(
+        `/api/payments/${id}`,
+        {
+          method: "POST",
+        }
+      );
+
+      if (!res.ok) {
+        throw new Error("Payment failed");
+      }
+
+      router.push(
+        `/order-confirmation/${id}`
+      );
+    } catch (error) {
+      console.error(error);
+      alert("Error processing payment");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <main className="max-w-xl mx-auto px-4 py-10">
@@ -20,16 +46,19 @@ const { userId } = await auth();
         </h1>
 
         <p className="text-muted mb-6">
-          Simulación del proceso de pago para la orden #{id}
+          Simulación del proceso de pago para la orden #
+          {id}
         </p>
 
-        <form action={`/api/payments/${id}`} method="POST">
-          <button
-            className="w-full btn-success py-3 rounded-lg font-bold"
-          >
-            Confirmar Pago
-          </button>
-        </form>
+        <button
+          onClick={handlePayment}
+          disabled={loading}
+          className="w-full btn-success py-3 rounded-lg font-bold"
+        >
+          {loading
+            ? "Procesando..."
+            : "Confirmar Pago"}
+        </button>
       </div>
     </main>
   );

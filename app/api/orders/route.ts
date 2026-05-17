@@ -4,6 +4,7 @@ import type { OrderItem } from "../../types/order";
 import { prisma } from "@/lib/prisma";
 import { auth, currentUser } from "@clerk/nextjs/server";
 
+
 export async function POST(req: Request): Promise<Response> {
   try {
     const { userId } = await auth();
@@ -60,7 +61,7 @@ export async function POST(req: Request): Promise<Response> {
       },
     });
 
-    // Limpiar el carrito del usuario después de hacer checkout
+    // Limpiar el carrito del usuario después de hacer la orden
     await prisma.cartItem.deleteMany({
       where: { userId: user.id },
     });
@@ -86,7 +87,6 @@ export async function GET(req: Request): Promise<Response> {
       );
     }
 
-    // Get user from our database
     const user = await prisma.user.findUnique({
       where: { clerkId: userId },
     });
@@ -99,7 +99,16 @@ export async function GET(req: Request): Promise<Response> {
     }
 
     const { searchParams } = new URL(req.url);
+
     const orderId = searchParams.get("id");
+
+    const statusParam = searchParams.get("status");
+
+    const status = ["PENDING", "COMPLETED", "CANCELLED"].includes(statusParam ?? "")
+  ? (statusParam as "PENDING" | "COMPLETED" | "CANCELLED")
+  : undefined;
+    const page = Number(searchParams.get("page")) || 1;
+    const limit = Number(searchParams.get("limit")) || 5;
 
     if (orderId) {
       const order = await prisma.order.findFirst({
@@ -107,31 +116,68 @@ export async function GET(req: Request): Promise<Response> {
           id: orderId,
           userId: user.id,
         },
+
         include: {
           items: {
-            include: { product: true },
+            include: {
+              product: true,
+            },
           },
         },
       });
 
       return order
         ? Response.json(order)
-        : Response.json({ error: "Order not found" }, { status: 404 });
+        : Response.json(
+            { error: "Order not found" },
+            { status: 404 }
+          );
     }
 
-    const orders = await prisma.order.findMany({
-      where: { userId: user.id },
-      include: {
-        items: {
-          include: { product: true },
-        },
-      },
-      orderBy: { createdAt: "desc" },
+    const whereClause = {
+      userId: user.id,
+
+      ...(status && {
+        status,
+      }),
+    };
+
+    const totalItems = await prisma.order.count({
+      where: whereClause,
     });
 
-    return Response.json(orders);
+    const orders = await prisma.order.findMany({
+      where: whereClause,
+
+      include: {
+        items: {
+          include: {
+            product: true,
+          },
+        },
+      },
+
+      orderBy: {
+        createdAt: "desc",
+      },
+
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+
+    return Response.json({
+      data: orders,
+
+      pagination: {
+        page,
+        limit,
+        totalItems,
+        totalPages: Math.ceil(totalItems / limit),
+      },
+    });
   } catch (error) {
     console.error("Error fetching orders:", error);
+
     return Response.json(
       { error: "Failed to fetch orders" },
       { status: 500 }

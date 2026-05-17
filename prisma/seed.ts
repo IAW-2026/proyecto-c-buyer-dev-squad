@@ -4,18 +4,22 @@ const SELLERS = [
   {
     id: "seller-1",
     clerkId: "clerk_seller_1",
-    businessName: "Nike Official Store",
+    name: "Nike Official Store",
     email: "contact@nike.com",
-    firstName: "Nike",
-    lastName: "Store",
+    avatarUrl:
+      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=200",
+    description:
+      "Tienda oficial de Nike con zapatillas, ropa deportiva y accesorios originales.",
   },
   {
     id: "seller-2",
     clerkId: "clerk_seller_2",
-    businessName: "Adidas Store",
+    name: "Adidas Store",
     email: "contact@adidas.com",
-    firstName: "Adidas",
-    lastName: "Store",
+    avatarUrl:
+      "https://images.unsplash.com/photo-1518002171953-a080ee817e1f?q=80&w=200",
+    description:
+      "Store oficial de Adidas especializada en calzado urbano, running y entrenamiento.",
   },
 ];
 
@@ -126,10 +130,10 @@ async function main() {
     await prisma.seller.upsert({
       where: { id: seller.id },
       update: {
-        businessName: seller.businessName,
+        name: seller.name,
         email: seller.email,
-        firstName: seller.firstName,
-        lastName: seller.lastName,
+        avatarUrl: seller.avatarUrl,
+        description: seller.description,
       },
       create: seller,
     });

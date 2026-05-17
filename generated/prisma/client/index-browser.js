@@ -134,10 +134,10 @@ exports.Prisma.UserScalarFieldEnum = {
 exports.Prisma.SellerScalarFieldEnum = {
   id: 'id',
   clerkId: 'clerkId',
+  name: 'name',
   email: 'email',
-  businessName: 'businessName',
-  firstName: 'firstName',
-  lastName: 'lastName',
+  description: 'description',
+  avatarUrl: 'avatarUrl',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

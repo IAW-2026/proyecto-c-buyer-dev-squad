@@ -2,8 +2,6 @@ import { Product } from "@/app/types/product";
 import { getProducts } from "@/lib/products";
 import { getSellerById } from "@/lib/sellers";
 
-//si se le pasa un filtro, devuelve solo los productos de esa filtro,
-// sino devuelve todos los productos
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
 
@@ -12,36 +10,57 @@ export async function GET(req: Request) {
   const minPrice = searchParams.get("minPrice");
   const maxPrice = searchParams.get("maxPrice");
   const search = searchParams.get("search");
+
+  const page = Number(searchParams.get("page")) || 1;
+  const limit = Number(searchParams.get("limit")) || 10;
+
   const PRODUCTS = await getProducts();
+
   let filtered: Product[] = PRODUCTS;
 
   if (category) {
-    filtered = filtered.filter((p: Product) => p.category === category);
+    filtered = filtered.filter(
+      (p: Product) => p.category === category
+    );
   }
 
   if (brand) {
-    filtered = filtered.filter((p: Product) => p.brand === brand);
+    filtered = filtered.filter(
+      (p: Product) => p.brand === brand
+    );
   }
 
   if (minPrice) {
-    filtered = filtered.filter((p: Product) => p.price >= Number(minPrice));
+    filtered = filtered.filter(
+      (p: Product) => p.price >= Number(minPrice)
+    );
   }
 
   if (maxPrice) {
-    filtered = filtered.filter((p: Product) => p.price <= Number(maxPrice));
+    filtered = filtered.filter(
+      (p: Product) => p.price <= Number(maxPrice)
+    );
   }
 
   if (search) {
-  filtered = filtered.filter((p: Product) =>
-    p.name.toLowerCase().includes(search.toLowerCase()) ||
-    p.brand.toLowerCase().includes(search.toLowerCase())
-  ); //busca por nombre o por marca, lo que incluya el texto de búsqueda, sin importar mayúsculas o minúsculas
+    filtered = filtered.filter(
+      (p: Product) =>
+        p.name.toLowerCase().includes(search.toLowerCase()) ||
+        p.brand.toLowerCase().includes(search.toLowerCase())
+    );
   }
 
-  // Agregar información del vendedor
+  const totalItems = filtered.length;
+
+  const start = (page - 1) * limit;
+  const end = start + limit;
+
+  const paginatedProducts = filtered.slice(start, end);
+
   const productsWithSellers = await Promise.all(
-    filtered.map(async (product: Product) => {
+    paginatedProducts.map(async (product: Product) => {
       const seller = await getSellerById(product.sellerId);
+
       return {
         ...product,
         seller,
@@ -49,5 +68,14 @@ export async function GET(req: Request) {
     })
   );
 
-  return Response.json(productsWithSellers);
+  return Response.json({
+    data: productsWithSellers,
+
+    pagination: {
+      page,
+      limit,
+      totalItems,
+      totalPages: Math.ceil(totalItems / limit),
+    },
+  });
 }

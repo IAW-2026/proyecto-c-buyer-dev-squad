@@ -78,7 +78,7 @@ export async function POST(
     return Response.json({
       ok: true,
 
-      redirectTo: `/checkout-confirmation/${id}`,
+      redirectTo: `/order-confirmation/${id}`,
 
       paymentPayload,
     });
