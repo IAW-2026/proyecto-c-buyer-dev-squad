@@ -1,9 +1,10 @@
 
+import { OrderStatus } from "@/app/generated/prisma/client";
 import type { OrderItem } from "../../types/order";
 
 import { prisma } from "@/lib/prisma";
 import { auth, currentUser } from "@clerk/nextjs/server";
-import { OrderStatus } from "@prisma/client";
+
 
 export async function POST(req: Request): Promise<Response> {
   try {
