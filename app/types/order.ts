@@ -7,3 +7,4 @@ export interface OrderItem {
   size: number;
   color: string;
 }
+export type OrderStatus = "PENDING" | "COMPLETED" | "CANCELLED";
