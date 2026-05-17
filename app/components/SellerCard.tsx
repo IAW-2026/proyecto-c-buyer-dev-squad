@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Seller } from "../types/seller";
+import CartButton from "./CartButton";
 
 interface SellerCardProps {
   sellerId: string;
@@ -105,7 +106,7 @@ export default function SellerCard({ sellerId, productId }: SellerCardProps) {
       >
         ⭐ Ver reseñas
       </Link>
-
+      <CartButton />
     </div>
   );
 }
