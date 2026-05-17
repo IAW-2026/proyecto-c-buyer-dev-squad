@@ -2,8 +2,6 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import OpenAI from "openai";
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
 /**
  * GET /api/recommendations
  *
@@ -16,7 +14,7 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 export async function GET(req: Request): Promise<Response> {
   try {
     const { userId } = await auth();
-
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
     if (!userId) {
       return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
