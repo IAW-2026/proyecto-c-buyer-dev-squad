@@ -1,8 +1,9 @@
 //server component
 import { getProducts } from "@/lib/products";
 import Link from "next/link";
-import { Product } from "@/app/types/product";  
+import { Product } from "@/app/types/product";
 import ProductActions from "@/app/components/ProductActions";
+import SellerCard from "@/app/components/SellerCard";
 
 type Props = {
   params: {
@@ -14,6 +15,7 @@ export default async function ProductPage({ params }: Props) {
   const { id } = await params;
   const PRODUCTS = await getProducts();
   const product = PRODUCTS.find((p: Product) => p.id === id);
+
   if (!product) {
     return (
       <div className="p-6 md:p-10">
@@ -27,13 +29,13 @@ export default async function ProductPage({ params }: Props) {
 
   return (
     <main className="h-screen overflow-hidden px-4 md:px-8 py-4 max-w-6xl mx-auto">
-      
+
       <Link href="/" className="text-sm text-muted underline">
         ← Volver
       </Link>
 
       <div className="grid md:grid-cols-2 gap-6 mt-4 h-[calc(100%-40px)]">
-        
+
         <div className="h-full flex items-center justify-center">
           <img
             src={product.image}
@@ -43,7 +45,7 @@ export default async function ProductPage({ params }: Props) {
         </div>
 
         <div className="flex flex-col h-full overflow-hidden">
-          
+
           <h1 className="text-2xl md:text-3xl font-bold">
             {product.name}
           </h1>
@@ -71,16 +73,8 @@ export default async function ProductPage({ params }: Props) {
             />
           </div>
 
-          <div className="mt-auto flex gap-3 flex-wrap">
-            
-            <Link
-              href={`/products/${product.id}/resenas`}
-              className="btn-secondary text-sm px-4 py-2 rounded-xl"
-            >
-              ⭐ Ver reseñas
-            </Link>
+          <SellerCard sellerId={product.sellerId} productId={product.id} />
 
-          </div>
         </div>
       </div>
     </main>
