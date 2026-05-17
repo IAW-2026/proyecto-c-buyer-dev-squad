@@ -1,5 +1,6 @@
+import { getOrCreateUser } from "@/lib/services/User.service";
 import { prisma } from "@/lib/prisma";
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { auth} from "@clerk/nextjs/server";
 
 export async function GET() {
   try {
@@ -11,21 +12,7 @@ export async function GET() {
       );
     }
 
-    let user = await prisma.user.findUnique({
-      where: { clerkId: userId },
-    });
-
-    if (!user) {
-      const clerkUser = await currentUser();
-      user = await prisma.user.create({
-        data: {
-          clerkId: userId,
-          email: clerkUser?.emailAddresses[0]?.emailAddress || "",
-          firstName: clerkUser?.firstName || "",
-          lastName: clerkUser?.lastName || "",
-        },
-      });
-    }
+    const user = await getOrCreateUser(userId);
 
     const cart = await prisma.cartItem.findMany({
       where: { userId: user.id },
@@ -63,21 +50,7 @@ export async function POST(req: Request) {
       );
     }
 
-    let user = await prisma.user.findUnique({
-      where: { clerkId: userId },
-    });
-
-    if (!user) {
-      const clerkUser = await currentUser();
-      user = await prisma.user.create({
-        data: {
-          clerkId: userId,
-          email: clerkUser?.emailAddresses[0]?.emailAddress || "",
-          firstName: clerkUser?.firstName || "",
-          lastName: clerkUser?.lastName || "",
-        },
-      });
-    }
+    const user = await getOrCreateUser(userId);
 
     const product = await prisma.product.findUnique({
       where: { id: productId },

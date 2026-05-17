@@ -205,7 +205,10 @@ exports.Prisma.NullsOrder = {
 };
 exports.Role = exports.$Enums.Role = {
   USER: 'USER',
-  ADMIN: 'ADMIN'
+  ADMIN: 'ADMIN',
+  SHIPPING: 'SHIPPING',
+  SELLER: 'SELLER',
+  FEEDBACK: 'FEEDBACK'
 };
 
 exports.OrderStatus = exports.$Enums.OrderStatus = {
