@@ -1,5 +1,4 @@
 
-import { OrderStatus } from "@/app/generated/prisma/client";
 import type { OrderItem } from "../../types/order";
 
 import { prisma } from "@/lib/prisma";
@@ -105,12 +104,9 @@ export async function GET(req: Request): Promise<Response> {
 
     const statusParam = searchParams.get("status");
 
-    const status = Object.values(OrderStatus).includes(
-      statusParam as OrderStatus
-    )
-      ? (statusParam as OrderStatus)
-      : undefined;
-
+    const status = ["PENDING", "COMPLETED", "CANCELLED"].includes(statusParam ?? "")
+  ? (statusParam as "PENDING" | "COMPLETED" | "CANCELLED")
+  : undefined;
     const page = Number(searchParams.get("page")) || 1;
     const limit = Number(searchParams.get("limit")) || 5;
 
