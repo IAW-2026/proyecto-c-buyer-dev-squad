@@ -22,10 +22,10 @@ export default function CartList({ items, total }: any) {
     router.refresh();
   }
 
-  async function handleCheckout() {
+  async function handleOrder() {
     setLoading(true);
 
-    const response = await fetch("/api/checkout", {
+    const response = await fetch("/api/orders", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ items: items, total }),
@@ -82,7 +82,7 @@ export default function CartList({ items, total }: any) {
         </div>
 
         <button
-          onClick={handleCheckout}
+          onClick={handleOrder}
           className="w-full btn-success font-bold py-3 px-4 rounded-lg transition"
           disabled={loading}
         >

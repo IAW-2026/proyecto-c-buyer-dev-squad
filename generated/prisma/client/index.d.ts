@@ -2648,9 +2648,9 @@ export namespace Prisma {
     id: string | null
     clerkId: string | null
     email: string | null
-    businessName: string | null
-    firstName: string | null
-    lastName: string | null
+    name: string | null
+    description: string | null
+    avatarUrl: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2659,9 +2659,9 @@ export namespace Prisma {
     id: string | null
     clerkId: string | null
     email: string | null
-    businessName: string | null
-    firstName: string | null
-    lastName: string | null
+    name: string | null
+    description: string | null
+    avatarUrl: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2670,9 +2670,9 @@ export namespace Prisma {
     id: number
     clerkId: number
     email: number
-    businessName: number
-    firstName: number
-    lastName: number
+    name: number
+    description: number
+    avatarUrl: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -2683,9 +2683,9 @@ export namespace Prisma {
     id?: true
     clerkId?: true
     email?: true
-    businessName?: true
-    firstName?: true
-    lastName?: true
+    name?: true
+    description?: true
+    avatarUrl?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2694,9 +2694,9 @@ export namespace Prisma {
     id?: true
     clerkId?: true
     email?: true
-    businessName?: true
-    firstName?: true
-    lastName?: true
+    name?: true
+    description?: true
+    avatarUrl?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2705,9 +2705,9 @@ export namespace Prisma {
     id?: true
     clerkId?: true
     email?: true
-    businessName?: true
-    firstName?: true
-    lastName?: true
+    name?: true
+    description?: true
+    avatarUrl?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -2789,9 +2789,9 @@ export namespace Prisma {
     id: string
     clerkId: string
     email: string
-    businessName: string
-    firstName: string | null
-    lastName: string | null
+    name: string
+    description: string
+    avatarUrl: string
     createdAt: Date
     updatedAt: Date
     _count: SellerCountAggregateOutputType | null
@@ -2817,9 +2817,9 @@ export namespace Prisma {
     id?: boolean
     clerkId?: boolean
     email?: boolean
-    businessName?: boolean
-    firstName?: boolean
-    lastName?: boolean
+    name?: boolean
+    description?: boolean
+    avatarUrl?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     products?: boolean | Seller$productsArgs<ExtArgs>
@@ -2830,9 +2830,9 @@ export namespace Prisma {
     id?: boolean
     clerkId?: boolean
     email?: boolean
-    businessName?: boolean
-    firstName?: boolean
-    lastName?: boolean
+    name?: boolean
+    description?: boolean
+    avatarUrl?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["seller"]>
@@ -2841,9 +2841,9 @@ export namespace Prisma {
     id?: boolean
     clerkId?: boolean
     email?: boolean
-    businessName?: boolean
-    firstName?: boolean
-    lastName?: boolean
+    name?: boolean
+    description?: boolean
+    avatarUrl?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["seller"]>
@@ -2852,14 +2852,14 @@ export namespace Prisma {
     id?: boolean
     clerkId?: boolean
     email?: boolean
-    businessName?: boolean
-    firstName?: boolean
-    lastName?: boolean
+    name?: boolean
+    description?: boolean
+    avatarUrl?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type SellerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clerkId" | "email" | "businessName" | "firstName" | "lastName" | "createdAt" | "updatedAt", ExtArgs["result"]["seller"]>
+  export type SellerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clerkId" | "email" | "name" | "description" | "avatarUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["seller"]>
   export type SellerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     products?: boolean | Seller$productsArgs<ExtArgs>
     _count?: boolean | SellerCountOutputTypeDefaultArgs<ExtArgs>
@@ -2876,9 +2876,9 @@ export namespace Prisma {
       id: string
       clerkId: string
       email: string
-      businessName: string
-      firstName: string | null
-      lastName: string | null
+      name: string
+      description: string
+      avatarUrl: string
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["seller"]>
@@ -3308,9 +3308,9 @@ export namespace Prisma {
     readonly id: FieldRef<"Seller", 'String'>
     readonly clerkId: FieldRef<"Seller", 'String'>
     readonly email: FieldRef<"Seller", 'String'>
-    readonly businessName: FieldRef<"Seller", 'String'>
-    readonly firstName: FieldRef<"Seller", 'String'>
-    readonly lastName: FieldRef<"Seller", 'String'>
+    readonly name: FieldRef<"Seller", 'String'>
+    readonly description: FieldRef<"Seller", 'String'>
+    readonly avatarUrl: FieldRef<"Seller", 'String'>
     readonly createdAt: FieldRef<"Seller", 'DateTime'>
     readonly updatedAt: FieldRef<"Seller", 'DateTime'>
   }
@@ -8475,9 +8475,9 @@ export namespace Prisma {
     id: 'id',
     clerkId: 'clerkId',
     email: 'email',
-    businessName: 'businessName',
-    firstName: 'firstName',
-    lastName: 'lastName',
+    name: 'name',
+    description: 'description',
+    avatarUrl: 'avatarUrl',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -8740,9 +8740,9 @@ export namespace Prisma {
     id?: StringFilter<"Seller"> | string
     clerkId?: StringFilter<"Seller"> | string
     email?: StringFilter<"Seller"> | string
-    businessName?: StringFilter<"Seller"> | string
-    firstName?: StringNullableFilter<"Seller"> | string | null
-    lastName?: StringNullableFilter<"Seller"> | string | null
+    name?: StringFilter<"Seller"> | string
+    description?: StringFilter<"Seller"> | string
+    avatarUrl?: StringFilter<"Seller"> | string
     createdAt?: DateTimeFilter<"Seller"> | Date | string
     updatedAt?: DateTimeFilter<"Seller"> | Date | string
     products?: ProductListRelationFilter
@@ -8752,9 +8752,9 @@ export namespace Prisma {
     id?: SortOrder
     clerkId?: SortOrder
     email?: SortOrder
-    businessName?: SortOrder
-    firstName?: SortOrderInput | SortOrder
-    lastName?: SortOrderInput | SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    avatarUrl?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     products?: ProductOrderByRelationAggregateInput
@@ -8767,9 +8767,9 @@ export namespace Prisma {
     AND?: SellerWhereInput | SellerWhereInput[]
     OR?: SellerWhereInput[]
     NOT?: SellerWhereInput | SellerWhereInput[]
-    businessName?: StringFilter<"Seller"> | string
-    firstName?: StringNullableFilter<"Seller"> | string | null
-    lastName?: StringNullableFilter<"Seller"> | string | null
+    name?: StringFilter<"Seller"> | string
+    description?: StringFilter<"Seller"> | string
+    avatarUrl?: StringFilter<"Seller"> | string
     createdAt?: DateTimeFilter<"Seller"> | Date | string
     updatedAt?: DateTimeFilter<"Seller"> | Date | string
     products?: ProductListRelationFilter
@@ -8779,9 +8779,9 @@ export namespace Prisma {
     id?: SortOrder
     clerkId?: SortOrder
     email?: SortOrder
-    businessName?: SortOrder
-    firstName?: SortOrderInput | SortOrder
-    lastName?: SortOrderInput | SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    avatarUrl?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: SellerCountOrderByAggregateInput
@@ -8796,9 +8796,9 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Seller"> | string
     clerkId?: StringWithAggregatesFilter<"Seller"> | string
     email?: StringWithAggregatesFilter<"Seller"> | string
-    businessName?: StringWithAggregatesFilter<"Seller"> | string
-    firstName?: StringNullableWithAggregatesFilter<"Seller"> | string | null
-    lastName?: StringNullableWithAggregatesFilter<"Seller"> | string | null
+    name?: StringWithAggregatesFilter<"Seller"> | string
+    description?: StringWithAggregatesFilter<"Seller"> | string
+    avatarUrl?: StringWithAggregatesFilter<"Seller"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Seller"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Seller"> | Date | string
   }
@@ -9211,9 +9211,9 @@ export namespace Prisma {
     id?: string
     clerkId: string
     email: string
-    businessName: string
-    firstName?: string | null
-    lastName?: string | null
+    name: string
+    description: string
+    avatarUrl: string
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutSellerInput
@@ -9223,9 +9223,9 @@ export namespace Prisma {
     id?: string
     clerkId: string
     email: string
-    businessName: string
-    firstName?: string | null
-    lastName?: string | null
+    name: string
+    description: string
+    avatarUrl: string
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutSellerInput
@@ -9235,9 +9235,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     clerkId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    businessName?: StringFieldUpdateOperationsInput | string
-    firstName?: NullableStringFieldUpdateOperationsInput | string | null
-    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    avatarUrl?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutSellerNestedInput
@@ -9247,9 +9247,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     clerkId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    businessName?: StringFieldUpdateOperationsInput | string
-    firstName?: NullableStringFieldUpdateOperationsInput | string | null
-    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    avatarUrl?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutSellerNestedInput
@@ -9259,9 +9259,9 @@ export namespace Prisma {
     id?: string
     clerkId: string
     email: string
-    businessName: string
-    firstName?: string | null
-    lastName?: string | null
+    name: string
+    description: string
+    avatarUrl: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -9270,9 +9270,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     clerkId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    businessName?: StringFieldUpdateOperationsInput | string
-    firstName?: NullableStringFieldUpdateOperationsInput | string | null
-    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    avatarUrl?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -9281,9 +9281,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     clerkId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    businessName?: StringFieldUpdateOperationsInput | string
-    firstName?: NullableStringFieldUpdateOperationsInput | string | null
-    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    avatarUrl?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -9803,9 +9803,9 @@ export namespace Prisma {
     id?: SortOrder
     clerkId?: SortOrder
     email?: SortOrder
-    businessName?: SortOrder
-    firstName?: SortOrder
-    lastName?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    avatarUrl?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -9814,9 +9814,9 @@ export namespace Prisma {
     id?: SortOrder
     clerkId?: SortOrder
     email?: SortOrder
-    businessName?: SortOrder
-    firstName?: SortOrder
-    lastName?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    avatarUrl?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -9825,9 +9825,9 @@ export namespace Prisma {
     id?: SortOrder
     clerkId?: SortOrder
     email?: SortOrder
-    businessName?: SortOrder
-    firstName?: SortOrder
-    lastName?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    avatarUrl?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -10967,9 +10967,9 @@ export namespace Prisma {
     id?: string
     clerkId: string
     email: string
-    businessName: string
-    firstName?: string | null
-    lastName?: string | null
+    name: string
+    description: string
+    avatarUrl: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -10978,9 +10978,9 @@ export namespace Prisma {
     id?: string
     clerkId: string
     email: string
-    businessName: string
-    firstName?: string | null
-    lastName?: string | null
+    name: string
+    description: string
+    avatarUrl: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -11067,9 +11067,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     clerkId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    businessName?: StringFieldUpdateOperationsInput | string
-    firstName?: NullableStringFieldUpdateOperationsInput | string | null
-    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    avatarUrl?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -11078,9 +11078,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     clerkId?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    businessName?: StringFieldUpdateOperationsInput | string
-    firstName?: NullableStringFieldUpdateOperationsInput | string | null
-    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    avatarUrl?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

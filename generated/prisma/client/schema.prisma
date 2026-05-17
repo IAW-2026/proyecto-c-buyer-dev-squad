@@ -25,14 +25,14 @@ model User {
 }
 
 model Seller {
-  id           String   @id @default(uuid())
-  clerkId      String   @unique
-  email        String   @unique
-  businessName String
-  firstName    String?
-  lastName     String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id          String   @id @default(uuid())
+  clerkId     String   @unique
+  email       String   @unique
+  name        String
+  description String
+  avatarUrl   String   @map("avatar_url")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   products Product[]
 

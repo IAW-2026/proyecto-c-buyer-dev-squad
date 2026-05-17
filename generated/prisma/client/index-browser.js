@@ -135,9 +135,9 @@ exports.Prisma.SellerScalarFieldEnum = {
   id: 'id',
   clerkId: 'clerkId',
   email: 'email',
-  businessName: 'businessName',
-  firstName: 'firstName',
-  lastName: 'lastName',
+  name: 'name',
+  description: 'description',
+  avatarUrl: 'avatarUrl',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

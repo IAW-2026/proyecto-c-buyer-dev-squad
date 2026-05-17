@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
-export default async function CheckoutConfirmation({
+export default async function OrderConfirmation({
   params,
 }: {
   params: Promise<{ orderId: string }>;
