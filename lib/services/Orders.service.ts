@@ -1,7 +1,6 @@
 import { prisma } from "@/lib/prisma";
-import type { OrderItem } from "../../app/types/order";
 import { OrderStatus } from "@prisma/client";
-//type OrderStatus = "PENDING" | "COMPLETED" | "CANCELLED";
+import { OrderItem } from "@/app/types/order";
 
 export interface GetOrdersParams {
   userId: string;

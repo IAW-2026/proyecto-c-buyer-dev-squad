@@ -1,16 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
-
-interface Seller {
-  id: string;
-  name: string;
-  description: string;
-  avatarUrl: string;
-  email: string;
-}
+import { Seller } from "../types/seller";
 
 interface SellerCardProps {
   sellerId: string;
