@@ -1,10 +1,10 @@
-import { OrderStatus } from "@/generated/prisma/client";
+import { OrderStatusType } from "@/app/types/order";
 import OrderStatusBadge from "./OrderStatusBadge";
 
 interface Order {
   id: string;
   total: number;
-  status: OrderStatus;
+  status: OrderStatusType;
   createdAt: Date;
   user: { firstName?: string | null; lastName?: string | null; email: string };
   items: {

@@ -1,10 +1,10 @@
 import { prisma } from "@/lib/prisma";
-import { OrderItem, OrderStatus } from "@/app/types/order";
+import { OrderItem, OrderStatusType } from "@/app/types/order";
 
 export interface GetOrdersParams {
   userId: string;
   orderId?: string;
-  status?: OrderStatus;
+  status?: OrderStatusType;
   page: number;
   limit: number;
 }

@@ -7,4 +7,4 @@ export interface OrderItem {
   size: number;
   color: string;
 }
-export type orderStatus = "PENDING" | "PAID" | "SHIPPED" | "DELIVERED";
+export type OrderStatusType = "PENDING" | "PAID" | "SHIPPED" | "DELIVERED";
