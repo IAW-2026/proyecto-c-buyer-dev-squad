@@ -5,7 +5,7 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 export async function getRecommendations(userId: string, limit: number) {
   const orders = await prisma.order.findMany({
-    where: { userId, status: "COMPLETED" },
+    where: { userId, status: "DELIVERED" },
     include: { items: { include: { product: true } } },
     orderBy: { createdAt: "desc" },
     take: 10,

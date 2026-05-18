@@ -2,7 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { getOrCreateUser } from "@/lib/services/User.service";
 import { createOrder, getOrders } from "@/lib/services/Orders.service";
 import type { OrderItem } from "@/app/types/order";
-
+import {orderStatus} from "@/app/types/order";
 export async function POST(req: Request): Promise<Response> {
   try {
     const { userId } = await auth();
@@ -33,8 +33,8 @@ export async function GET(req: Request): Promise<Response> {
     const { searchParams } = new URL(req.url);
     const orderId = searchParams.get("id") ?? undefined;
     const statusParam = searchParams.get("status");
-    const status = ["PENDING", "COMPLETED", "CANCELLED"].includes(statusParam ?? "")
-      ? (statusParam as "PENDING" | "COMPLETED" | "CANCELLED")
+    const status = ["PENDING", "PAID", "SHIPPED", "DELIVERED"].includes(statusParam ?? "")
+      ? (statusParam as "PENDING" | "PAID" | "SHIPPED" | "DELIVERED")
       : undefined;
     const page = Number(searchParams.get("page")) || 1;
     const limit = Number(searchParams.get("limit")) || 5;

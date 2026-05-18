@@ -6,14 +6,15 @@ import Link from "next/link";
 
 const statusLabel: Record<string, string> = {
   PENDING: "En proceso",
-  COMPLETED: "Entregado",
-  CANCELLED: "Cancelado",
+  PAID: "Pagado",
+  SHIPPED: "Enviado",
+  DELIVERED: "Entregado",
 };
-
 const statusStyle: Record<string, string> = {
   PENDING: "bg-surface text-info",
-  COMPLETED: "bg-surface text-success",
-  CANCELLED: "bg-surface text-danger",
+  PAID: "bg-surface text-success",
+  SHIPPED: "bg-surface text-warning",
+  DELIVERED: "bg-surface text-primary",
 };
 
 export default async function PedidosPage() {
@@ -130,7 +131,7 @@ export default async function PedidosPage() {
                         $
                         {(item.price * item.quantity).toLocaleString("es-AR")}
                       </p>
-
+                    {pedido.status === "DELIVERED" && (
                       <Link
                         //href={`https://mi-api.com/pedidos/${item.productId}/reseña`}
                         href="#"
@@ -138,6 +139,7 @@ export default async function PedidosPage() {
                       >
                         Agregar reseña
                       </Link>
+                    )}
                     </div>
                   </div>
                 ))}
@@ -151,9 +153,9 @@ export default async function PedidosPage() {
                 <Link
                   //href={`https://mi-api.com/pedidos/${pedido.id}/status`}
                   href="#"
-                  className="px-4 py-2 rounded-xl bg-primary text-white text-sm font-medium"
+                  className="px-4 py-2 rounded-xl border text-sm font-medium"
                 >
-                  Ver estado del pedido
+                  Ver estado del envío
                 </Link>
               </div>
             </div>

@@ -1,14 +1,25 @@
 import { SignInButton} from "@clerk/nextjs";
 import { currentUser } from "@clerk/nextjs/server";
-import Image from "next/image";
+import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
 import { LogOutButton } from "./LogOutButton";
 import { LogInButton } from "./LogInButton";
 import ThemedLogo from "./ThemedLogo";
 import ThemeToggle from "./ThemeToggle";
+import { prisma } from "@/lib/prisma";
 
 export default async function Navbar() {
   const user = await currentUser();
+  const { userId } = await auth();
+
+  let isAdmin = false;
+  if (userId) {
+    const dbUser = await prisma.user.findUnique({
+      where: { clerkId: userId },
+      select: { role: true },
+    });
+    isAdmin = dbUser?.role === "ADMIN";
+  }
 
 return (
   <nav className="w-full sticky top-0 z-50 border-b border-muted bg-surface-alt shadow-sm">
@@ -18,9 +29,16 @@ return (
       <div className="scale-110">
         <ThemedLogo />
       </div>
-
       <div className="flex items-center gap-4">
         <ThemeToggle />
+          {isAdmin && (
+            <Link
+              href="/admin"
+              className="text-sm font-medium px-3 py-1.5 rounded-lg border border-muted hover:bg-surface transition-colors text-muted"
+            >
+              Admin
+            </Link>
+          )}
         {user ? (
           <div className="flex items-center gap-3">
             <img
