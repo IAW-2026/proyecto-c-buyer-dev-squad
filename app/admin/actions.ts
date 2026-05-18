@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 
-export async function updateOrderStatus(orderId: string, status: "PENDING" | "COMPLETED" | "CANCELLED") {
+export async function updateOrderStatus(orderId: string, status: "PENDING" | "PAID" | "SHIPPED" | "DELIVERED") {
   const { userId } = await auth();
   if (!userId) throw new Error("No autenticado");
 

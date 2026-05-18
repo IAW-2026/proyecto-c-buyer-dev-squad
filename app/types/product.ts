@@ -1,12 +1,13 @@
-export type Product = {
+// app/types/product.ts
+export interface Product {
   id: string;
   name: string;
   price: number;
-  brand: string;
   image: string;
-  description: string;
+  brand: string;
   category: string;
-  sizes: number[];
-  colors: string[];
   sellerId: string;
-};
+  description: string;
+  colors: string[];
+  sizes: number[];
+}

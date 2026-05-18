@@ -96,8 +96,8 @@ model OrderItem {
   name      String
   quantity  Int
   price     Float
-  size      Int?
-  color     String?
+  size      Int
+  color     String
   createdAt DateTime @default(now())
   order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
@@ -110,10 +110,14 @@ model OrderItem {
 enum Role {
   USER
   ADMIN
+  SHIPPING
+  SELLER
+  FEEDBACK
 }
 
 enum OrderStatus {
   PENDING
-  COMPLETED
-  CANCELLED
+  PAID
+  SHIPPED
+  DELIVERED
 }

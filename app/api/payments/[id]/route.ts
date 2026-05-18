@@ -71,7 +71,7 @@ export async function POST(
         id,
       },
       data: {
-        status: "COMPLETED",
+        status: "PAID",
       },
     });
 

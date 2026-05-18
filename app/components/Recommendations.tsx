@@ -3,18 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
-  brand: string;
-  category: string;
-  description: string;
-  colors: string[];
-  sizes: number[];
-}
+import { Product } from "../types/product";
 
 interface RecommendationsResponse {
   recommendations: Product[];

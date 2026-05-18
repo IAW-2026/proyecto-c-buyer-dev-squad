@@ -6,44 +6,49 @@ import Link from "next/link";
 
 const statusLabel: Record<string, string> = {
   PENDING: "En proceso",
-  COMPLETED: "Entregado",
-  CANCELLED: "Cancelado",
+  PAID: "Pagado",
+  SHIPPED: "Enviado",
+  DELIVERED: "Entregado",
 };
-
 const statusStyle: Record<string, string> = {
   PENDING: "bg-surface text-info",
-  COMPLETED: "bg-surface text-success",
-  CANCELLED: "bg-surface text-danger",
+  PAID: "bg-surface text-success",
+  SHIPPED: "bg-surface text-warning",
+  DELIVERED: "bg-surface text-primary",
 };
 
 export default async function PedidosPage() {
   const { userId } = await auth();
+
   if (!userId) redirect("/");
 
   const user = await prisma.user.findUnique({
     where: { clerkId: userId },
   });
+
   if (!user) redirect("/");
 
   const pedidos = await prisma.order.findMany({
     where: { userId: user.id },
     include: {
       items: {
-        include: { product: true },
+        include: {
+          product: true,
+        },
       },
     },
-    orderBy: { createdAt: "desc" },
+    orderBy: {
+      createdAt: "desc",
+    },
   });
 
   return (
     <main className="w-full px-4 sm:px-6 md:px-10 max-w-6xl mx-auto">
       <div className="flex items-center gap-4 mb-8">
-        <Link
-          href="/"
-          className="text-muted hover:text-foreground transition-colors text-sm"
-        >
+        <Link href="/" className="text-sm text-muted underline">
           ← Volver
         </Link>
+
         <h1 className="text-2xl md:text-3xl font-bold text-foreground">
           Mis pedidos
         </h1>
@@ -52,8 +57,15 @@ export default async function PedidosPage() {
       {pedidos.length === 0 ? (
         <div className="text-center py-20 text-muted">
           <p className="text-5xl mb-4">📦</p>
-          <p className="text-lg font-medium">Todavía no tenés pedidos</p>
-          <Link href="/" className="mt-4 inline-block text-primary underline">
+
+          <p className="text-lg font-medium">
+            Todavía no tenés pedidos
+          </p>
+
+          <Link
+            href="/"
+            className="mt-4 inline-block text-primary underline"
+          >
             Ir a comprar
           </Link>
         </div>
@@ -69,6 +81,7 @@ export default async function PedidosPage() {
                   <p className="font-semibold text-sm text-foreground">
                     Pedido #{pedido.id.slice(-8).toUpperCase()}
                   </p>
+
                   <p className="text-xs text-muted">
                     {new Date(pedido.createdAt).toLocaleDateString("es-AR", {
                       day: "2-digit",
@@ -77,6 +90,7 @@ export default async function PedidosPage() {
                     })}
                   </p>
                 </div>
+
                 <span
                   className={`text-xs font-semibold px-3 py-1 rounded-full ${statusStyle[pedido.status]}`}
                 >
@@ -103,6 +117,7 @@ export default async function PedidosPage() {
                       <p className="font-medium text-sm truncate text-foreground">
                         {item.name}
                       </p>
+
                       <p className="text-xs text-muted">
                         {item.size && `Talle ${item.size}`}
                         {item.size && item.color && " · "}
@@ -111,27 +126,38 @@ export default async function PedidosPage() {
                       </p>
                     </div>
 
-                    <p className="text-sm font-semibold self-end sm:self-auto sm:text-right text-foreground">
-                      ${(item.price * item.quantity).toLocaleString("es-AR")}
-                    </p>
+                    <div className="flex flex-col gap-2 items-end">
+                      <p className="text-sm font-semibold text-foreground">
+                        $
+                        {(item.price * item.quantity).toLocaleString("es-AR")}
+                      </p>
+                    {pedido.status === "DELIVERED" && (
+                      <Link
+                        //href={`https://mi-api.com/pedidos/${item.productId}/reseña`}
+                        href="#"
+                        className="text-xs underline text-primary"
+                      >
+                        Agregar reseña
+                      </Link>
+                    )}
+                    </div>
                   </div>
                 ))}
               </div>
 
-                <div className="mt-4 pt-4 border-t border-muted flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                
+              <div className="mt-4 pt-4 border-t border-muted flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <p className="font-bold text-base text-foreground">
-                    Total: ${pedido.total.toLocaleString("es-AR")}
+                  Total: ${pedido.total.toLocaleString("es-AR")}
                 </p>
 
                 <Link
-                    href={`/pedidos/${pedido.id}`}
-                    className="btn-primary text-sm px-4 py-2 rounded-xl text-center"
+                  //href={`https://mi-api.com/pedidos/${pedido.id}/status`}
+                  href="#"
+                  className="px-4 py-2 rounded-xl border text-sm font-medium"
                 >
-                    Ver estado del pedido
+                  Ver estado del envío
                 </Link>
-
-                </div>
+              </div>
             </div>
           ))}
         </div>
