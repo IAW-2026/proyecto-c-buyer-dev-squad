@@ -1,4 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export default async function PedidoDetallePage({
@@ -8,14 +9,20 @@ export default async function PedidoDetallePage({
 }) {
   const { id } = await params;
   const { userId } = await auth();
+
   if (!userId) redirect("/");
 
-  // Acá después vas a hacer una consulta a tu API para traer el detalle del pedido usando el id de params.id
-  // const res = await fetch(`${process.env.API_URL}/orders/${params.id}`);
-  // const pedido = await res.json();
-
   return (
-    <main className="w-full px-4 sm:px-6 md:px-10 max-w-4xl mx-auto">
+    <main className="w-full px-4 sm:px-6 md:px-10 max-w-4xl mx-auto py-8">
+      <div className="mb-4">
+        <Link
+          href="/pedidos"
+          className="text-sm text-muted underline"
+        >
+          ← Volver
+        </Link>
+      </div>
+
       <h1 className="text-2xl font-bold text-foreground mb-6">
         Estado del pedido
       </h1>

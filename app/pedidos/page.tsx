@@ -40,7 +40,7 @@ export default async function PedidosPage() {
       <div className="flex items-center gap-4 mb-8">
         <Link
           href="/"
-          className="text-muted hover:text-foreground transition-colors text-sm"
+          className="text-sm text-muted underline"
         >
           ← Volver
         </Link>

@@ -48,7 +48,7 @@ export default function CartList({ items, total }: any) {
       <div className="mb-4">
         <button
           onClick={() => router.back()}
-          className="text-sm text-muted hover:text-foreground underline"
+          className="text-sm text-muted underline"
         >
           ← Volver
         </button>
