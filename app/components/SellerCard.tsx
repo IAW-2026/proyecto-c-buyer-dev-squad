@@ -91,7 +91,8 @@ export default function SellerCard({ sellerId, productId }: SellerCardProps) {
               {seller.description}
             </p>
             <Link
-              href={`/products/${productId}/vendedor/${sellerId}/opinions`}
+              //href={`https://mi-api.com/products/${productId}/vendedor/${sellerId}/opinions`}
+              href="#"
               className="btn-secondary text-sm px-4 py-2 rounded-xl"
             >
               ⭐ Ver opiniones
@@ -101,7 +102,8 @@ export default function SellerCard({ sellerId, productId }: SellerCardProps) {
       </div>
 
       <Link
-        href={`/products/${productId}/resenas`}
+        //href={`https://mi-api.com/products/${productId}/resenas`}
+        href="#"
         className="btn-secondary text-sm px-4 py-2 rounded-xl"
       >
         ⭐ Ver reseñas
