@@ -1,6 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { OrderStatus } from "@/app/types/order";
-import { OrderItem } from "@/app/types/order";
+import { OrderItem, OrderStatus } from "@/app/types/order";
 
 export interface GetOrdersParams {
   userId: string;
