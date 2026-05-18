@@ -2,7 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { getOrCreateUser } from "@/lib/services/User.service";
 import { createOrder, getOrders } from "@/lib/services/Orders.service";
 import type { OrderItem } from "@/app/types/order";
-import {orderStatus} from "@/app/types/order";
+
 export async function POST(req: Request): Promise<Response> {
   try {
     const { userId } = await auth();
