@@ -50,10 +50,7 @@ export type OrderItem = $Result.DefaultSelection<Prisma.$OrderItemPayload>
 export namespace $Enums {
   export const Role: {
   USER: 'USER',
-  ADMIN: 'ADMIN',
-  SHIPPING: 'SHIPPING',
-  SELLER: 'SELLER',
-  FEEDBACK: 'FEEDBACK'
+  ADMIN: 'ADMIN'
 };
 
 export type Role = (typeof Role)[keyof typeof Role]

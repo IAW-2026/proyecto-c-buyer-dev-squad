@@ -110,9 +110,6 @@ model OrderItem {
 enum Role {
   USER
   ADMIN
-  SHIPPING
-  SELLER
-  FEEDBACK
 }
 
 enum OrderStatus {

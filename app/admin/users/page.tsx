@@ -7,7 +7,7 @@ async function getUsers(search?: string) {
       ? {
           OR: [
             { email: { contains: search, mode: "insensitive" } },
-            { firstName: { contains: search, mode: "insensitive" } },
+            { name: { contains: search, mode: "insensitive" } },
             { lastName: { contains: search, mode: "insensitive" } },
           ],
         }
