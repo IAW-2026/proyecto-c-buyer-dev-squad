@@ -43,8 +43,9 @@ export default async function OrdersPage(props: {
         {[
           { label: "Todos", value: "ALL", count: Object.values(counts).reduce((a, b) => a + b, 0) },
           { label: "Pendientes", value: "PENDING", count: counts.PENDING ?? 0 },
-          { label: "Completados", value: "COMPLETED", count: counts.COMPLETED ?? 0 },
-          { label: "Cancelados", value: "CANCELLED", count: counts.CANCELLED ?? 0 },
+          { label: "Pagados", value: "PAID", count: counts.PAID ?? 0 },
+          { label: "Enviados", value: "SHIPPED", count: counts.SHIPPED ?? 0 },
+          { label: "Entregados", value: "DELIVERED", count: counts.DELIVERED ?? 0 },
         ].map((filter) => (
           <a
             key={filter.value}

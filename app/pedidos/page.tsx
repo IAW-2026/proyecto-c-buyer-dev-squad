@@ -135,7 +135,7 @@ export default async function PedidosPage() {
                       <Link
                         //href={`https://mi-api.com/pedidos/${item.productId}/reseña`}
                         href="#"
-                        className="text-xs underline text-primary"
+                        className="text-info underline text-xs font-medium hover:opacity-80 transition"
                       >
                         Agregar reseña
                       </Link>

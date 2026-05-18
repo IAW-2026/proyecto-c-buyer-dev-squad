@@ -21,7 +21,7 @@ async function getDashboardStats() {
 
   const revenue = await prisma.order.aggregate({
     _sum: { total: true },
-    where: { status: "COMPLETED" },
+    where: { status: "PAID" },
   });
 
   const pendingOrders = await prisma.order.count({

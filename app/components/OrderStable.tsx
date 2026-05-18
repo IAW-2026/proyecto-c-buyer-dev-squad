@@ -89,8 +89,9 @@ export default function OrdersTable({ orders }: { orders: Order[] }) {
                     }
                   >
                     <option value="PENDING">Pendiente</option>
-                    <option value="COMPLETED">Completado</option>
-                    <option value="CANCELLED">Cancelado</option>
+                    <option value="PAID">Pagado</option>
+                    <option value="SHIPPED">Enviado</option>
+                    <option value="DELIVERED">Entregado</option>
                   </select>
                 </td>
               </tr>

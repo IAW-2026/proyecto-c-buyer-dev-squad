@@ -1,8 +1,27 @@
 import { OrderStatus } from "@/generated/prisma/client";
-const statusConfig: Record<OrderStatus, { label: string; className: string }> = {
-  PENDING: { label: "Pendiente", className: "badge-pending" },
-  COMPLETED: { label: "Completado", className: "badge-completed" },
-  CANCELLED: { label: "Cancelado", className: "badge-cancelled" },
+const statusConfig: Record<
+  OrderStatus,
+  { label: string; className: string }
+> = {
+  PENDING: {
+    label: "Pendiente",
+    className: "badge-pending",
+  },
+
+  PAID: {
+    label: "Pagado",
+    className: "badge-completed",
+  },
+
+  SHIPPED: {
+    label: "Enviado",
+    className: "badge-shipped",
+  },
+
+  DELIVERED: {
+    label: "Entregado",
+    className: "badge-delivered",
+  },
 };
 
 export default function OrderStatusBadge({ status }: { status: OrderStatus }) {
