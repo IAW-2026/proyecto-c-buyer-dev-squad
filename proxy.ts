@@ -18,12 +18,17 @@ export default clerkMiddleware(async (auth, req) => {
   if (isAdminRoute(req)) {
     const { userId } = await auth.protect();
 
-    const user = await prisma.user.findUnique({
-      where: { clerkId: userId },
-      select: { role: true },
-    });
+    try {
+      const user = await prisma.user.findUnique({
+        where: { clerkId: userId },
+        select: { role: true },
+      });
 
-    if (!user || user.role !== "ADMIN") {
+      if (!user || user.role !== "ADMIN") {
+        return NextResponse.redirect(new URL("/", req.url));
+      }
+    } catch {
+      // Si la DB falla, no dejar pasar
       return NextResponse.redirect(new URL("/", req.url));
     }
   }
