@@ -1,26 +1,10 @@
 "use client";
 
-import { OrderStatus } from "@/generated/prisma/client";
+import { OrderStatusType } from "@/app/types/order";
 import { useState, useTransition } from "react";
-import { updateOrder, deleteOrder } from "@/lib/actions/Order.actions";
+import { updateOrder, deleteOrder, deleteOrderItem } from "@/lib/actions/Order.actions";
+import { Order, OrderItem } from "@/app/types/order";
 import OrderStatusBadge from "./OrderStatusBadge";
-
-interface OrderItem {
-  quantity: number;
-  price: number;
-  size?: number | null;
-  color?: string | null;
-  product: { name: string; image: string };
-}
-
-interface Order {
-  id: string;
-  total: number;
-  status: OrderStatus;
-  createdAt: Date;
-  user: { firstName?: string | null; lastName?: string | null; email: string };
-  items: OrderItem[];
-}
 
 function OrderRow({ order }: { order: Order }) {
   const [expanded, setExpanded] = useState(false);
@@ -31,12 +15,15 @@ function OrderRow({ order }: { order: Order }) {
   const [firstName, setFirstName] = useState(order.user.firstName ?? "");
   const [lastName, setLastName] = useState(order.user.lastName ?? "");
   const [email, setEmail] = useState(order.user.email);
-  const [total, setTotal] = useState(order.total);
   const [createdAt, setCreatedAt] = useState(
     new Date(order.createdAt).toISOString().slice(0, 10)
   );
 
   const [items, setItems] = useState<OrderItem[]>(order.items);
+  const calculatedTotal = items.reduce(
+  (acc, item) => acc + item.quantity * item.price,
+  0
+  );
 
   const handleSave = () => {
     startTransition(async () => {
@@ -44,7 +31,7 @@ function OrderRow({ order }: { order: Order }) {
         firstName: firstName || null,
         lastName: lastName || null,
         email,
-        total,
+        total: calculatedTotal,
         status: order.status,
         createdAt: new Date(createdAt),
         items: items.map((it) => ({ quantity: it.quantity, price: it.price })),
@@ -58,7 +45,6 @@ function OrderRow({ order }: { order: Order }) {
     setFirstName(order.user.firstName ?? "");
     setLastName(order.user.lastName ?? "");
     setEmail(order.user.email);
-    setTotal(order.total);
     setCreatedAt(new Date(order.createdAt).toISOString().slice(0, 10));
     setItems(order.items);
     setEditing(false);
@@ -80,9 +66,17 @@ function OrderRow({ order }: { order: Order }) {
     );
   };
 
-  const removeItem = (idx: number) => {
+  const removeItem = async (idx: number) => {
+  const item = items[idx];
+
+  if (!item) return;
+
+  startTransition(async () => {
+    await deleteOrderItem(item.id);
+
     setItems((prev) => prev.filter((_, i) => i !== idx));
-  };
+  });
+};
 
   const clientName =
     order.user.firstName || order.user.lastName
@@ -143,23 +137,12 @@ function OrderRow({ order }: { order: Order }) {
         </td>
 
         <td className="px-4 py-3 text-[var(--color-muted)] text-sm">
-          {items.length} producto{items.length !== 1 ? "s" : ""}
+          {items.reduce((acc, item) => acc + item.quantity, 0)} producto
+          {items.reduce((acc, item) => acc + item.quantity, 0) !== 1 ? "s" : ""}
         </td>
 
         <td className="px-4 py-3 font-semibold text-[var(--color-foreground)]">
-          {editing ? (
-            <input
-              type="number"
-              min={0}
-              step={0.01}
-              value={total}
-              onChange={(e) => setTotal(Number(e.target.value))}
-              onClick={(e) => e.stopPropagation()}
-              className="w-24 px-2 py-1 text-xs rounded border border-[var(--color-border)] bg-[var(--color-background)] text-[var(--color-foreground)] focus:outline-none focus:border-[var(--color-primary)]"
-            />
-          ) : (
-            `$${order.total.toLocaleString("es-AR")}`
-          )}
+          ${calculatedTotal.toLocaleString("es-AR")}
         </td>
 
         <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
@@ -180,7 +163,6 @@ function OrderRow({ order }: { order: Order }) {
           )}
         </td>
 
-        {/* Acciones */}
         <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
           <div className="flex items-center justify-end gap-1">
             {editing ? (

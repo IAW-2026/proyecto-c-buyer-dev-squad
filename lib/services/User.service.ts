@@ -61,4 +61,3 @@ export async function updateUser(
   });
   revalidatePath("/admin/users");
 }
- 

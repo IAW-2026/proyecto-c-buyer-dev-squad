@@ -38,7 +38,6 @@ export default async function OrdersPage(props: {
         <p className="admin-page-subtitle">{orders.length} pedidos encontrados</p>
       </div>
 
-      {/* Filtros de estado */}
       <div className="status-filters">
         {[
           { label: "Todos", value: "ALL", count: Object.values(counts).reduce((a, b) => a + b, 0) },

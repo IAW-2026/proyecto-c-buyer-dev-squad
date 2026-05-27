@@ -85,3 +85,10 @@ export async function deleteOrder(orderId: string) {
   await prisma.order.delete({ where: { id: orderId } });
   revalidatePath("/admin/orders");
 }
+export async function deleteOrderItem(itemId: string) {
+  await prisma.orderItem.delete({
+    where: { id: itemId },
+  });
+
+  revalidatePath("/admin/orders");
+}
