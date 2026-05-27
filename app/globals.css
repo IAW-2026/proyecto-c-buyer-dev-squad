@@ -665,3 +665,55 @@ body {
     white-space: nowrap;
   }
 }
+.dashboard-analysis-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .dashboard-analysis-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.rank-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  background-color: var(--color-muted-light);
+  color: var(--color-muted);
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.sold-bar-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.sold-count {
+  font-weight: 600;
+  font-size: 0.875rem;
+  min-width: 1.5rem;
+  text-align: right;
+}
+
+.sold-bar-track {
+  flex: 1;
+  height: 6px;
+  background-color: var(--color-border);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.sold-bar-fill {
+  height: 100%;
+  background-color: var(--color-success);
+  border-radius: 9999px;
+  transition: width 0.4s ease;
+}
