@@ -65,6 +65,14 @@ export const OrderStatus: {
 
 export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus]
 
+
+export const UserStatus: {
+  ACTIVE: 'ACTIVE',
+  SUSPENDED: 'SUSPENDED'
+};
+
+export type UserStatus = (typeof UserStatus)[keyof typeof UserStatus]
+
 }
 
 export type Role = $Enums.Role
@@ -74,6 +82,10 @@ export const Role: typeof $Enums.Role
 export type OrderStatus = $Enums.OrderStatus
 
 export const OrderStatus: typeof $Enums.OrderStatus
+
+export type UserStatus = $Enums.UserStatus
+
+export const UserStatus: typeof $Enums.UserStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -1510,6 +1522,7 @@ export namespace Prisma {
     firstName: string | null
     lastName: string | null
     role: $Enums.Role | null
+    status: $Enums.UserStatus | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -1521,6 +1534,7 @@ export namespace Prisma {
     firstName: string | null
     lastName: string | null
     role: $Enums.Role | null
+    status: $Enums.UserStatus | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -1532,6 +1546,7 @@ export namespace Prisma {
     firstName: number
     lastName: number
     role: number
+    status: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -1545,6 +1560,7 @@ export namespace Prisma {
     firstName?: true
     lastName?: true
     role?: true
+    status?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -1556,6 +1572,7 @@ export namespace Prisma {
     firstName?: true
     lastName?: true
     role?: true
+    status?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -1567,6 +1584,7 @@ export namespace Prisma {
     firstName?: true
     lastName?: true
     role?: true
+    status?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -1651,6 +1669,7 @@ export namespace Prisma {
     firstName: string | null
     lastName: string | null
     role: $Enums.Role
+    status: $Enums.UserStatus
     createdAt: Date
     updatedAt: Date
     _count: UserCountAggregateOutputType | null
@@ -1679,6 +1698,7 @@ export namespace Prisma {
     firstName?: boolean
     lastName?: boolean
     role?: boolean
+    status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     cartItems?: boolean | User$cartItemsArgs<ExtArgs>
@@ -1693,6 +1713,7 @@ export namespace Prisma {
     firstName?: boolean
     lastName?: boolean
     role?: boolean
+    status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
@@ -1704,6 +1725,7 @@ export namespace Prisma {
     firstName?: boolean
     lastName?: boolean
     role?: boolean
+    status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
@@ -1715,11 +1737,12 @@ export namespace Prisma {
     firstName?: boolean
     lastName?: boolean
     role?: boolean
+    status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clerkId" | "email" | "firstName" | "lastName" | "role" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clerkId" | "email" | "firstName" | "lastName" | "role" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cartItems?: boolean | User$cartItemsArgs<ExtArgs>
     orders?: boolean | User$ordersArgs<ExtArgs>
@@ -1741,6 +1764,7 @@ export namespace Prisma {
       firstName: string | null
       lastName: string | null
       role: $Enums.Role
+      status: $Enums.UserStatus
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["user"]>
@@ -2174,6 +2198,7 @@ export namespace Prisma {
     readonly firstName: FieldRef<"User", 'String'>
     readonly lastName: FieldRef<"User", 'String'>
     readonly role: FieldRef<"User", 'Role'>
+    readonly status: FieldRef<"User", 'UserStatus'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
   }
@@ -3778,6 +3803,7 @@ export namespace Prisma {
     image: string | null
     brand: string | null
     category: string | null
+    direction: string | null
     description: string | null
     sellerId: string | null
     createdAt: Date | null
@@ -3791,6 +3817,7 @@ export namespace Prisma {
     image: string | null
     brand: string | null
     category: string | null
+    direction: string | null
     description: string | null
     sellerId: string | null
     createdAt: Date | null
@@ -3804,6 +3831,7 @@ export namespace Prisma {
     image: number
     brand: number
     category: number
+    direction: number
     description: number
     sizes: number
     colors: number
@@ -3831,6 +3859,7 @@ export namespace Prisma {
     image?: true
     brand?: true
     category?: true
+    direction?: true
     description?: true
     sellerId?: true
     createdAt?: true
@@ -3844,6 +3873,7 @@ export namespace Prisma {
     image?: true
     brand?: true
     category?: true
+    direction?: true
     description?: true
     sellerId?: true
     createdAt?: true
@@ -3857,6 +3887,7 @@ export namespace Prisma {
     image?: true
     brand?: true
     category?: true
+    direction?: true
     description?: true
     sizes?: true
     colors?: true
@@ -3959,6 +3990,7 @@ export namespace Prisma {
     image: string
     brand: string
     category: string
+    direction: string
     description: string
     sizes: number[]
     colors: string[]
@@ -3993,6 +4025,7 @@ export namespace Prisma {
     image?: boolean
     brand?: boolean
     category?: boolean
+    direction?: boolean
     description?: boolean
     sizes?: boolean
     colors?: boolean
@@ -4012,6 +4045,7 @@ export namespace Prisma {
     image?: boolean
     brand?: boolean
     category?: boolean
+    direction?: boolean
     description?: boolean
     sizes?: boolean
     colors?: boolean
@@ -4028,6 +4062,7 @@ export namespace Prisma {
     image?: boolean
     brand?: boolean
     category?: boolean
+    direction?: boolean
     description?: boolean
     sizes?: boolean
     colors?: boolean
@@ -4044,6 +4079,7 @@ export namespace Prisma {
     image?: boolean
     brand?: boolean
     category?: boolean
+    direction?: boolean
     description?: boolean
     sizes?: boolean
     colors?: boolean
@@ -4052,7 +4088,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "price" | "image" | "brand" | "category" | "description" | "sizes" | "colors" | "sellerId" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "price" | "image" | "brand" | "category" | "direction" | "description" | "sizes" | "colors" | "sellerId" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cartItems?: boolean | Product$cartItemsArgs<ExtArgs>
     orderItems?: boolean | Product$orderItemsArgs<ExtArgs>
@@ -4080,6 +4116,7 @@ export namespace Prisma {
       image: string
       brand: string
       category: string
+      direction: string
       description: string
       sizes: number[]
       colors: string[]
@@ -4518,6 +4555,7 @@ export namespace Prisma {
     readonly image: FieldRef<"Product", 'String'>
     readonly brand: FieldRef<"Product", 'String'>
     readonly category: FieldRef<"Product", 'String'>
+    readonly direction: FieldRef<"Product", 'String'>
     readonly description: FieldRef<"Product", 'String'>
     readonly sizes: FieldRef<"Product", 'Int[]'>
     readonly colors: FieldRef<"Product", 'String[]'>
@@ -8465,6 +8503,7 @@ export namespace Prisma {
     firstName: 'firstName',
     lastName: 'lastName',
     role: 'role',
+    status: 'status',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -8493,6 +8532,7 @@ export namespace Prisma {
     image: 'image',
     brand: 'brand',
     category: 'category',
+    direction: 'direction',
     description: 'description',
     sizes: 'sizes',
     colors: 'colors',
@@ -8603,6 +8643,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'UserStatus'
+   */
+  export type EnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'UserStatus[]'
+   */
+  export type ListEnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserStatus[]'>
+    
+
+
+  /**
    * Reference to a field of type 'DateTime'
    */
   export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -8671,6 +8725,7 @@ export namespace Prisma {
     firstName?: StringNullableFilter<"User"> | string | null
     lastName?: StringNullableFilter<"User"> | string | null
     role?: EnumRoleFilter<"User"> | $Enums.Role
+    status?: EnumUserStatusFilter<"User"> | $Enums.UserStatus
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     cartItems?: CartItemListRelationFilter
@@ -8684,6 +8739,7 @@ export namespace Prisma {
     firstName?: SortOrderInput | SortOrder
     lastName?: SortOrderInput | SortOrder
     role?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     cartItems?: CartItemOrderByRelationAggregateInput
@@ -8700,6 +8756,7 @@ export namespace Prisma {
     firstName?: StringNullableFilter<"User"> | string | null
     lastName?: StringNullableFilter<"User"> | string | null
     role?: EnumRoleFilter<"User"> | $Enums.Role
+    status?: EnumUserStatusFilter<"User"> | $Enums.UserStatus
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     cartItems?: CartItemListRelationFilter
@@ -8713,6 +8770,7 @@ export namespace Prisma {
     firstName?: SortOrderInput | SortOrder
     lastName?: SortOrderInput | SortOrder
     role?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
@@ -8730,6 +8788,7 @@ export namespace Prisma {
     firstName?: StringNullableWithAggregatesFilter<"User"> | string | null
     lastName?: StringNullableWithAggregatesFilter<"User"> | string | null
     role?: EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
+    status?: EnumUserStatusWithAggregatesFilter<"User"> | $Enums.UserStatus
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
@@ -8814,6 +8873,7 @@ export namespace Prisma {
     image?: StringFilter<"Product"> | string
     brand?: StringFilter<"Product"> | string
     category?: StringFilter<"Product"> | string
+    direction?: StringFilter<"Product"> | string
     description?: StringFilter<"Product"> | string
     sizes?: IntNullableListFilter<"Product">
     colors?: StringNullableListFilter<"Product">
@@ -8832,6 +8892,7 @@ export namespace Prisma {
     image?: SortOrder
     brand?: SortOrder
     category?: SortOrder
+    direction?: SortOrder
     description?: SortOrder
     sizes?: SortOrder
     colors?: SortOrder
@@ -8853,6 +8914,7 @@ export namespace Prisma {
     image?: StringFilter<"Product"> | string
     brand?: StringFilter<"Product"> | string
     category?: StringFilter<"Product"> | string
+    direction?: StringFilter<"Product"> | string
     description?: StringFilter<"Product"> | string
     sizes?: IntNullableListFilter<"Product">
     colors?: StringNullableListFilter<"Product">
@@ -8871,6 +8933,7 @@ export namespace Prisma {
     image?: SortOrder
     brand?: SortOrder
     category?: SortOrder
+    direction?: SortOrder
     description?: SortOrder
     sizes?: SortOrder
     colors?: SortOrder
@@ -8894,6 +8957,7 @@ export namespace Prisma {
     image?: StringWithAggregatesFilter<"Product"> | string
     brand?: StringWithAggregatesFilter<"Product"> | string
     category?: StringWithAggregatesFilter<"Product"> | string
+    direction?: StringWithAggregatesFilter<"Product"> | string
     description?: StringWithAggregatesFilter<"Product"> | string
     sizes?: IntNullableListFilter<"Product">
     colors?: StringNullableListFilter<"Product">
@@ -9130,6 +9194,7 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     role?: $Enums.Role
+    status?: $Enums.UserStatus
     createdAt?: Date | string
     updatedAt?: Date | string
     cartItems?: CartItemCreateNestedManyWithoutUserInput
@@ -9143,6 +9208,7 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     role?: $Enums.Role
+    status?: $Enums.UserStatus
     createdAt?: Date | string
     updatedAt?: Date | string
     cartItems?: CartItemUncheckedCreateNestedManyWithoutUserInput
@@ -9156,6 +9222,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cartItems?: CartItemUpdateManyWithoutUserNestedInput
@@ -9169,6 +9236,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cartItems?: CartItemUncheckedUpdateManyWithoutUserNestedInput
@@ -9182,6 +9250,7 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     role?: $Enums.Role
+    status?: $Enums.UserStatus
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -9193,6 +9262,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -9204,6 +9274,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -9296,6 +9367,7 @@ export namespace Prisma {
     image: string
     brand: string
     category: string
+    direction: string
     description: string
     sizes?: ProductCreatesizesInput | number[]
     colors?: ProductCreatecolorsInput | string[]
@@ -9313,6 +9385,7 @@ export namespace Prisma {
     image: string
     brand: string
     category: string
+    direction: string
     description: string
     sizes?: ProductCreatesizesInput | number[]
     colors?: ProductCreatecolorsInput | string[]
@@ -9330,6 +9403,7 @@ export namespace Prisma {
     image?: StringFieldUpdateOperationsInput | string
     brand?: StringFieldUpdateOperationsInput | string
     category?: StringFieldUpdateOperationsInput | string
+    direction?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     sizes?: ProductUpdatesizesInput | number[]
     colors?: ProductUpdatecolorsInput | string[]
@@ -9347,6 +9421,7 @@ export namespace Prisma {
     image?: StringFieldUpdateOperationsInput | string
     brand?: StringFieldUpdateOperationsInput | string
     category?: StringFieldUpdateOperationsInput | string
+    direction?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     sizes?: ProductUpdatesizesInput | number[]
     colors?: ProductUpdatecolorsInput | string[]
@@ -9364,6 +9439,7 @@ export namespace Prisma {
     image: string
     brand: string
     category: string
+    direction: string
     description: string
     sizes?: ProductCreatesizesInput | number[]
     colors?: ProductCreatecolorsInput | string[]
@@ -9379,6 +9455,7 @@ export namespace Prisma {
     image?: StringFieldUpdateOperationsInput | string
     brand?: StringFieldUpdateOperationsInput | string
     category?: StringFieldUpdateOperationsInput | string
+    direction?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     sizes?: ProductUpdatesizesInput | number[]
     colors?: ProductUpdatecolorsInput | string[]
@@ -9393,6 +9470,7 @@ export namespace Prisma {
     image?: StringFieldUpdateOperationsInput | string
     brand?: StringFieldUpdateOperationsInput | string
     category?: StringFieldUpdateOperationsInput | string
+    direction?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     sizes?: ProductUpdatesizesInput | number[]
     colors?: ProductUpdatecolorsInput | string[]
@@ -9661,6 +9739,13 @@ export namespace Prisma {
     not?: NestedEnumRoleFilter<$PrismaModel> | $Enums.Role
   }
 
+  export type EnumUserStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserStatus | EnumUserStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.UserStatus[] | ListEnumUserStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.UserStatus[] | ListEnumUserStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumUserStatusFilter<$PrismaModel> | $Enums.UserStatus
+  }
+
   export type DateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -9704,6 +9789,7 @@ export namespace Prisma {
     firstName?: SortOrder
     lastName?: SortOrder
     role?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -9715,6 +9801,7 @@ export namespace Prisma {
     firstName?: SortOrder
     lastName?: SortOrder
     role?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -9726,6 +9813,7 @@ export namespace Prisma {
     firstName?: SortOrder
     lastName?: SortOrder
     role?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -9774,6 +9862,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumRoleFilter<$PrismaModel>
     _max?: NestedEnumRoleFilter<$PrismaModel>
+  }
+
+  export type EnumUserStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserStatus | EnumUserStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.UserStatus[] | ListEnumUserStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.UserStatus[] | ListEnumUserStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumUserStatusWithAggregatesFilter<$PrismaModel> | $Enums.UserStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumUserStatusFilter<$PrismaModel>
+    _max?: NestedEnumUserStatusFilter<$PrismaModel>
   }
 
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -9882,6 +9980,7 @@ export namespace Prisma {
     image?: SortOrder
     brand?: SortOrder
     category?: SortOrder
+    direction?: SortOrder
     description?: SortOrder
     sizes?: SortOrder
     colors?: SortOrder
@@ -9902,6 +10001,7 @@ export namespace Prisma {
     image?: SortOrder
     brand?: SortOrder
     category?: SortOrder
+    direction?: SortOrder
     description?: SortOrder
     sellerId?: SortOrder
     createdAt?: SortOrder
@@ -9915,6 +10015,7 @@ export namespace Prisma {
     image?: SortOrder
     brand?: SortOrder
     category?: SortOrder
+    direction?: SortOrder
     description?: SortOrder
     sellerId?: SortOrder
     createdAt?: SortOrder
@@ -10172,6 +10273,10 @@ export namespace Prisma {
 
   export type EnumRoleFieldUpdateOperationsInput = {
     set?: $Enums.Role
+  }
+
+  export type EnumUserStatusFieldUpdateOperationsInput = {
+    set?: $Enums.UserStatus
   }
 
   export type DateTimeFieldUpdateOperationsInput = {
@@ -10559,6 +10664,13 @@ export namespace Prisma {
     not?: NestedEnumRoleFilter<$PrismaModel> | $Enums.Role
   }
 
+  export type NestedEnumUserStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserStatus | EnumUserStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.UserStatus[] | ListEnumUserStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.UserStatus[] | ListEnumUserStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumUserStatusFilter<$PrismaModel> | $Enums.UserStatus
+  }
+
   export type NestedDateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -10634,6 +10746,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumRoleFilter<$PrismaModel>
     _max?: NestedEnumRoleFilter<$PrismaModel>
+  }
+
+  export type NestedEnumUserStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserStatus | EnumUserStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.UserStatus[] | ListEnumUserStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.UserStatus[] | ListEnumUserStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumUserStatusWithAggregatesFilter<$PrismaModel> | $Enums.UserStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumUserStatusFilter<$PrismaModel>
+    _max?: NestedEnumUserStatusFilter<$PrismaModel>
   }
 
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -10833,6 +10955,7 @@ export namespace Prisma {
     image: string
     brand: string
     category: string
+    direction: string
     description: string
     sizes?: ProductCreatesizesInput | number[]
     colors?: ProductCreatecolorsInput | string[]
@@ -10849,6 +10972,7 @@ export namespace Prisma {
     image: string
     brand: string
     category: string
+    direction: string
     description: string
     sizes?: ProductCreatesizesInput | number[]
     colors?: ProductCreatecolorsInput | string[]
@@ -10894,6 +11018,7 @@ export namespace Prisma {
     image?: StringFilter<"Product"> | string
     brand?: StringFilter<"Product"> | string
     category?: StringFilter<"Product"> | string
+    direction?: StringFilter<"Product"> | string
     description?: StringFilter<"Product"> | string
     sizes?: IntNullableListFilter<"Product">
     colors?: StringNullableListFilter<"Product">
@@ -11078,6 +11203,7 @@ export namespace Prisma {
     image: string
     brand: string
     category: string
+    direction: string
     description: string
     sizes?: ProductCreatesizesInput | number[]
     colors?: ProductCreatecolorsInput | string[]
@@ -11094,6 +11220,7 @@ export namespace Prisma {
     image: string
     brand: string
     category: string
+    direction: string
     description: string
     sizes?: ProductCreatesizesInput | number[]
     colors?: ProductCreatecolorsInput | string[]
@@ -11115,6 +11242,7 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     role?: $Enums.Role
+    status?: $Enums.UserStatus
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderCreateNestedManyWithoutUserInput
@@ -11127,6 +11255,7 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     role?: $Enums.Role
+    status?: $Enums.UserStatus
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
@@ -11155,6 +11284,7 @@ export namespace Prisma {
     image?: StringFieldUpdateOperationsInput | string
     brand?: StringFieldUpdateOperationsInput | string
     category?: StringFieldUpdateOperationsInput | string
+    direction?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     sizes?: ProductUpdatesizesInput | number[]
     colors?: ProductUpdatecolorsInput | string[]
@@ -11171,6 +11301,7 @@ export namespace Prisma {
     image?: StringFieldUpdateOperationsInput | string
     brand?: StringFieldUpdateOperationsInput | string
     category?: StringFieldUpdateOperationsInput | string
+    direction?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     sizes?: ProductUpdatesizesInput | number[]
     colors?: ProductUpdatecolorsInput | string[]
@@ -11198,6 +11329,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUpdateManyWithoutUserNestedInput
@@ -11210,6 +11342,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
@@ -11254,6 +11387,7 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     role?: $Enums.Role
+    status?: $Enums.UserStatus
     createdAt?: Date | string
     updatedAt?: Date | string
     cartItems?: CartItemCreateNestedManyWithoutUserInput
@@ -11266,6 +11400,7 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     role?: $Enums.Role
+    status?: $Enums.UserStatus
     createdAt?: Date | string
     updatedAt?: Date | string
     cartItems?: CartItemUncheckedCreateNestedManyWithoutUserInput
@@ -11310,6 +11445,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cartItems?: CartItemUpdateManyWithoutUserNestedInput
@@ -11322,6 +11458,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cartItems?: CartItemUncheckedUpdateManyWithoutUserNestedInput
@@ -11357,6 +11494,7 @@ export namespace Prisma {
     image: string
     brand: string
     category: string
+    direction: string
     description: string
     sizes?: ProductCreatesizesInput | number[]
     colors?: ProductCreatecolorsInput | string[]
@@ -11373,6 +11511,7 @@ export namespace Prisma {
     image: string
     brand: string
     category: string
+    direction: string
     description: string
     sizes?: ProductCreatesizesInput | number[]
     colors?: ProductCreatecolorsInput | string[]
@@ -11434,6 +11573,7 @@ export namespace Prisma {
     image?: StringFieldUpdateOperationsInput | string
     brand?: StringFieldUpdateOperationsInput | string
     category?: StringFieldUpdateOperationsInput | string
+    direction?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     sizes?: ProductUpdatesizesInput | number[]
     colors?: ProductUpdatecolorsInput | string[]
@@ -11450,6 +11590,7 @@ export namespace Prisma {
     image?: StringFieldUpdateOperationsInput | string
     brand?: StringFieldUpdateOperationsInput | string
     category?: StringFieldUpdateOperationsInput | string
+    direction?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     sizes?: ProductUpdatesizesInput | number[]
     colors?: ProductUpdatecolorsInput | string[]
@@ -11540,6 +11681,7 @@ export namespace Prisma {
     image: string
     brand: string
     category: string
+    direction: string
     description: string
     sizes?: ProductCreatesizesInput | number[]
     colors?: ProductCreatecolorsInput | string[]
@@ -11554,6 +11696,7 @@ export namespace Prisma {
     image?: StringFieldUpdateOperationsInput | string
     brand?: StringFieldUpdateOperationsInput | string
     category?: StringFieldUpdateOperationsInput | string
+    direction?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     sizes?: ProductUpdatesizesInput | number[]
     colors?: ProductUpdatecolorsInput | string[]
@@ -11570,6 +11713,7 @@ export namespace Prisma {
     image?: StringFieldUpdateOperationsInput | string
     brand?: StringFieldUpdateOperationsInput | string
     category?: StringFieldUpdateOperationsInput | string
+    direction?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     sizes?: ProductUpdatesizesInput | number[]
     colors?: ProductUpdatecolorsInput | string[]
@@ -11586,6 +11730,7 @@ export namespace Prisma {
     image?: StringFieldUpdateOperationsInput | string
     brand?: StringFieldUpdateOperationsInput | string
     category?: StringFieldUpdateOperationsInput | string
+    direction?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     sizes?: ProductUpdatesizesInput | number[]
     colors?: ProductUpdatecolorsInput | string[]

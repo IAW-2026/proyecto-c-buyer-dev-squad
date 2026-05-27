@@ -127,6 +127,7 @@ exports.Prisma.UserScalarFieldEnum = {
   firstName: 'firstName',
   lastName: 'lastName',
   role: 'role',
+  status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -149,6 +150,7 @@ exports.Prisma.ProductScalarFieldEnum = {
   image: 'image',
   brand: 'brand',
   category: 'category',
+  direction: 'direction',
   description: 'description',
   sizes: 'sizes',
   colors: 'colors',
@@ -206,6 +208,11 @@ exports.Prisma.NullsOrder = {
 exports.Role = exports.$Enums.Role = {
   USER: 'USER',
   ADMIN: 'ADMIN'
+};
+
+exports.UserStatus = exports.$Enums.UserStatus = {
+  ACTIVE: 'ACTIVE',
+  SUSPENDED: 'SUSPENDED'
 };
 
 exports.OrderStatus = exports.$Enums.OrderStatus = {
