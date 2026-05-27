@@ -8,8 +8,8 @@ export interface OrderItem {
   quantity: number;
   price: number;
 
-  size?: number | null;
-  color?: string | null;
+  size: number;
+  color: string;
 
   product: Pick<Product, "name" | "image">;
 }
