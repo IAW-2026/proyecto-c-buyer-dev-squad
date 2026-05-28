@@ -3,6 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
+import { createOrder } from "../services/Orders.service";
+import { OrderItem } from "@/app/types/order";
 
 export async function getOrCreateUser(clerkId: string) {
   const existing = await prisma.user.findUnique({ where: { clerkId } });
@@ -73,47 +75,43 @@ export type CheckoutFormData = {
 
 export async function submitCheckout(
   userId: string,
-  cartItems: { productId: string; name: string; quantity: number; price: number; size: number; color: string }[],
+  cartItems: OrderItem[],
   form: CheckoutFormData
 ): Promise<{ orderId: string }> {
-  const total = cartItems.reduce((acc, i) => acc + i.price * i.quantity, 0);
-
+  const total = cartItems.reduce(
+    (acc, i) => acc + i.price * i.quantity,
+    0
+  );
   await prisma.user.update({
     where: { id: userId },
     data: {
       firstName: form.firstName,
       lastName: form.lastName,
       phone: form.phone,
-      birthDate: form.birthDate ? new Date(form.birthDate) : null,
-      address: form.deliveryType === "delivery" ? (form.address ?? null) : undefined,
+      birthDate: form.birthDate
+        ? new Date(form.birthDate)
+        : null,
+
+      address:
+        form.deliveryType === "delivery"
+          ? form.address ?? null
+          : null,
     },
   });
-
-  const order = await prisma.order.create({
-    data: {
-      userId,
-      total,
-      items: {
-        create: cartItems.map((i) => ({
-          productId: i.productId,
-          name: i.name,
-          quantity: i.quantity,
-          price: i.price,
-          size: i.size,
-          color: i.color,
-        })),
-      },
-    },
-  });
-
-  await prisma.cartItem.deleteMany({ where: { userId } });
-
+  const order = await createOrder(
+    userId,
+    cartItems,
+    total,
+    form.firstName,
+    form.lastName,
+    form.phone,
+    form.deliveryType,
+    form.address
+  );
   revalidatePath("/cart");
   revalidatePath("/orders");
-
   return { orderId: order.id };
 }
-
 export async function getUserCheckoutData(userId: string) {
   return prisma.user.findUnique({
     where: { id: userId },
