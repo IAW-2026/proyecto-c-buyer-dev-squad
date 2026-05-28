@@ -1,6 +1,5 @@
 "use client";
 
-import { OrderStatusType } from "@/app/types/order";
 import { useState, useTransition } from "react";
 import { updateOrder, deleteOrder, deleteOrderItem } from "@/lib/actions/Order.actions";
 import { Order, OrderItem } from "@/app/types/order";
@@ -235,13 +234,13 @@ function OrderRow({ order }: { order: Order }) {
                     className="flex items-center gap-3 p-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-background)]"
                   >
                     <img
-                      src={item.product.image}
-                      alt={item.product.name}
+                      src={item.image}
+                      alt={item.name}
                       className="w-12 h-12 rounded-md object-cover flex-shrink-0"
                     />
                     <div className="min-w-0 flex-1">
                       <p className="font-medium text-sm text-[var(--color-foreground)] truncate">
-                        {item.product.name}
+                        {item.name}
                       </p>
                       <p className="text-[var(--color-muted)] text-xs">
                         {item.size ? `Talle: ${item.size}` : ""}
