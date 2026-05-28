@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
@@ -48,7 +49,39 @@ export default async function OrderConfirmation({
       </main>
     );
   }
+  if (order.status !== "PAID") {
+  return (
+    <main className="p-6 md:p-10">
+      <div className="max-w-2xl mx-auto">
+        <div className="bg-warning-light border border-warning rounded-lg p-6 md:p-8 mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold text-warning mb-2">
+            Pago Pendiente
+          </h1>
 
+          <p className="text-muted">
+            Estamos esperando la confirmación del pago.
+          </p>
+        </div>
+
+        <div className="bg-surface border rounded-lg p-4 md:p-6">
+          <p className="mb-2">
+            <span className="font-semibold">
+              Orden:
+            </span>{" "}
+            {order.id}
+          </p>
+
+          <p>
+            <span className="font-semibold">
+              Estado:
+            </span>{" "}
+            {order.status}
+          </p>
+        </div>
+      </div>
+    </main>
+    );
+  }
   return (
     <main className="p-6 md:p-10">
       <div className="max-w-2xl mx-auto">
