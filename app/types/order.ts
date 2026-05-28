@@ -1,17 +1,17 @@
-import { Product } from "./product";
 
-// types/order.ts
 export interface OrderItem {
   id: string;
+
   productId: string;
+
+  name: string;
+  image: string;
 
   quantity: number;
   price: number;
 
   size: number;
   color: string;
-
-  product: Pick<Product, "name" | "image">;
 }
 export type OrderStatusType = "PENDING" | "PAID" | "SHIPPED" | "DELIVERED";
 export interface Order {

@@ -6,20 +6,69 @@ import type { OrderItem } from "@/app/types/order";
 export async function POST(req: Request): Promise<Response> {
   try {
     const { userId } = await auth();
-    if (!userId) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
-    const { items, total }: { items: OrderItem[]; total: number } = await req.json();
-    if (!items || !Array.isArray(items) || total == null) {
-      return Response.json({ error: "Invalid body" }, { status: 400 });
+    if (!userId) {
+      return Response.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
+    const {
+      items,
+      total,
+      firstName,
+      lastName,
+      phone,
+      deliveryType,
+      address,
+
+    }: {
+      items: OrderItem[];
+      total: number;
+      firstName: string;
+      lastName: string;
+      phone: string;
+      deliveryType: string;
+      address?: string;
+    } = await req.json();
+
+    if (
+      !items ||
+      !Array.isArray(items) ||
+      total == null
+    ) {
+      return Response.json(
+        { error: "Invalid body" },
+        { status: 400 }
+      );
     }
 
     const user = await getOrCreateUser(userId);
-    const order = await createOrder(user.id, items, total);
 
-    return Response.json({ orderId: order.id, ok: true });
+    const order = await createOrder(
+      user.id,
+      items,
+      total,
+      firstName,
+      lastName,
+      phone,
+      deliveryType,
+      address
+    );
+
+    return Response.json({
+      orderId: order.id,
+      ok: true,
+    });
+
   } catch (error) {
     console.error("Error creating order:", error);
-    return Response.json({ error: "Failed to create order" }, { status: 500 });
+
+    return Response.json(
+      { error: "Failed to create order" },
+      { status: 500 }
+    );
   }
 }
 

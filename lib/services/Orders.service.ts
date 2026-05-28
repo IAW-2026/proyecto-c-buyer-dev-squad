@@ -9,16 +9,30 @@ export interface GetOrdersParams {
   limit: number;
 }
 
-export async function createOrder(userId: string, items: OrderItem[], total: number) {
+export async function createOrder(
+  userId: string,
+  items: OrderItem[],
+  total: number,
+  firstName: string,
+  lastName: string,
+  phone: string,
+  deliveryType: string,
+  address?: string
+) {
   const order = await prisma.order.create({
     data: {
       userId,
       total,
+      receiverName: `${firstName} ${lastName}`,
+      receiverPhone: phone,
+      deliveryType,
+      shippingAddress: address,
       status: "PENDING",
       items: {
         create: items.map((item) => ({
           productId: item.productId,
-          name: item.product.name,
+          name: item.name,
+          image: item.image,
           quantity: item.quantity,
           price: item.price,
           size: item.size,
@@ -26,12 +40,17 @@ export async function createOrder(userId: string, items: OrderItem[], total: num
         })),
       },
     },
-    include: { items: true },
+
+    include: {
+      items: true,
+    },
   });
 
-  await prisma.cartItem.deleteMany({ where: { userId } });
+  await prisma.cartItem.deleteMany({
+    where: { userId },
+  });
 
-  return order;
+  return order; 
 }
 
 export async function getOrders({ userId, orderId, status, page, limit }: GetOrdersParams) {

@@ -13,6 +13,9 @@ model User {
   email     String     @unique
   firstName String?
   lastName  String?
+  phone     String?
+  address   String?
+  birthDate DateTime?
   role      Role       @default(USER)
   status    UserStatus @default(ACTIVE)
   createdAt DateTime   @default(now())
@@ -78,14 +81,18 @@ model CartItem {
 }
 
 model Order {
-  id        String      @id @default(uuid())
-  userId    String
-  total     Float
-  status    OrderStatus @default(PENDING)
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-  items     OrderItem[]
-  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id              String      @id @default(uuid())
+  userId          String
+  total           Float
+  status          OrderStatus @default(PENDING)
+  receiverName    String
+  receiverPhone   String
+  deliveryType    String
+  shippingAddress String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  items           OrderItem[]
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@map("orders")
@@ -96,6 +103,7 @@ model OrderItem {
   orderId   String
   productId String
   name      String
+  image     String
   quantity  Int
   price     Float
   size      Int
