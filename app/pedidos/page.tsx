@@ -79,7 +79,7 @@ export default async function PedidosPage() {
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
                 <div>
                   <p className="font-semibold text-sm text-foreground">
-                    Pedido #{pedido.id.slice(-8).toUpperCase()}
+                    Pedido #{pedido.id}
                   </p>
 
                   <p className="text-xs text-muted">
@@ -149,7 +149,7 @@ export default async function PedidosPage() {
                 <p className="font-bold text-base text-foreground">
                   Total: ${pedido.total.toLocaleString("es-AR")}
                 </p>
-
+                {pedido.status !== "DELIVERED" && (
                 <Link
                   //href={`https://mi-api.com/pedidos/${pedido.id}/status`}
                   href="#"
@@ -157,6 +157,7 @@ export default async function PedidosPage() {
                 >
                   Ver estado del envío
                 </Link>
+                )}
               </div>
             </div>
           ))}

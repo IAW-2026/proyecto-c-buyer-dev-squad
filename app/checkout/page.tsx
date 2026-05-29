@@ -1,7 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { getCartItems } from "@/lib/services/Cart.service";
-import CheckoutForm from "@/app/components/CheckoutForm";
 import { redirect } from "next/navigation";
+import CheckoutForm from "../components/CheckoutForm";
 
 export default async function Page() {
   const { userId } = await auth();
