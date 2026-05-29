@@ -1,7 +1,6 @@
 import { currentUser } from "@clerk/nextjs/server";
 import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
-import { LogOutButton } from "./LogOutButton";
 import { LogInButton } from "./LogInButton";
 import ThemedLogo from "./ThemedLogo";
 import ThemeToggle from "./ThemeToggle";

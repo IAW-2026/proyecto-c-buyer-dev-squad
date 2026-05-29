@@ -56,7 +56,26 @@ export async function POST(req: Request): Promise<Response> {
       deliveryType,
       address
     );
-
+   /*Cuando se crea la orden, se hará una llamada a un servicio externo de payments
+    para iniciar el proceso de pago y este lo envía a shipping y seller. Por ejemplo:
+   await fetch("https://payments.com/orders", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${process.env.PAYMENTS_API_KEY}`,
+      },
+      body: JSON.stringify({
+        orderId: order.id,
+        total,
+        firstName,
+        lastName,
+        phone,
+        deliveryType,
+        address,
+        items,
+      }),
+    });
+  */
     return Response.json({
       orderId: order.id,
       ok: true,

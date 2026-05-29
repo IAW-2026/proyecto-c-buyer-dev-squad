@@ -1,42 +1,11 @@
-"use client";
+import PaymentsButton from "@/app/components/PaymentsButton";
 
-import { useRouter } from "next/navigation";
-import { useState, use} from "react";
-
-export default function PaymentsPage({
+export default async function PaymentsPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const router = useRouter();
-  const { id } = use(params);
-  const [loading, setLoading] = useState(false);
-
-  async function handlePayment() {
-    try {
-      setLoading(true);
-
-      const res = await fetch(
-        `/api/payments/${id}`,
-        {
-          method: "POST",
-        }
-      );
-
-      if (!res.ok) {
-        throw new Error("Payment failed");
-      }
-
-      router.push(
-        `/order-confirmation/${id}`
-      );
-    } catch (error) {
-      console.error(error);
-      alert("Error processing payment");
-    } finally {
-      setLoading(false);
-    }
-  }
+  const { id } = await params;
 
   return (
     <main className="max-w-xl mx-auto px-4 py-10">
@@ -50,15 +19,7 @@ export default function PaymentsPage({
           {id}
         </p>
 
-        <button
-          onClick={handlePayment}
-          disabled={loading}
-          className="w-full btn-success py-3 rounded-lg font-bold"
-        >
-          {loading
-            ? "Procesando..."
-            : "Confirmar Pago"}
-        </button>
+        <PaymentsButton orderId={id} />
       </div>
     </main>
   );

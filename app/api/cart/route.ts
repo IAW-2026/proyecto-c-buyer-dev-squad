@@ -11,7 +11,6 @@ export async function GET() {
         { status: 401 }
       );
     }
-
     const user = await getOrCreateUser(userId);
 
     const cart = await prisma.cartItem.findMany({

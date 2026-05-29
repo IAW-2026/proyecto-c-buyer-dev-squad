@@ -1,14 +1,12 @@
-//server component
 import { getProducts } from "@/lib/products";
+import { getSellerById } from "@/lib/sellers";
 import Link from "next/link";
-import { Product } from "@/app/types/product";
+import type { Product } from "@/app/types/product";
 import ProductActions from "@/app/components/ProductActions";
-import SellerCard from "@/app/components/SellerCard";
+import SellerInfo from "@/app/components/SellerInfo";
 
 type Props = {
-  params: {
-    id: string;
-  };
+  params: Promise<{ id: string }>;
 };
 
 export default async function ProductPage({ params }: Props) {
@@ -27,15 +25,15 @@ export default async function ProductPage({ params }: Props) {
     );
   }
 
+  const seller = await getSellerById(product.sellerId);
+
   return (
     <main className="h-screen overflow-hidden px-4 md:px-8 py-4 max-w-6xl mx-auto">
-
       <Link href="/" className="text-sm text-muted underline">
         ← Volver
       </Link>
 
       <div className="grid md:grid-cols-2 gap-6 mt-4 h-[calc(100%-40px)]">
-
         <div className="h-full flex items-center justify-center">
           <img
             src={product.image}
@@ -45,7 +43,6 @@ export default async function ProductPage({ params }: Props) {
         </div>
 
         <div className="flex flex-col h-full overflow-hidden">
-
           <h1 className="text-2xl md:text-3xl font-bold">
             {product.name}
           </h1>
@@ -73,8 +70,7 @@ export default async function ProductPage({ params }: Props) {
             />
           </div>
 
-          <SellerCard sellerId={product.sellerId} productId={product.id} />
-
+          {seller && <SellerInfo seller={seller} productId={product.id} />}
         </div>
       </div>
     </main>

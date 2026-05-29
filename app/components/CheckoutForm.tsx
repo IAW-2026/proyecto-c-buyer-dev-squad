@@ -1,26 +1,21 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import {getUserCheckoutData, CheckoutFormData} from "@/lib/actions/Checkout.actions";
+import { submitCheckout } from "@/lib/actions/Checkout.actions";
+import type { CheckoutFormData } from "@/lib/actions/Checkout.actions";
 import type { OrderItem } from "@/app/types/order";
 
 type Props = {
   userId: string;
   cartItems: OrderItem[];
+  initialData: CheckoutFormData;
 };
-
-function formatDate(date: Date | null | undefined): string {
-  if (!date) return "";
-
-  return new Date(date)
-    .toISOString()
-    .split("T")[0];
-}
 
 export default function CheckoutPage({
   userId,
   cartItems,
+  initialData,
 }: Props) {
   const router = useRouter();
 
@@ -32,39 +27,7 @@ export default function CheckoutPage({
   >({});
 
   const [form, setForm] =
-    useState<CheckoutFormData>({
-      firstName: "",
-      lastName: "",
-      phone: "",
-      birthDate: "",
-      deliveryType: "pickup",
-      address: "",
-    });
-
-  useEffect(() => {
-    getUserCheckoutData(userId).then((data) => {
-      if (!data) return;
-
-      setForm((prev) => ({
-        ...prev,
-
-        firstName:
-          data.firstName ?? prev.firstName,
-
-        lastName:
-          data.lastName ?? prev.lastName,
-
-        phone: data.phone ?? prev.phone,
-
-        birthDate:
-          formatDate(data.birthDate) ||
-          prev.birthDate,
-
-        address:
-          data.address ?? prev.address,
-      }));
-    });
-  }, [userId]);
+    useState<CheckoutFormData>(initialData);
 
   const total = cartItems.reduce(
     (acc, item) =>
@@ -112,35 +75,13 @@ export default function CheckoutPage({
     if (!validate()) return;
     startTransition(async () => {
       try {
-        const response = await fetch(
-          "/api/orders",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type":
-                "application/json",
-            },
-            body: JSON.stringify({
-              total,
-              firstName: form.firstName,
-              lastName: form.lastName,
-              phone: form.phone,
-              deliveryType:
-                form.deliveryType,
-              address: form.address,
-              items: cartItems,
-            }),
-          }
+        const { orderId } = await submitCheckout(
+          userId,
+          cartItems,
+          form
         );
-
-        if (!response.ok) {
-          throw new Error(
-            "Error al crear la orden"
-          );
-        }
-        const data = await response.json();
         router.push(
-          `/order-confirmation/${data.orderId}`
+          `/order-confirmation/${orderId}`
         );
       } catch (e) {
         console.error(e);

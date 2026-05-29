@@ -1,6 +1,5 @@
 import { prisma } from "@/lib/prisma";
 
-const BUYER_SECRET = process.env.buyer_SECRET;
 export async function PATCH(
   req: Request,
   context: { params: Promise<{ id: string }> }
@@ -8,6 +7,7 @@ export async function PATCH(
 
   const { id } = await context.params;
   const secret = req.headers.get("buyer-key");
+  const BUYER_SECRET = process.env.buyer_SECRET;
   if (!BUYER_SECRET || secret !== BUYER_SECRET) {
     return new Response("Clave inválida", { status: 403 });
   }

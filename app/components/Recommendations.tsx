@@ -1,9 +1,9 @@
-"use client";
-
-import { useEffect, useState } from "react";
+import { auth } from "@clerk/nextjs/server";
+import { prisma } from "@/lib/prisma";
+import { getRecommendations } from "@/lib/services/Recommendations.service";
 import Image from "next/image";
 import Link from "next/link";
-import { Product } from "../types/product";
+import type { Product } from "../types/product";
 
 interface RecommendationsResponse {
   recommendations: Product[];
@@ -11,43 +11,32 @@ interface RecommendationsResponse {
   basedOnHistory: boolean;
 }
 
-interface RecommendationsProps {
-  limit?: number;
-  productBasePath?: string;
-}
-
-export default function Recommendations({
+export default async function Recommendations({
   limit = 6,
   productBasePath = "/products",
-}: RecommendationsProps) {
-  const [data, setData] = useState<RecommendationsResponse | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+}: {
+  limit?: number;
+  productBasePath?: string;
+}) {
+  let data: RecommendationsResponse;
 
-  useEffect(() => {
-    async function fetchRecommendations() {
-      try {
-        const res = await fetch(`/api/recommendations?limit=${limit}`);
-        if (!res.ok) throw new Error("Error al cargar recomendaciones");
-        const json = await res.json();
-        setData(json);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Error desconocido");
-      } finally {
-        setLoading(false);
-      }
+  const { userId: clerkId } = await auth();
+
+  if (clerkId) {
+    const user = await prisma.user.findUnique({ where: { clerkId: clerkId } });
+    if (user) {
+      data = await getRecommendations(user.id, limit);
+    } else {
+      data = await getFallbackRecommendations(limit);
     }
+  } else {
+    data = await getFallbackRecommendations(limit);
+  }
 
-    fetchRecommendations();
-  }, [limit]);
-
-  if (loading) return <RecommendationsSkeleton count={limit} />;
-
-  if (error || !data || data.recommendations.length === 0) return null;
+  if (!data.recommendations.length) return null;
 
   return (
     <section className="w-full py-10">
-      {/* Header */}
       <div className="mb-6 flex flex-col gap-1">
         <div className="flex items-center gap-2">
           <span className="text-lg">✦</span>
@@ -81,6 +70,14 @@ export default function Recommendations({
   );
 }
 
+async function getFallbackRecommendations(limit: number): Promise<RecommendationsResponse> {
+  const popular = await prisma.product.findMany({
+    orderBy: { createdAt: "desc" },
+    take: limit,
+  });
+  return { recommendations: popular, reason: "Productos destacados para vos", basedOnHistory: false };
+}
+
 function ProductCard({
   product,
   basePath,
@@ -94,7 +91,6 @@ function ProductCard({
       className="group flex flex-col gap-2 rounded-xl overflow-hidden transition-transform duration-200 hover:-translate-y-1"
       style={{ backgroundColor: "var(--color-surface-alt)" }}
     >
-      {/* Image */}
       <div className="relative aspect-square w-full overflow-hidden bg-surface">
         <Image
           src={product.image}
@@ -134,32 +130,5 @@ function ProductCard({
         </span>
       </div>
     </Link>
-  );
-}
-
-function RecommendationsSkeleton({ count }: { count: number }) {
-  return (
-    <section className="w-full py-10">
-      <div className="mb-6 flex flex-col gap-1">
-        <div className="h-6 w-40 rounded-md bg-surface animate-pulse" />
-        <div className="h-4 w-64 rounded-md bg-surface animate-pulse ml-6" />
-      </div>
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
-        {Array.from({ length: count }).map((_, i) => (
-          <div
-            key={i}
-            className="flex flex-col gap-2 rounded-xl overflow-hidden"
-            style={{ backgroundColor: "var(--color-surface-alt)" }}
-          >
-            <div className="aspect-square w-full bg-surface animate-pulse" />
-            <div className="flex flex-col gap-2 px-3 pb-3">
-              <div className="h-3 w-12 rounded bg-surface animate-pulse" />
-              <div className="h-4 w-full rounded bg-surface animate-pulse" />
-              <div className="h-4 w-16 rounded bg-surface animate-pulse mt-1" />
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
   );
 }

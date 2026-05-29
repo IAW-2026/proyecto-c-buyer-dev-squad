@@ -84,7 +84,7 @@ Respondé ÚNICAMENTE con un JSON en este formato, sin texto extra:
     const parsed: { ids: string[]; reason: string } = JSON.parse(raw.replace(/```json|```/g, "").trim());
 
     const recommended = await prisma.product.findMany({ where: { id: { in: parsed.ids } } });
-    const ordered = parsed.ids.map((id) => recommended.find((p) => p.id === id)).filter(Boolean);
+    const ordered = parsed.ids.map((id) => recommended.find((p) => p.id === id)).filter((p): p is NonNullable<typeof p> => p != null);
 
     return { recommendations: ordered, reason: parsed.reason, basedOnHistory: true };
   } catch {
