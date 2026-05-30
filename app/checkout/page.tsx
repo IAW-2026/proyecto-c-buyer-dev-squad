@@ -6,12 +6,19 @@ import {
   getCheckoutPageData,
   formatDate,
 } from "@/lib/services/Checkout.service";
+import { getUserByClerkId } from "@/lib/services/User.service";
 
 export default async function Page() {
   const { userId: clerkId } = await auth();
 
   if (!clerkId) {
     redirect("/login");
+  }
+
+  const dbCheck = await getUserByClerkId(clerkId);
+
+  if (dbCheck?.status === "SUSPENDED") {
+    redirect("/suspended");
   }
 
   const data = await getCheckoutPageData(clerkId);

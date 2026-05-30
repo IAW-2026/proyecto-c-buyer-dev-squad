@@ -2,6 +2,7 @@
 
 import { auth } from "@clerk/nextjs/server";
 import { getCart, addToCart, removeFromCart } from "@/lib/services/Cart.service";
+import { checkUserActive } from "@/lib/services/User.service";
 
 async function requireUser() {
   const { userId } = await auth();
@@ -9,6 +10,8 @@ async function requireUser() {
   if (!userId) {
     throw new Error("Unauthorized");
   }
+
+  await checkUserActive(userId);
 
   return userId;
 }

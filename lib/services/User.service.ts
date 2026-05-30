@@ -83,6 +83,7 @@ export async function getNavbarUser(clerkId: string) {
     where: { clerkId },
     select: {
       role: true,
+      status: true,
       firstName: true,
       lastName: true,
       phone: true,
@@ -90,6 +91,19 @@ export async function getNavbarUser(clerkId: string) {
       birthDate: true,
     },
   });
+}
+
+export async function checkUserActive(clerkId: string) {
+  const user = await prisma.user.findUnique({
+    where: { clerkId },
+    select: { status: true },
+  });
+
+  if (user?.status === "SUSPENDED") {
+    throw new Error("Usted ha sido suspendido");
+  }
+
+  return true;
 }
 export async function getUserByClerkId(clerkId: string) {
   return prisma.user.findUnique({

@@ -1,22 +1,42 @@
 import { currentUser } from "@clerk/nextjs/server";
-import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
 import { LogInButton } from "./LogInButton";
+import { LogOutButton } from "./LogOutButton";
 import ThemedLogo from "./ThemedLogo";
 import ThemeToggle from "./ThemeToggle";
 import { UserAvatarMenu } from "./UserAvatarMenu";
 import { getNavbarUser } from "@/lib/services/User.service";
 
 export default async function Navbar() {
-  const user = await currentUser();
+  const clerkUser = await currentUser();
 
   let isAdmin = false;
+  let isSuspended = false;
   let dbUser = null;
 
-  if (user) {
-    dbUser = await getNavbarUser(user.id);
-  }
+  if (clerkUser) {
+    dbUser = await getNavbarUser(clerkUser.id);
     isAdmin = dbUser?.role === "ADMIN";
+    isSuspended = dbUser?.status === "SUSPENDED";
+  }
+
+  if (isSuspended) {
+    return (
+      <nav className="w-full sticky top-0 z-50 border-b border-destructive/30 bg-destructive/5 shadow-sm">
+        <div className="max-w-6xl mx-auto flex items-center justify-between px-2 sm:px-4 md:px-6 h-14 sm:h-16 md:h-20">
+          <div className="scale-90 sm:scale-100 md:scale-110">
+            <ThemedLogo />
+          </div>
+          <div className="flex items-center gap-4">
+            <span className="text-sm text-destructive font-medium">
+              Cuenta suspendida
+            </span>
+            <LogOutButton />
+          </div>
+        </div>
+      </nav>
+    );
+  }
 
   return (
     <nav className="w-full sticky top-0 z-50 border-b border-muted bg-surface-alt shadow-sm">
@@ -36,10 +56,10 @@ export default async function Navbar() {
               Admin
             </Link>
           )}
-          {user && dbUser ? (
+          {clerkUser && dbUser ? (
             <UserAvatarMenu
-              imageUrl={user.imageUrl}
-              fullName={user.fullName}
+              imageUrl={clerkUser.imageUrl}
+              fullName={clerkUser.fullName}
               dbUser={{
                 firstName: dbUser.firstName,
                 lastName: dbUser.lastName,

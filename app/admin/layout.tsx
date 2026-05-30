@@ -12,15 +12,16 @@ export default async function AdminLayout({
 
   if (!userId) redirect("/sign-in");
 
-  // Verificar rol ADMIN en la base de datos
   const dbUser = await prisma.user.findUnique({
     where: { clerkId: userId },
-    select: { role: true, firstName: true, lastName: true, email: true },
+    select: { role: true, status: true, firstName: true, lastName: true, email: true },
   });
 
-  if (!dbUser || dbUser.role !== "ADMIN") {
-    redirect("/");
-  }
+  if (!dbUser) redirect("/");
+
+  if (dbUser.status === "SUSPENDED") redirect("/suspended");
+
+  if (dbUser.role !== "ADMIN") redirect("/");
 
   return (
     <div className="admin-layout">
