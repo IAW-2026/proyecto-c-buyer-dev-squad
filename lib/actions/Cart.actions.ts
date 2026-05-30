@@ -47,7 +47,10 @@ export async function removeFromCartAction(
   );
 }
 export async function getCartCount(): Promise<number> {
-  const userId = await requireUser();
+const { userId } = await auth();
+  if (!userId) {
+    return 0;
+  }
   const cart = await getCart(userId);
   return cart.reduce((acc, item) => acc + item.quantity, 0);
 }
