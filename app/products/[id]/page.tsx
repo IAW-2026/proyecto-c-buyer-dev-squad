@@ -1,9 +1,9 @@
-import { getProducts } from "@/lib/products";
-import { getSellerById } from "@/lib/sellers";
+import { getProducts } from "@/lib/services/Products.service";
 import Link from "next/link";
 import type { Product } from "@/app/types/product";
 import ProductActions from "@/app/components/ProductActions";
 import SellerInfo from "@/app/components/SellerInfo";
+import { getSellerById } from "@/lib/services/Sellers.service";
 
 type Props = {
   params: Promise<{ id: string }>;

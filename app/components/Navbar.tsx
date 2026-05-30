@@ -5,29 +5,18 @@ import { LogInButton } from "./LogInButton";
 import ThemedLogo from "./ThemedLogo";
 import ThemeToggle from "./ThemeToggle";
 import { UserAvatarMenu } from "./UserAvatarMenu";
-import { prisma } from "@/lib/prisma";
+import { getNavbarUser } from "@/lib/services/User.service";
 
 export default async function Navbar() {
   const user = await currentUser();
-  const { userId } = await auth();
 
   let isAdmin = false;
   let dbUser = null;
 
-  if (userId) {
-    dbUser = await prisma.user.findUnique({
-      where: { clerkId: userId },
-      select: {
-        role: true,
-        firstName: true,
-        lastName: true,
-        phone: true,
-        address: true,
-        birthDate: true,
-      },
-    });
-    isAdmin = dbUser?.role === "ADMIN";
+  if (user) {
+    dbUser = await getNavbarUser(user.id);
   }
+    isAdmin = dbUser?.role === "ADMIN";
 
   return (
     <nav className="w-full sticky top-0 z-50 border-b border-muted bg-surface-alt shadow-sm">

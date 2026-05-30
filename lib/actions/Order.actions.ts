@@ -1,27 +1,45 @@
 "use server";
-import { prisma } from "@/lib/prisma";
+
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
+
+import {
+  updateOrderStatusService,
+  updateOrderService,
+  deleteOrderService,
+  deleteOrderItemService,
+  getMoreOrders,
+} from "@/lib/services/Orders.service";
+
 import { OrderStatusType } from "@/app/types/order";
-export async function updateOrderStatus(orderId: string, status: "PENDING" | "PAID" | "SHIPPED" | "DELIVERED") {
+import { getUserByClerkId } from "../services/User.service";
+
+async function requireAdmin() {
   const { userId } = await auth();
-  if (!userId) throw new Error("No autenticado");
 
-  const admin = await prisma.user.findUnique({
-    where: { clerkId: userId },
-    select: { role: true },
-  });
+  if (!userId) {
+    throw new Error("No autenticado");
+  }
 
-  if (!admin || admin.role !== "ADMIN") throw new Error("No autorizado");
+  const admin = await getUserByClerkId(userId);
 
-  await prisma.order.update({
-    where: { id: orderId },
-    data: { status },
-  });
+  if (!admin || admin.role !== "ADMIN") {
+    throw new Error("No autorizado");
+  }
+}
+
+export async function updateOrderStatus(
+  orderId: string,
+  status: OrderStatusType
+) {
+  await requireAdmin();
+
+  await updateOrderStatusService(orderId, status);
 
   revalidatePath("/admin/orders");
   revalidatePath("/admin");
 }
+
 export async function updateOrder(
   orderId: string,
   data: {
@@ -34,90 +52,51 @@ export async function updateOrder(
     items: { quantity: number; price: number }[];
   }
 ) {
-  // Actualizar el pedido
-  await prisma.order.update({
-    where: { id: orderId },
-    data: {
-      total: data.total,
-      status: data.status,
-      createdAt: data.createdAt,
-    },
-  });
- 
-  // Actualizar el usuario asociado al pedido
-  const order = await prisma.order.findUnique({
-    where: { id: orderId },
-    select: { userId: true },
-  });
- 
-  if (order) {
-    await prisma.user.update({
-      where: { id: order.userId },
-      data: {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        email: data.email,
-      },
-    });
-  }
- 
-  // Actualizar los items (cantidad y precio) en orden
-  const orderItems = await prisma.orderItem.findMany({
-    where: { orderId },
-    orderBy: { createdAt: "asc" },
-  });
- 
-  await Promise.all(
-    data.items.map((item, i) => {
-      const dbItem = orderItems[i];
-      if (!dbItem) return;
-      return prisma.orderItem.update({
-        where: { id: dbItem.id },
-        data: { quantity: item.quantity, price: item.price },
-      });
-    })
-  );
- 
-  revalidatePath("/admin/orders");
-}
- 
-export async function deleteOrder(orderId: string) {
-  await prisma.order.delete({ where: { id: orderId } });
-  revalidatePath("/admin/orders");
-}
-export async function deleteOrderItem(itemId: string) {
-  await prisma.orderItem.delete({
-    where: { id: itemId },
-  });
+  await requireAdmin();
+
+  await updateOrderService(orderId, data);
 
   revalidatePath("/admin/orders");
 }
-export async function getMoreOrders(skip: number) {
+
+export async function deleteOrder(orderId: string) {
+  await requireAdmin();
+
+  await deleteOrderService(orderId);
+
+  revalidatePath("/admin/orders");
+}
+
+export async function deleteOrderItem(itemId: string) {
+  await requireAdmin();
+
+  await deleteOrderItemService(itemId);
+
+  revalidatePath("/admin/orders");
+}
+
+export async function loadMoreOrders(skip: number) {
   const { userId } = await auth();
 
-  if (!userId) return [];
+  if (!userId) {
+    return [];
+  }
 
-  const user = await prisma.user.findUnique({
-    where: { clerkId: userId },
-  });
+  const user = await getUserByClerkId(userId);
 
-  if (!user) return [];
+  if (!user) {
+    return [];
+  }
 
-  return prisma.order.findMany({
-    where: {
-      userId: user.id,
-    },
-    include: {
-      items: {
-        include: {
-          product: true,
-        },
-      },
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-    skip,
-    take: 5,
-  });
+  return getMoreOrders(user.id, skip);
+}
+export async function getFiveMoreOrders(
+  skip: number
+) {
+  const { userId } = await auth();
+
+  if (!userId) {
+    return [];
+  }
+  return await getMoreOrders(userId,skip)
 }

@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { getMoreOrders } from "@/lib/actions/Order.actions";
+import { getFiveMoreOrders } from "@/lib/actions/Order.actions";
 
 const statusLabel: Record<string, string> = {
   PENDING: "En proceso",
@@ -30,7 +30,7 @@ export default function OrdersList({
 
   const loadMore = () => {
     startTransition(async () => {
-      const newOrders = await getMoreOrders(orders.length);
+      const newOrders = await getFiveMoreOrders(orders.length);
 
       if (newOrders.length < 5) {
         setHasMore(false);

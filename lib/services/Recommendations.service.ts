@@ -107,3 +107,30 @@ function getTopKeys(values: string[], top: number): string[] {
     .slice(0, top)
     .map(([key]) => key);
 }
+
+export interface RecommendationsResponse {
+  recommendations: any[];
+  reason: string;
+  basedOnHistory: boolean;
+}
+
+export async function getRecommendationsForUser(
+  clerkId: string,
+  userId: string,
+  limit: number
+): Promise<RecommendationsResponse> {
+  return getRecommendations(userId, limit);
+}
+
+export async function getFallbackRecommendationsService(limit: number) {
+  const popular = await prisma.product.findMany({
+    orderBy: { createdAt: "desc" },
+    take: limit,
+  });
+
+  return {
+    recommendations: popular,
+    reason: "Productos destacados para vos",
+    basedOnHistory: false,
+  };
+}

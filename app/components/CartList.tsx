@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { removeFromCartAction } from "@/lib/actions/Cart.actions";
 
 export default function CartList({ items, total }: any) {
   const [loading, setLoading] = useState(false);
@@ -13,9 +14,7 @@ export default function CartList({ items, total }: any) {
 
     setLoading(true);
 
-    await fetch(`/api/cart?id=${itemToDelete}`, {
-      method: "DELETE",
-    });
+    await removeFromCartAction(itemToDelete);
 
     setLoading(false);
     setItemToDelete(null);

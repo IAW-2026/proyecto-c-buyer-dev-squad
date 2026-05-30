@@ -1,6 +1,8 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { useUser, useClerk } from "@clerk/nextjs";
+import { addToCartAction } from "@/lib/actions/Cart.actions";
 
 type Props = {
   productId: string;
@@ -8,7 +10,11 @@ type Props = {
   selectedColor: string | null;
 };
 
-export default function AddToCartButton({ productId, selectedSize, selectedColor }: Props) {
+export default function AddToCartButton({
+  productId,
+  selectedSize,
+  selectedColor,
+}: Props) {
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [addedId, setAddedId] = useState<string | null>(null);
 
@@ -17,60 +23,87 @@ export default function AddToCartButton({ productId, selectedSize, selectedColor
 
   const isLoading = loadingId === productId;
   const isAdded = addedId === productId;
-  const isDisabled = isLoading || isAdded || !selectedSize || !selectedColor;
+  const isDisabled =
+    isLoading || isAdded || !selectedSize || !selectedColor;
 
   useEffect(() => {
     if (isSignedIn) {
-      const pendingProduct = localStorage.getItem("pendingCartProduct");
+      const pendingProduct = localStorage.getItem(
+        "pendingCartProduct"
+      );
+
       if (pendingProduct) {
         const parsed = JSON.parse(pendingProduct);
-        if (parsed?.productId && parsed?.size && parsed?.color) {
-          addToCart(parsed.productId, parsed.size, parsed.color);
+
+        if (
+          parsed?.productId &&
+          parsed?.size &&
+          parsed?.color
+        ) {
+          addToCart(
+            parsed.productId,
+            parsed.size,
+            parsed.color
+          );
         }
+
         localStorage.removeItem("pendingCartProduct");
       }
     }
   }, [isSignedIn]);
 
   async function handleClick() {
-    if (!selectedSize || !selectedColor) return; // doble chequeo
+    if (!selectedSize || !selectedColor) return;
+
     if (!isSignedIn) {
       localStorage.setItem(
         "pendingCartProduct",
-        JSON.stringify({ productId, size: selectedSize, color: selectedColor })
+        JSON.stringify({
+          productId,
+          size: selectedSize,
+          color: selectedColor,
+        })
       );
+
       openSignIn();
       return;
     }
-    addToCart(productId, selectedSize, selectedColor);
+
+    await addToCart(
+      productId,
+      selectedSize,
+      selectedColor
+    );
   }
 
-  async function addToCart(productId: string, size: number, color: string) {
+  async function addToCart(
+    productId: string,
+    size: number,
+    color: string
+  ) {
     setLoadingId(productId);
-    try {
-      const response = await fetch("/api/cart", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          productId,
-          quantity: 1,
-          size,
-          color,
-        }),
-      });
-      if (!response.ok) {
-        const error = await response.json();
-        alert("Error: " + (error.error || "No se pudo agregar al carrito"));
-        setLoadingId(null);
-        return;
-      }
 
-      window.dispatchEvent(new Event("cartUpdated"));
-      setLoadingId(null);
+    try {
+      await addToCartAction(
+        productId,
+        1,
+        size,
+        color
+      );
+
+      window.dispatchEvent(
+        new Event("cartUpdated")
+      );
+
       setAddedId(productId);
-      setTimeout(() => setAddedId(null), 2200);
-    } catch {
-      alert("Error de conexión");
+
+      setTimeout(() => {
+        setAddedId(null);
+      }, 2200);
+    } catch (error) {
+      console.error(error);
+      alert("No se pudo agregar al carrito");
+    } finally {
       setLoadingId(null);
     }
   }
@@ -81,10 +114,21 @@ export default function AddToCartButton({ productId, selectedSize, selectedColor
         onClick={handleClick}
         disabled={isDisabled}
         className={`w-full flex items-center justify-center gap-2 px-5 py-2 rounded font-medium transition-colors duration-200
-          ${isAdded ? "btn-success" : "btn-primary"} disabled:opacity-40 disabled:cursor-not-allowed`}
+          ${
+            isAdded
+              ? "btn-success"
+              : "btn-primary"
+          }
+          disabled:opacity-40
+          disabled:cursor-not-allowed`}
       >
-        {isLoading ? "Agregando..." : isAdded ? "¡Agregado!" : "Agregar al carrito"}
+        {isLoading
+          ? "Agregando..."
+          : isAdded
+          ? "¡Agregado!"
+          : "Agregar al carrito"}
       </button>
+
       {(!selectedSize || !selectedColor) && (
         <p className="text-xs text-center text-red-500">
           Seleccioná talle y color para continuar

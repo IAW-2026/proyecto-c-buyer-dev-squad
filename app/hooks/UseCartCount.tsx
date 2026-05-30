@@ -1,24 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
+import { getCartCount } from "@/lib/actions/Cart.actions";
 
 export function useCartCount() {
   const [count, setCount] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [isPending, startTransition] = useTransition();
 
-  const update = async () => {
-    try {
-      const response = await fetch("/api/cart");
-      if (response.ok) {
-        const cart = await response.json();
-        const total = cart.reduce((acc: number, item: any) => acc + item.quantity, 0);
-        setCount(total);
-      }
-    } catch (error) {
-      console.error("Error fetching cart count:", error);
-    } finally {
-      setLoading(false);
-    }
+  const update = () => {
+    startTransition(async () => {
+      const total = await getCartCount();
+      setCount(total);
+    });
   };
 
   useEffect(() => {
@@ -27,5 +20,5 @@ export function useCartCount() {
     return () => window.removeEventListener("cartUpdated", update);
   }, []);
 
-  return { count, loading };
+  return { count, loading: isPending };
 }

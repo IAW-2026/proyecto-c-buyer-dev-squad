@@ -1,34 +1,20 @@
-import { prisma } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+
 import OrdersList from "../components/OrdersList";
+import { getLastOrdersByUser } from "@/lib/services/Orders.service";
 
 export default async function PedidosPage() {
   const { userId } = await auth();
 
   if (!userId) redirect("/");
 
-  const user = await prisma.user.findUnique({
-    where: { clerkId: userId },
-  });
+  const result = await getLastOrdersByUser(userId, 5);
 
-  if (!user) redirect("/");
+  if (!result) redirect("/");
 
-  const pedidos = await prisma.order.findMany({
-    where: { userId: user.id },
-    include: {
-      items: {
-        include: {
-          product: true,
-        },
-      },
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-    take: 5,
-  });
+  const { orders } = result;
 
   return (
     <main className="w-full px-4 sm:px-6 md:px-10 max-w-6xl mx-auto">
@@ -42,7 +28,7 @@ export default async function PedidosPage() {
         </h1>
       </div>
 
-      {pedidos.length === 0 ? (
+      {orders.length === 0 ? (
         <div className="text-center py-20 text-muted">
           <p className="text-5xl mb-4">📦</p>
 
@@ -50,15 +36,12 @@ export default async function PedidosPage() {
             Todavía no tenés pedidos
           </p>
 
-          <Link
-            href="/"
-            className="mt-4 inline-block text-primary underline"
-          >
+          <Link href="/" className="mt-4 inline-block text-primary underline">
             Ir a comprar
           </Link>
         </div>
       ) : (
-        <OrdersList initialOrders={pedidos} />
+        <OrdersList initialOrders={orders} />
       )}
     </main>
   );

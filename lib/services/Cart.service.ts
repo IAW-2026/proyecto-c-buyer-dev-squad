@@ -1,12 +1,10 @@
 
 import { prisma } from "@/lib/prisma";
 import type { OrderItem } from "@/app/types/order";
+import { getOrCreateUser } from "./User.service";
 
 export async function getCartItems(clerkId: string): Promise<OrderItem[]> {
-  const user = await prisma.user.findUnique({
-    where: { clerkId },
-  });
-  if (!user) return [];
+  const user = await getOrCreateUser(clerkId);
   const items = await prisma.cartItem.findMany({
     where: { userId: user.id },
     include: { product: true },
@@ -21,4 +19,106 @@ export async function getCartItems(clerkId: string): Promise<OrderItem[]> {
     size: item.size,
     color: item.color,
   }));
+}
+export async function getCart(clerkUserId: string) {
+  const user = await getOrCreateUser(clerkUserId);
+
+  return prisma.cartItem.findMany({
+    where: { userId: user.id },
+    include: { product: true },
+  });
+}
+
+export async function addToCart(
+  clerkUserId: string,
+  productId: string,
+  quantity: number,
+  size: number,
+  color: string
+) {
+  const user = await getOrCreateUser(clerkUserId);
+
+  const product = await prisma.product.findUnique({
+    where: { id: productId },
+  });
+
+  if (!product) {
+    throw new Error("Product not found");
+  }
+
+  const existingItem = await prisma.cartItem.findFirst({
+    where: {
+      productId,
+      userId: user.id,
+      size,
+      color,
+    },
+  });
+
+  if (existingItem) {
+    return prisma.cartItem.update({
+      where: { id: existingItem.id },
+      data: {
+        quantity: existingItem.quantity + quantity,
+      },
+      include: { product: true },
+    });
+  }
+
+  return prisma.cartItem.create({
+    data: {
+      productId,
+      userId: user.id,
+      quantity,
+      size,
+      color,
+    },
+    include: { product: true },
+  });
+}
+
+export async function removeFromCart(
+  clerkUserId: string,
+  cartItemId: string
+) {
+  const user = await getOrCreateUser(clerkUserId);
+
+  const existingItem = await prisma.cartItem.findFirst({
+    where: {
+      id: cartItemId,
+      userId: user.id,
+    },
+  });
+
+  if (!existingItem) {
+    throw new Error("Cart item not found");
+  }
+
+  if (existingItem.quantity > 1) {
+    return prisma.cartItem.update({
+      where: { id: cartItemId },
+      data: {
+        quantity: existingItem.quantity - 1,
+      },
+    });
+  }
+
+  return prisma.cartItem.delete({
+    where: {
+      id: cartItemId,
+    },
+  });
+}
+export async function getCartSummary(clerkId: string) {
+  const items = await getCartItems(clerkId);
+
+  const total = items.reduce(
+    (acc, item) => acc + item.price * item.quantity,
+    0
+  );
+
+  return {
+    items,
+    total,
+  };
 }

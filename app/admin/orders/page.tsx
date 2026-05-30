@@ -1,36 +1,12 @@
-import { prisma } from "@/lib/prisma";
 import OrdersTable from "@/app/components/OrderStable";
-
-async function getOrders(status?: string) {
-  return prisma.order.findMany({
-    where: status && status !== "ALL" ? { status: status as any } : undefined,
-    include: {
-      user: { select: { firstName: true, lastName: true, email: true } },
-      items: {
-        include: {
-          product: { select: { name: true, image: true } },
-        },
-      },
-    },
-    orderBy: { createdAt: "desc" },
-  });
-}
+import { getOrdersByStatus, getOrderStatusCounts } from "@/lib/services/Orders.service";
 
 export default async function OrdersPage(props: {
   searchParams: Promise<{ status?: string }>;
 }) {
   const { status } = await props.searchParams;
-  const orders = await getOrders(status);
-
-  const statusCounts = await prisma.order.groupBy({
-    by: ["status"],
-    _count: true,
-  });
-
-  const counts = Object.fromEntries(
-    statusCounts.map((s) => [s.status, s._count])
-  );
-
+  const orders = await getOrdersByStatus(status);
+  const counts = await getOrderStatusCounts();
   return (
     <div className="admin-page">
       <div className="admin-page-header">

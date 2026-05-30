@@ -6,7 +6,7 @@ import Filters from "./components/Filters";
 import CartButton from "./components/CartButton";
 import Recommendations from "./components/Recommendations";
 import ProductGridSkeleton from "./components/ProductGridSkeleton";
-import { prisma } from "@/lib/prisma";
+import { getBrands, getProducts} from "@/lib/services/Products.service";
 
 const categoryTitles: Record<string, string> = {
   hombre: "Zapatillas/Hombres",
@@ -14,61 +14,6 @@ const categoryTitles: Record<string, string> = {
   nino: "Zapatillas/Niños/as",
   zapatillas: "Zapatillas",
 };
-
-async function getProducts(searchParams: {
-  category?: string;
-  brand?: string;
-  minPrice?: string;
-  maxPrice?: string;
-  search?: string;
-}) {
-  return prisma.product.findMany({
-    where: {
-      ...(searchParams.category && {
-        category: searchParams.category,
-      }),
-
-      ...(searchParams.brand && {
-        brand: searchParams.brand,
-      }),
-
-      ...(searchParams.search && {
-        name: {
-          contains: searchParams.search,
-          mode: "insensitive",
-        },
-      }),
-
-      ...((searchParams.minPrice || searchParams.maxPrice) && {
-        price: {
-          ...(searchParams.minPrice && {
-            gte: Number(searchParams.minPrice),
-          }),
-
-          ...(searchParams.maxPrice && {
-            lte: Number(searchParams.maxPrice),
-          }),
-        },
-      }),
-    },
-  });
-}
-
-async function getBrands(category?: string) {
-  const products = await prisma.product.findMany({
-    where: {
-      ...(category && {
-        category,
-      }),
-    },
-
-    select: {
-      brand: true,
-    },
-  });
-
-  return [...new Set(products.map((p) => p.brand))];
-}
 
 function RecommendationsSkeleton() {
   return (
@@ -97,9 +42,13 @@ function RecommendationsSkeleton() {
   );
 }
 
-async function ProductsSection({ searchParams }: { searchParams: any }) {
+async function ProductsSection({
+  searchParams,
+}: {
+  searchParams: any;
+}) {
   const products = await getProducts(searchParams);
-  return <ProductList products={products} />;
+  return <ProductList products={products.data} />;
 }
 
 export default async function Home(props: {
@@ -117,20 +66,28 @@ export default async function Home(props: {
     <main className="p-6 md:p-10 space-y-6">
       <Navbar />
       <Tabs />
+
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <h1 className="text-2xl md:text-2xl font-bold">
+        <h1 className="text-2xl font-bold">
           {searchParams.category
             ? categoryTitles[searchParams.category] ?? "Productos"
             : "Zapatillas"}
         </h1>
+
         <Filters brands={brandList} />
       </div>
+
       <section>
-        <Suspense key={JSON.stringify(searchParams)} fallback={<ProductGridSkeleton />}>
+        <Suspense
+          key={JSON.stringify(searchParams)}
+          fallback={<ProductGridSkeleton />}
+        >
           <ProductsSection searchParams={searchParams} />
         </Suspense>
       </section>
+
       <CartButton />
+
       <Suspense fallback={<RecommendationsSkeleton />}>
         <Recommendations limit={6} productBasePath="/products" />
       </Suspense>

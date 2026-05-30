@@ -15,13 +15,11 @@ export default function Filters({ brands }: FiltersProps) {
   const updateFilter = (key: string, value: string) => {
     startTransition(() => {
       const params = new URLSearchParams(searchParams.toString());
-
       if (value) {
         params.set(key, value);
       } else {
         params.delete(key);
       }
-
       router.push(`/?${params.toString()}`);
     });
   };

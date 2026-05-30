@@ -1,8 +1,10 @@
 export const dynamic = "force-dynamic";
+
 import Link from "next/link";
-import { prisma } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+
+import { getOrderConfirmationData } from "@/lib/services/Orders.service";
 
 export default async function OrderConfirmation({
   params,
@@ -11,31 +13,16 @@ export default async function OrderConfirmation({
 }) {
   const { userId } = await auth();
 
-  if (!userId) {
-    redirect("/");
-  }
+  if (!userId) redirect("/");
 
   const { orderId } = await params;
 
-  const user = await prisma.user.findUnique({
-    where: { clerkId: userId },
-  });
+  const { user, order } = await getOrderConfirmationData(
+    userId,
+    orderId
+  );
 
-  if (!user) {
-    redirect("/");
-  }
-
-  const order = await prisma.order.findFirst({
-    where: {
-      id: orderId,
-      userId: user.id,
-    },
-    include: {
-      items: {
-        include: { product: true },
-      },
-    },
-  });
+  if (!user) redirect("/");
 
   if (!order) {
     return (

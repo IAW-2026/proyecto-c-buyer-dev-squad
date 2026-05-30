@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
  
 export async function getOrCreateUser(clerkId: string) {
-  const existing = await prisma.user.findUnique({ where: { clerkId } });
+  const existing = await getUserByClerkId(clerkId);
   if (existing) return existing;
  
   const clerkUser = await currentUser();
@@ -60,4 +60,64 @@ export async function updateUser(
     },
   });
   revalidatePath("/admin/users");
+}
+export async function getUsers(search?: string) {
+  return prisma.user.findMany({
+    where: search
+      ? {
+          OR: [
+            { email: { contains: search, mode: "insensitive" } },
+            { firstName: { contains: search, mode: "insensitive" } },
+            { lastName: { contains: search, mode: "insensitive" } },
+          ],
+        }
+      : undefined,
+    include: {
+      _count: { select: { orders: true } },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+}
+export async function getNavbarUser(clerkId: string) {
+  return prisma.user.findUnique({
+    where: { clerkId },
+    select: {
+      role: true,
+      firstName: true,
+      lastName: true,
+      phone: true,
+      address: true,
+      birthDate: true,
+    },
+  });
+}
+export async function getUserByClerkId(clerkId: string) {
+  return prisma.user.findUnique({
+    where: { clerkId },
+  });
+}
+export type UpdateUserProfileData = {
+  firstName: string;
+  lastName: string;
+  phone: string;
+  address: string;
+  birthDate: string;
+};
+
+export async function updateUserProfileData(
+  clerkId: string,
+  data: UpdateUserProfileData
+) {
+  return prisma.user.update({
+    where: { clerkId },
+    data: {
+      firstName: data.firstName,
+      lastName: data.lastName,
+      phone: data.phone,
+      address: data.address,
+      birthDate: data.birthDate
+        ? new Date(data.birthDate)
+        : null,
+    },
+  });
 }

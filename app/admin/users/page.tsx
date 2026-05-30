@@ -1,23 +1,5 @@
-import { prisma } from "@/lib/prisma";
 import UsersTable from "@/app/components/UsersTable";
-
-async function getUsers(search?: string) {
-  return prisma.user.findMany({
-    where: search
-      ? {
-          OR: [
-            { email: { contains: search, mode: "insensitive" } },
-            { firstName: { contains: search, mode: "insensitive" } },
-            { lastName: { contains: search, mode: "insensitive" } },
-          ],
-        }
-      : undefined,
-    include: {
-      _count: { select: { orders: true } },
-    },
-    orderBy: { createdAt: "desc" },
-  });
-}
+import { getUsers } from "@/lib/services/User.service";
 
 export default async function UsersPage(props: {
   searchParams: Promise<{ search?: string }>;

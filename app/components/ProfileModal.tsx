@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { updateUserProfile } from "@/lib/actions/UpdateProfile.actions";
+import { updateUserProfile } from "@/lib/actions/User.actions";
 
 type Props = {
   user: {

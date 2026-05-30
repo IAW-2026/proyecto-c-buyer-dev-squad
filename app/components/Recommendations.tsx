@@ -1,9 +1,10 @@
 import { auth } from "@clerk/nextjs/server";
-import { prisma } from "@/lib/prisma";
-import { getRecommendations } from "@/lib/services/Recommendations.service";
+import type { Product } from "../types/product";
+
 import Image from "next/image";
 import Link from "next/link";
-import type { Product } from "../types/product";
+import { getFallbackRecommendationsService, getRecommendationsForUser } from "@/lib/services/Recommendations.service";
+import { getUserByClerkId } from "@/lib/services/User.service";
 
 interface RecommendationsResponse {
   recommendations: Product[];
@@ -23,18 +24,22 @@ export default async function Recommendations({
   const { userId: clerkId } = await auth();
 
   if (clerkId) {
-    const user = await prisma.user.findUnique({ where: { clerkId: clerkId } });
+    const user = await getUserByClerkId(clerkId);
+
     if (user) {
-      data = await getRecommendations(user.id, limit);
+      data = await getRecommendationsForUser(
+        clerkId,
+        user.id,
+        limit
+      );
     } else {
-      data = await getFallbackRecommendations(limit);
+      data = await getFallbackRecommendationsService(limit);
     }
   } else {
-    data = await getFallbackRecommendations(limit);
+    data = await getFallbackRecommendationsService(limit);
   }
 
   if (!data.recommendations.length) return null;
-
   return (
     <section className="w-full py-10">
       <div className="mb-6 flex flex-col gap-1">
@@ -68,14 +73,6 @@ export default async function Recommendations({
       </div>
     </section>
   );
-}
-
-async function getFallbackRecommendations(limit: number): Promise<RecommendationsResponse> {
-  const popular = await prisma.product.findMany({
-    orderBy: { createdAt: "desc" },
-    take: limit,
-  });
-  return { recommendations: popular, reason: "Productos destacados para vos", basedOnHistory: false };
 }
 
 function ProductCard({
