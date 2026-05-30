@@ -193,7 +193,8 @@ body {
 
 .admin-sidebar {
   width: 260px;
-  min-height: 100vh;
+  height: 100vh;
+  overflow-y: auto;
   background-color: var(--color-primary);
   color: var(--color-on-primary);
   display: flex;
@@ -302,7 +303,7 @@ body {
 
 .admin-back-link {
   font-size: 0.75rem;
-  color: rgba(238, 233, 233, 0.911);
+  color: rgba(153, 150, 150, 0.911);
   text-decoration: none;
   display: block;
   text-align: center;
