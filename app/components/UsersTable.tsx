@@ -10,6 +10,7 @@ type User = {
   firstName: string | null;
   lastName: string | null;
   status: string;
+  role: "ADMIN" | "USER";
   createdAt: Date;
   _count: { orders: number };
 };
@@ -28,7 +29,7 @@ function UserRow({ user }: { user: User }) {
   const [orderCount, setOrderCount] = useState(user._count.orders);
 
   const isSuspended = user.status === "SUSPENDED";
-
+  const isAdmin = user.role === "ADMIN";
   const fullName =
     user.firstName || user.lastName
       ? `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim()
@@ -39,11 +40,12 @@ function UserRow({ user }: { user: User }) {
     : user.email[0].toUpperCase();
 
   const handleToggleSuspend = () => {
-    startTransition(async () => {
-      if (isSuspended) await activateUser(user.id);
-      else await suspendUser(user.id);
-    });
-  };
+  if (isAdmin) return;
+  startTransition(async () => {
+    if (isSuspended) await activateUser(user.id);
+    else await suspendUser(user.id);
+  });
+};
 
   const handleSave = () => {
     startTransition(async () => {
@@ -128,8 +130,14 @@ function UserRow({ user }: { user: User }) {
         <td className="px-3 py-1.5">
           <button
             onClick={handleToggleSuspend}
-            disabled={isPending}
-            title={isSuspended ? "Activar usuario" : "Suspender usuario"}
+            disabled={isPending || isAdmin}
+            title={
+              isAdmin
+                ? "Los administradores no pueden ser suspendidos"
+                : isSuspended
+                ? "Activar usuario"
+                : "Suspender usuario"
+            }
             className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold cursor-pointer transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed select-none border ${
               isSuspended
                 ? "bg-[var(--color-danger-light)] text-[var(--color-danger)] border-[var(--color-danger)]"
@@ -144,7 +152,7 @@ function UserRow({ user }: { user: User }) {
             ) : (
               <span className={`w-1.5 h-1.5 rounded-full ${isSuspended ? "bg-[var(--color-danger)]" : "bg-[var(--color-success)]"}`} />
             )}
-            {isSuspended ? "Suspendido" : "Activo"}
+            {isAdmin ? "Administrador" : isSuspended ? "Suspendido" : "Activo"}
           </button>
         </td>
 
@@ -220,16 +228,28 @@ function UserRow({ user }: { user: User }) {
               </button>
             )}
 
-            <button
-              onClick={() => setShowDeleteConfirm(true)}
-              title="Eliminar"
-              disabled={isPending}
-              className="p-1.5 rounded-md text-[var(--color-danger)] hover:bg-[var(--color-danger-light)] transition-colors disabled:opacity-40"
-            >
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-              </svg>
-            </button>
+            {!isAdmin && (
+              <button
+                onClick={() => setShowDeleteConfirm(true)}
+                title="Eliminar"
+                disabled={isPending}
+                className="p-1.5 rounded-md text-[var(--color-danger)] hover:bg-[var(--color-danger-light)] transition-colors disabled:opacity-40"
+              >
+                <svg
+                  className="w-3.5 h-3.5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                  />
+                </svg>
+              </button>
+            )}
           </div>
         </td>
       </tr>
