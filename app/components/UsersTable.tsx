@@ -14,7 +14,6 @@ type User = {
   _count: { orders: number };
 };
 
-
 function UserRow({ user }: { user: User }) {
   const [editing, setEditing] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -31,7 +30,7 @@ function UserRow({ user }: { user: User }) {
   const isSuspended = user.status === "SUSPENDED";
 
   const fullName =
-    (user.firstName || user.lastName)
+    user.firstName || user.lastName
       ? `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim()
       : null;
 
@@ -41,11 +40,8 @@ function UserRow({ user }: { user: User }) {
 
   const handleToggleSuspend = () => {
     startTransition(async () => {
-      if (isSuspended) {
-        await activateUser(user.id);
-      } else {
-        await suspendUser(user.id);
-      }
+      if (isSuspended) await activateUser(user.id);
+      else await suspendUser(user.id);
     });
   };
 
@@ -80,11 +76,11 @@ function UserRow({ user }: { user: User }) {
   return (
     <>
       <tr
-        className={`transition-colors group ${
-          isSuspended ? "opacity-55" : ""
-        } ${editing ? "bg-[var(--color-surface-alt)]" : "hover:bg-[var(--color-surface)]"}`}
+        className={`transition-colors ${isSuspended ? "opacity-55" : ""} ${
+          editing ? "bg-[var(--color-surface-alt)]" : "hover:bg-[var(--color-surface)]"
+        }`}
       >
-        {/* Avatar + name */}
+        {/* Avatar + nombre */}
         <td className="px-4 py-3">
           <div className="flex items-center gap-3 min-w-0">
             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-zinc-600 to-zinc-900 dark:from-zinc-300 dark:to-zinc-500 flex items-center justify-center text-white dark:text-black text-xs font-bold flex-shrink-0 select-none">
@@ -115,8 +111,8 @@ function UserRow({ user }: { user: User }) {
           </div>
         </td>
 
-        {/* Email */}
-        <td className="px-4 py-3 text-[var(--color-muted)] text-xs">
+        {/* Email — oculto en mobile */}
+        <td className="hidden sm:table-cell px-4 py-3 text-[var(--color-muted)] text-xs">
           {editing ? (
             <input
               value={email}
@@ -128,6 +124,7 @@ function UserRow({ user }: { user: User }) {
           )}
         </td>
 
+        {/* Estado */}
         <td className="px-4 py-3">
           <button
             onClick={handleToggleSuspend}
@@ -151,7 +148,8 @@ function UserRow({ user }: { user: User }) {
           </button>
         </td>
 
-        <td className="px-4 py-3">
+        {/* Pedidos — oculto en mobile */}
+        <td className="hidden sm:table-cell px-4 py-3">
           {editing ? (
             <input
               type="number"
@@ -167,8 +165,8 @@ function UserRow({ user }: { user: User }) {
           )}
         </td>
 
-        {/* Date */}
-        <td className="px-4 py-3 text-[var(--color-muted)] text-xs">
+        {/* Fecha — oculto en mobile */}
+        <td className="hidden md:table-cell px-4 py-3 text-[var(--color-muted)] text-xs">
           {editing ? (
             <input
               type="date"
@@ -185,6 +183,7 @@ function UserRow({ user }: { user: User }) {
           )}
         </td>
 
+        {/* Acciones — siempre visibles */}
         <td className="px-4 py-3">
           <div className="flex items-center justify-end gap-1">
             {editing ? (
@@ -213,7 +212,7 @@ function UserRow({ user }: { user: User }) {
               <button
                 onClick={() => setEditing(true)}
                 title="Editar"
-                className="p-1.5 rounded-md text-[var(--color-muted)] hover:text-[var(--color-foreground)] hover:bg-[var(--color-surface)] transition-colors opacity-0 group-hover:opacity-100"
+                className="p-1.5 rounded-md text-[var(--color-muted)] hover:text-[var(--color-foreground)] hover:bg-[var(--color-surface)] transition-colors"
               >
                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -225,7 +224,7 @@ function UserRow({ user }: { user: User }) {
               onClick={() => setShowDeleteConfirm(true)}
               title="Eliminar"
               disabled={isPending}
-              className="p-1.5 rounded-md text-[var(--color-danger)] hover:bg-[var(--color-danger-light)] transition-colors opacity-0 group-hover:opacity-100 disabled:opacity-40"
+              className="p-1.5 rounded-md text-[var(--color-danger)] hover:bg-[var(--color-danger-light)] transition-colors disabled:opacity-40"
             >
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -282,7 +281,6 @@ function UserRow({ user }: { user: User }) {
   );
 }
 
-
 export default function UsersTable({ users }: { users: User[] }) {
   if (users.length === 0) {
     return (
@@ -296,18 +294,16 @@ export default function UsersTable({ users }: { users: User[] }) {
   }
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-[var(--color-border)]" style={{ WebkitOverflowScrolling: 'touch' }}>
-      <table className="w-full text-sm" style={{ minWidth: 500 }}>
+    <div className="overflow-x-auto rounded-xl border border-[var(--color-border)]" style={{ WebkitOverflowScrolling: "touch" }}>
+      <table className="w-full text-sm" style={{ minWidth: 320 }}>
         <thead>
           <tr className="border-b border-[var(--color-border)] bg-[var(--color-surface-alt)]">
-            {["Usuario", "Email", "Estado", "Pedidos", "Registrado", ""].map((h) => (
-              <th
-                key={h}
-                className="px-4 py-3 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap"
-              >
-                {h}
-              </th>
-            ))}
+            <th className="px-4 py-3 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Usuario</th>
+            <th className="hidden sm:table-cell px-4 py-3 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Email</th>
+            <th className="px-4 py-3 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Estado</th>
+            <th className="hidden sm:table-cell px-4 py-3 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Pedidos</th>
+            <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Registrado</th>
+            <th className="px-4 py-3" />
           </tr>
         </thead>
         <tbody className="divide-y divide-[var(--color-border)]">
