@@ -31,13 +31,13 @@ export default async function Navbar() {
 
   return (
     <nav className="w-full sticky top-0 z-50 border-b border-muted bg-surface-alt shadow-sm">
-      <div className="max-w-6xl mx-auto flex items-center justify-between px-4 md:px-6 h-16 md:h-20">
+      <div className="max-w-6xl mx-auto flex items-center justify-between px-2 sm:px-4 md:px-6 h-14 sm:h-16 md:h-20">
 
-        <div className="scale-110">
+        <div className="scale-90 sm:scale-100 md:scale-110">
           <ThemedLogo />
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
           <ThemeToggle />
           {isAdmin && (
             <Link

@@ -28,13 +28,13 @@ export default async function ProductPage({ params }: Props) {
   const seller = await getSellerById(product.sellerId);
 
   return (
-    <main className="h-screen overflow-hidden px-4 md:px-8 py-4 max-w-6xl mx-auto">
+    <main className="min-h-screen px-4 md:px-8 py-4 max-w-6xl mx-auto">
       <Link href="/" className="text-sm text-muted underline">
         ← Volver
       </Link>
 
-      <div className="grid md:grid-cols-2 gap-6 mt-4 h-[calc(100%-40px)]">
-        <div className="h-full flex items-center justify-center">
+      <div className="grid md:grid-cols-2 gap-6 mt-4">
+        <div className="flex items-start md:items-center justify-center">
           <img
             src={product.image}
             alt={product.name}
@@ -42,7 +42,7 @@ export default async function ProductPage({ params }: Props) {
           />
         </div>
 
-        <div className="flex flex-col h-full overflow-hidden">
+        <div className="flex flex-col">
           <h1 className="text-2xl md:text-3xl font-bold">
             {product.name}
           </h1>
@@ -55,7 +55,7 @@ export default async function ProductPage({ params }: Props) {
             ${product.price}
           </p>
 
-          <div className="mt-4 p-4 border border-muted rounded-xl bg-surface overflow-auto max-h-[120px]">
+          <div className="mt-4 p-4 border border-muted rounded-xl bg-surface">
             <h2 className="font-semibold mb-1 text-sm">Descripción</h2>
             <p className="text-muted text-sm">
               {product.description}

@@ -296,8 +296,8 @@ export default function UsersTable({ users }: { users: User[] }) {
   }
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-[var(--color-border)]">
-      <table className="w-full text-sm">
+    <div className="overflow-x-auto rounded-xl border border-[var(--color-border)]" style={{ WebkitOverflowScrolling: 'touch' }}>
+      <table className="w-full text-sm" style={{ minWidth: 500 }}>
         <thead>
           <tr className="border-b border-[var(--color-border)] bg-[var(--color-surface-alt)]">
             {["Usuario", "Email", "Estado", "Pedidos", "Registrado", ""].map((h) => (
