@@ -1,271 +1,127 @@
-# 👟 Marketplace de Zapatillas
+# Buyer App — Marketplace
 
-Proyecto fullstack desarrollado con **Next.js**, **TypeScript**, **Prisma** y **Clerk** que simula un marketplace de zapatillas con autenticación, carrito de compras, órdenes y checkout.
+Aplicación de compras para un marketplace estilo Mercado Libre desarrollada como parte de la Etapa 2 del proyecto integrador.
 
----
+La plataforma permite a los compradores explorar productos, aplicar filtros de búsqueda, gestionar un carrito de compras, realizar pedidos y consultar su historial de compras. Además, incorpora recomendaciones personalizadas basadas en compras previas y un panel de administración para la gestión del sistema.
 
-# 🚀 Tecnologías utilizadas
+Construida con Next.js, PostgreSQL, Prisma, Clerk Authentication y Tailwind CSS. Durante esta etapa del proyecto, las integraciones con las aplicaciones Seller, Payments y Shipping se encuentran mockeadas/simuladas respetando los contratos definidos en la etapa de diseño.
 
-* Next.js (App Router)
-* TypeScript
-* Prisma ORM
-* PostgreSQL
-* Clerk Authentication
-* Tailwind CSS
-* React
+## Características principales
 
----
+### Compradores
 
-# 📦 Funcionalidades
+* Registro e inicio de sesión mediante Clerk.
+* Búsqueda de productos.
+* Filtros por categoría, marca, color y rango de precios.
+* Visualización de detalles de productos y vendedores.
+* Gestión de carrito de compras.
+* Creación y seguimiento de pedidos.
+* Historial de compras.
+* Recomendaciones de productos basadas en compras anteriores.
 
-## 🔐 Autenticación
+### Administración
 
-El proyecto utiliza Clerk como proveedor de autenticación.
+* Dashboard con métricas generales.
+* Gestión de usuarios.
+* Suspensión y reactivación de usuarios.
+* Gestión y actualización de pedidos.
+* Visualización de reportes y listados relevantes.
 
-Características:
+## Tecnologías
 
-* Registro e inicio de sesión
-* Persistencia de sesión
-* Protección de rutas privadas
-* Integración de usuarios entre servicios mediante Clerk JWT
+* **Next.js** — Framework React full-stack.
+* **TypeScript** — Tipado estático.
+* **PostgreSQL** — Base de datos relacional.
+* **Prisma** — ORM y sistema de migraciones.
+* **Clerk** — Autenticación y manejo de sesiones.
+* **Tailwind CSS** — Estilos y diseño responsivo.
+* **Vercel** — Deploy de la aplicación.
 
----
+## Deploy
 
-## 🛒 Carrito de compras
+https://[completar-url-de-vercel]
 
-Los usuarios autenticados pueden:
+## Credenciales de acceso
 
-* Agregar productos al carrito
-* Elegir talle y color
-* Incrementar cantidades automáticamente
-* Eliminar productos
-* Obtener el carrito asociado a su cuenta
+| Rol           | Email                   | Contraseña  |
+| ------------- | ----------------------- | ----------- |
+| Administrador | zapasya.clerk@gmail.com | ZapasYa11@  |
+| Comprador     | buyerzapasya@gmail.com  | dev-squad   |
 
-### Endpoints principales
+## Datos de prueba incluidos
 
-| Método | Endpoint        | Descripción                    |
-| ------ | --------------- | ------------------------------ |
-| GET    | `/api/cart`     | Obtiene el carrito del usuario |
-| POST   | `/api/cart`     | Agrega un producto al carrito  |
-| DELETE | `/api/cart?id=` | Elimina o decrementa un item   |
+La aplicación cuenta con:
 
----
+* Usuarios precargados.
+* Productos precargados en distintas categorías.
+* Pedidos en diferentes estados.
+* Historial de compras asociado a distintos usuarios.
 
-## 📦 Órdenes
-
-El sistema permite:
-
-* Crear órdenes desde el carrito
-* Asociar órdenes a usuarios
-* Consultar historial de compras
-* Consultar una orden específica
-
-### Endpoints principales
-
-| Método | Endpoint          | Descripción                  |
-| ------ | ----------------- | ---------------------------- |
-| POST   | `/api/orders`     | Crea una nueva orden         |
-| GET    | `/api/orders`     | Obtiene órdenes del usuario  |
-| GET    | `/api/orders?id=` | Obtiene una orden específica |
-
----
-
-## 💳 Checkout y pagos simulados
-
-El proyecto incluye una simulación de integración con una API de pagos.
-
-Flujo:
-
-1. Se obtiene la orden.
-2. Se genera un payload de pago.
-3. Se simula el envío a una API externa.
-4. La orden cambia su estado a `COMPLETED`.
-5. Se redirige a la confirmación de compra.
-
-### Endpoint principal
-
-| Método | Endpoint             | Descripción                      |
-| ------ | -------------------- | -------------------------------- |
-| POST   | `/api/checkout/[id]` | Procesa el checkout de una orden |
-
----
-
-## 🔍 Productos y filtros
-
-El marketplace permite:
-
-* Filtrar por categoría
-* Filtrar por marca
-* Filtrar por precio
-* Buscar por nombre o marca
-* Obtener información del vendedor
-
-### Endpoint principal
-
-| Método | Endpoint        | Descripción                 |
-| ------ | --------------- | --------------------------- |
-| GET    | `/api/products` | Obtiene productos filtrados |
-
-### Parámetros soportados
-
-| Parámetro | Descripción               |
-| --------- | ------------------------- |
-| category  | Filtrar por categoría     |
-| brand     | Filtrar por marca         |
-| minPrice  | Precio mínimo             |
-| maxPrice  | Precio máximo             |
-| search    | Buscar por nombre o marca |
-
-Ejemplo:
+Para simular la integración con los servicios externos del marketplace, se incluyen scripts que permiten modificar el estado de las órdenes:
 
 ```bash
-/api/products?brand=Nike&minPrice=100&maxPrice=300
+npm run status-paid
+npm run status-shipping
+npm run status-delivered
 ```
 
----
+Estos scripts representan los eventos que, en una integración real, serían enviados por las aplicaciones de pagos y logística.
 
-## 🏪 Sellers
-
-El sistema también expone información de vendedores.
-
-### Endpoints principales
-
-| Método | Endpoint           | Descripción                  |
-| ------ | ------------------ | ---------------------------- |
-| GET    | `/api/sellers`     | Obtiene todos los sellers    |
-| GET    | `/api/sellers?id=` | Obtiene un seller específico |
-
----
-
-# 🧠 Arquitectura
-
-El proyecto sigue una arquitectura basada en:
-
-* Frontend y backend integrados con Next.js App Router
-* API Routes para lógica de negocio
-* Prisma como capa de acceso a datos
-* Clerk para autenticación centralizada
-* Separación modular por features
-
----
-
-# ⚙️ Instalación
-
-## 1. Clonar repositorio
+## Ejecución local
 
 ```bash
-git clone <repo-url>
-```
+# 1. Clonar repositorio
+git clone https://github.com/IAW-2026/proyecto-c-buyer-dev-squad.git
 
----
-
-## 2. Instalar dependencias
-
-```bash
+# 2. Instalar dependencias
 npm install
-```
 
----
+# 3. Configurar variables de entorno
+cp .env.example .env.local
 
-## 3. Configurar variables de entorno
-
-Crear un archivo `.env`:
-
-```env
-DATABASE_URL=
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
-CLERK_SECRET_KEY=
-```
-
----
-
-## 4. Ejecutar migraciones
-
-```bash
+# 4. Ejecutar migraciones
 npx prisma migrate dev
-```
 
----
+# 5. Cargar datos iniciales
+npm run seed
 
-## 5. Ejecutar el proyecto
-
-```bash
+# 6. Iniciar aplicación
 npm run dev
 ```
 
----
+## Variables de entorno
 
-# 🗄️ Modelo de datos
-
-Entidades principales:
-
-* User
-* Product
-* CartItem
-* Order
-* OrderItem
-* Seller
-
-Relaciones:
-
-* Un usuario puede tener múltiples items en el carrito.
-* Un usuario puede tener múltiples órdenes.
-* Una orden contiene múltiples productos.
-* Un producto pertenece a un seller.
-
----
-
-# 📁 Estructura del proyecto
-
-```bash
-src/
- ├── app/
- │    ├── api/
- │    ├── components/
- │    ├── admin/
- │    └── checkout/
- │
- ├── lib/
- │    ├── prisma.ts
- │    ├── products.ts
- │    └── sellers.ts
- │
- ├── generated/
- └── prisma/
+```env
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
+CLERK_SECRET_KEY=
+OPENAI_API_KEY=
+DATABASE_URL=
+BUYER_SECRET=
 ```
+### Recomendaciones inteligentes con IA
 
----
+La aplicación incorpora un sistema de recomendaciones personalizadas utilizando la API de OpenAI.
 
-# 🔒 Seguridad
+A partir del historial de compras del usuario, se analizan sus categorías más frecuentes, marcas preferidas y rango habitual de precios. Esta información se utiliza para generar sugerencias de productos que aún no han sido comprados y que se ajustan a sus preferencias.
 
-* Validación de autenticación con Clerk
-* Protección de endpoints privados
-* Validación de recursos por usuario
-* Manejo de errores HTTP
+Para garantizar la disponibilidad de la funcionalidad, el sistema incluye un mecanismo de respaldo que genera recomendaciones basadas en categorías populares cuando la API externa no se encuentra disponible.
 
----
+Debido a que el consumo de la API tiene costos asociados, el uso de esta funcionalidad se encuentra limitado en el entorno de pruebas. Como mejora futura se planea optimizar el sistema mediante caché de recomendaciones, reducción de llamadas a la API y la incorporación de algoritmos híbridos de recomendación.
 
-# 📌 Estados de órdenes
+## Limitaciones actuales
 
-| Estado    | Descripción                    |
-| --------- | ------------------------------ |
-| PENDING   | Orden creada pendiente de pago |
-| COMPLETED | Pago realizado correctamente   |
+* Las integraciones con Seller App, Payments App y Shipping App están simuladas.
+* No existe sincronización real de stock con vendedores.
+* Los estados de envío y pago son actualizados mediante scripts de prueba.
 
----
+## Futuras mejoras
 
-# 🧪 Posibles mejoras futuras
-
-* Integración real con otras apis
-* Panel de administración avanzado
-* Gestión de stock
-* Reviews y ratings
-* Notificaciones
-* Emails transaccionales
-* Dashboard de vendedores
-
----
-
-# 👨‍💻 Autor
-
-Desarrollado como proyecto académico/fullstack utilizando tecnologías modernas del ecosistema React y Next.js.
+* Control de stock en tiempo real.
+* Integración completa con las demás aplicaciones del marketplace.
+* Más medios y opciones de compra.
+* Sistema avanzado de recomendaciones.
+* Lista de favoritos y productos guardados.
+* Notificaciones en tiempo real sobre cambios de estado de pedidos.
+* Comparación de productos y mejoras en la experiencia de búsqueda.
+* Optimización del sistema de recomendaciones basado en IA para reducir costos de OpenAI.
+* Dashboard analítico más avanzado con nuevas métricas comerciales.
