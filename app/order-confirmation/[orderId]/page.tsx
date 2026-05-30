@@ -3,7 +3,7 @@ export const dynamic = "force-dynamic";
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-
+import AutoRefresh from "@/app/components/AutoRefresh";
 import { getOrderConfirmationData } from "@/lib/services/Orders.service";
 
 export default async function OrderConfirmation({
@@ -39,6 +39,7 @@ export default async function OrderConfirmation({
   if (order.status !== "PAID") {
   return (
     <main className="p-6 md:p-10">
+      <AutoRefresh />
       <div className="max-w-2xl mx-auto">
         <div className="bg-warning-light border border-warning rounded-lg p-6 md:p-8 mb-8">
           <h1 className="text-3xl md:text-4xl font-bold text-warning mb-2">
