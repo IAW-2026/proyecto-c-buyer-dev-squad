@@ -3,11 +3,13 @@
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useUser, useClerk } from "@clerk/nextjs";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useTransition } from "react";
+import Loader from "./Loader";
 
 export default function Tabs() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
 
   const currentCategory = searchParams.get("category");
   const currentSearch = searchParams.get("search") || "";
@@ -33,15 +35,17 @@ export default function Tabs() {
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      const params = new URLSearchParams(searchParams.toString());
+      startTransition(() => {
+        const params = new URLSearchParams(searchParams.toString());
 
-      if (search.trim()) {
-        params.set("search", search.trim());
-      } else {
-        params.delete("search");
-      }
+        if (search.trim()) {
+          params.set("search", search.trim());
+        } else {
+          params.delete("search");
+        }
 
-      router.push(`/?${params.toString()}`);
+        router.push(`/?${params.toString()}`);
+      });
     }, 300);
 
     return () => clearTimeout(timeout);
@@ -73,13 +77,20 @@ export default function Tabs() {
         </div>
 
         <div className="w-full lg:flex-1 lg:flex lg:justify-center">
-          <input
-            type="text"
-            placeholder="🔍 Buscar productos..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full lg:max-w-md px-4 py-2 rounded-full border border-muted bg-surface text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-          />
+          <div className="relative w-full lg:max-w-md">
+            <input
+              type="text"
+              placeholder="🔍 Buscar productos..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full px-4 py-2 rounded-full border border-muted bg-surface text-sm focus:outline-none focus:ring-2 focus:ring-primary pr-10"
+            />
+            {isPending && (
+              <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                <Loader size="sm" />
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="w-full lg:w-auto">

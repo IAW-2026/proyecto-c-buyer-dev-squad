@@ -1,6 +1,8 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTransition } from "react";
+import Loader from "./Loader";
 
 interface FiltersProps {
     brands: string[];
@@ -8,20 +10,29 @@ interface FiltersProps {
 export default function Filters({ brands }: FiltersProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [isPending, startTransition] = useTransition();
+
   const updateFilter = (key: string, value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
+    startTransition(() => {
+      const params = new URLSearchParams(searchParams.toString());
 
-    if (value) {
-      params.set(key, value);
-    } else {
-      params.delete(key);
-    }
+      if (value) {
+        params.set(key, value);
+      } else {
+        params.delete(key);
+      }
 
-    router.push(`/?${params.toString()}`);
+      router.push(`/?${params.toString()}`);
+    });
   };
 
   return (
-    <div className="flex flex-col sm:flex-row gap-4">
+    <div className="relative flex flex-col sm:flex-row gap-4">
+      {isPending && (
+        <div className="absolute inset-0 bg-background/50 z-10 flex items-center justify-center rounded">
+          <Loader size="sm" />
+        </div>
+      )}
       <select
         onChange={(e) => updateFilter("brand", e.target.value)}
         className="bg-surface-alt text-foreground border border-muted p-2"

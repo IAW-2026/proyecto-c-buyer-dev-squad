@@ -5,6 +5,7 @@ import Tabs from "./components/Tabs";
 import Filters from "./components/Filters";
 import CartButton from "./components/CartButton";
 import Recommendations from "./components/Recommendations";
+import ProductGridSkeleton from "./components/ProductGridSkeleton";
 import { prisma } from "@/lib/prisma";
 
 const categoryTitles: Record<string, string> = {
@@ -96,6 +97,11 @@ function RecommendationsSkeleton() {
   );
 }
 
+async function ProductsSection({ searchParams }: { searchParams: any }) {
+  const products = await getProducts(searchParams);
+  return <ProductList products={products} />;
+}
+
 export default async function Home(props: {
   searchParams: Promise<{
     category?: string;
@@ -105,7 +111,6 @@ export default async function Home(props: {
   }>;
 }) {
   const searchParams = await props.searchParams;
-  const products = await getProducts(searchParams);
   const brandList = await getBrands(searchParams.category);
 
   return (
@@ -121,7 +126,9 @@ export default async function Home(props: {
         <Filters brands={brandList} />
       </div>
       <section>
-        <ProductList products={products} />
+        <Suspense key={JSON.stringify(searchParams)} fallback={<ProductGridSkeleton />}>
+          <ProductsSection searchParams={searchParams} />
+        </Suspense>
       </section>
       <CartButton />
       <Suspense fallback={<RecommendationsSkeleton />}>

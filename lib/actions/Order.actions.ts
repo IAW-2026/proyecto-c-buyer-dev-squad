@@ -92,3 +92,32 @@ export async function deleteOrderItem(itemId: string) {
 
   revalidatePath("/admin/orders");
 }
+export async function getMoreOrders(skip: number) {
+  const { userId } = await auth();
+
+  if (!userId) return [];
+
+  const user = await prisma.user.findUnique({
+    where: { clerkId: userId },
+  });
+
+  if (!user) return [];
+
+  return prisma.order.findMany({
+    where: {
+      userId: user.id,
+    },
+    include: {
+      items: {
+        include: {
+          product: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    skip,
+    take: 5,
+  });
+}
