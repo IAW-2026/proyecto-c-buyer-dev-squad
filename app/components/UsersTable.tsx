@@ -81,7 +81,7 @@ function UserRow({ user }: { user: User }) {
         }`}
       >
         {/* Avatar + nombre */}
-        <td className="px-4 py-3">
+        <td className="px-3 py-1.5">
           <div className="flex items-center gap-3 min-w-0">
             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-zinc-600 to-zinc-900 dark:from-zinc-300 dark:to-zinc-500 flex items-center justify-center text-white dark:text-black text-xs font-bold flex-shrink-0 select-none">
               {initials}
@@ -112,7 +112,7 @@ function UserRow({ user }: { user: User }) {
         </td>
 
         {/* Email — oculto en mobile */}
-        <td className="hidden sm:table-cell px-4 py-3 text-[var(--color-muted)] text-xs">
+        <td className="hidden sm:table-cell px-3 py-1.5 text-[var(--color-muted)] text-xs">
           {editing ? (
             <input
               value={email}
@@ -125,7 +125,7 @@ function UserRow({ user }: { user: User }) {
         </td>
 
         {/* Estado */}
-        <td className="px-4 py-3">
+        <td className="px-3 py-1.5">
           <button
             onClick={handleToggleSuspend}
             disabled={isPending}
@@ -149,7 +149,7 @@ function UserRow({ user }: { user: User }) {
         </td>
 
         {/* Pedidos — oculto en mobile */}
-        <td className="hidden sm:table-cell px-4 py-3">
+        <td className="hidden sm:table-cell px-3 py-1.5">
           {editing ? (
             <input
               type="number"
@@ -166,7 +166,7 @@ function UserRow({ user }: { user: User }) {
         </td>
 
         {/* Fecha — oculto en mobile */}
-        <td className="hidden md:table-cell px-4 py-3 text-[var(--color-muted)] text-xs">
+        <td className="hidden md:table-cell px-3 py-1.5 text-[var(--color-muted)] text-xs">
           {editing ? (
             <input
               type="date"
@@ -184,7 +184,7 @@ function UserRow({ user }: { user: User }) {
         </td>
 
         {/* Acciones — siempre visibles */}
-        <td className="px-4 py-3">
+        <td className="px-3 py-1.5">
           <div className="flex items-center justify-end gap-1">
             {editing ? (
               <>
@@ -298,12 +298,12 @@ export default function UsersTable({ users }: { users: User[] }) {
       <table className="w-full text-sm" style={{ minWidth: 320 }}>
         <thead>
           <tr className="border-b border-[var(--color-border)] bg-[var(--color-surface-alt)]">
-            <th className="px-4 py-3 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Usuario</th>
-            <th className="hidden sm:table-cell px-4 py-3 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Email</th>
-            <th className="px-4 py-3 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Estado</th>
-            <th className="hidden sm:table-cell px-4 py-3 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Pedidos</th>
-            <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Registrado</th>
-            <th className="px-4 py-3" />
+            <th className="px-3 py-1.5 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Usuario</th>
+            <th className="hidden sm:table-cell px-3 py-1.5 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Email</th>
+            <th className="px-3 py-1.5 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Estado</th>
+            <th className="hidden sm:table-cell px-3 py-1.5 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Pedidos</th>
+            <th className="hidden md:table-cell px-3 py-1.5 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Registrado</th>
+            <th className="px-3 py-1.5" />
           </tr>
         </thead>
         <tbody className="divide-y divide-[var(--color-border)]">

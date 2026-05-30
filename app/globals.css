@@ -320,7 +320,6 @@ body {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  overflow-x: hidden;
 }
 
 @media (min-width: 1240px) {
@@ -428,7 +427,7 @@ body {
 .admin-table-wrapper {
   overflow-x: auto;
   border: 1px solid var(--color-border);
-  border-radius: 0.75rem;
+  border-radius: 0.5rem;
   background-color: var(--color-surface-alt);
 }
 
@@ -443,7 +442,7 @@ body {
 }
 
 .admin-table th {
-  padding: 0.75rem 1rem;
+  padding: 0.4rem 0.75rem;
   text-align: left;
   font-size: 0.75rem;
   font-weight: 600;
@@ -454,7 +453,7 @@ body {
 }
 
 .admin-table td {
-  padding: 0.875rem 1rem;
+  padding: 0.5rem 0.75rem;
   border-top: 1px solid var(--color-border);
   color: var(--color-foreground);
   vertical-align: middle;
@@ -758,7 +757,7 @@ body {
 
   .admin-table th,
   .admin-table td {
-    padding: 0.5rem 0.625rem;
+    padding: 0.3rem 0.5rem;
     font-size: 0.75rem;
   }
 
@@ -776,12 +775,13 @@ body {
   }
 
   .admin-table-wrapper {
+    width: 100%;
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
   }
 
   .admin-table {
-    min-width: 600px;
+  min-width: unset;
+  width: 100%;
   }
 
   .status-filters {
@@ -811,6 +811,7 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1.5rem;
+  align-items: start;
 }
 
 @media (max-width: 900px) {
@@ -819,6 +820,30 @@ body {
   }
 }
 
+.admin-table {
+  width: 100%;
+  table-layout: auto;
+}
+.user-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+.admin-table-wrapper {
+  overflow-x: auto;
+}
+
+.admin-table {
+  min-width: 100px;
+}
+.customer-name,
+.customer-email,
+.user-cell span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .rank-badge {
   display: inline-flex;
   align-items: center;

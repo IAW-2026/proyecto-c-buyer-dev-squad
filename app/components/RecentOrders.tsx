@@ -24,7 +24,7 @@ export default function RecentOrders({ orders }: { orders: Order[] }) {
       <table className="admin-table">
         <thead>
           <tr>
-            <th>ID</th>
+            <th className= "hidden md:table-cell">ID</th>
             <th>Cliente</th>
             <th>Productos</th>
             <th>Total</th>
@@ -35,7 +35,7 @@ export default function RecentOrders({ orders }: { orders: Order[] }) {
         <tbody>
           {orders.map((order) => (
             <tr key={order.id}>
-              <td className="admin-table-id">#{order.id.slice(0, 8)}</td>
+              <td className="admin-table-id hidden md:table-cell">#{order.id.slice(0, 8)}</td>
               <td>
                 <div>
                   <p className="font-medium">

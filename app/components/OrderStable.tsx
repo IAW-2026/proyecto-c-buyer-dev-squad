@@ -80,13 +80,11 @@ function OrderRow({ order }: { order: Order }) {
         }`}
         onClick={() => !editing && setExpanded((v) => !v)}
       >
-        {/* ID — oculto en mobile */}
-        <td className="hidden sm:table-cell px-4 py-3 font-mono text-xs text-[var(--color-muted)]">
+        <td className="hidden sm:table-cell px-2 py-3 font-mono text-xs text-[var(--color-muted)]">
           #{order.id.slice(0, 8)}
         </td>
 
-        {/* Cliente */}
-        <td className="px-4 py-3">
+        <td className="px-2 py-3">
           {editing ? (
             <div className="flex flex-col gap-1">
               <div className="flex gap-1">
@@ -125,24 +123,20 @@ function OrderRow({ order }: { order: Order }) {
           )}
         </td>
 
-        {/* Items — oculto en mobile */}
-        <td className="hidden sm:table-cell px-4 py-3 text-[var(--color-muted)] text-sm">
+        <td className="hidden sm:table-cell px-2 py-3 text-[var(--color-muted)] text-sm">
           {items.reduce((acc, item) => acc + item.quantity, 0)} producto
           {items.reduce((acc, item) => acc + item.quantity, 0) !== 1 ? "s" : ""}
         </td>
 
-        {/* Total */}
-        <td className="px-4 py-3 font-semibold text-[var(--color-foreground)]">
+        <td className="px-2 py-3 font-semibold text-[var(--color-foreground)]">
           ${calculatedTotal.toLocaleString("es-AR")}
         </td>
 
-        {/* Estado */}
-        <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
+        <td className="px-2 py-3" onClick={(e) => e.stopPropagation()}>
           <OrderStatusBadge status={order.status} />
         </td>
 
-        {/* Fecha — oculto en mobile */}
-        <td className="hidden md:table-cell px-4 py-3 text-[var(--color-muted)] text-sm">
+        <td className="hidden md:table-cell px-2 py-3 text-[var(--color-muted)] text-sm">
           {editing ? (
             <input
               type="date"
@@ -156,8 +150,7 @@ function OrderRow({ order }: { order: Order }) {
           )}
         </td>
 
-        {/* Acciones — siempre visibles */}
-        <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
+        <td className="px-2 py-3" onClick={(e) => e.stopPropagation()}>
           <div className="flex items-center justify-end gap-1">
             {editing ? (
               <>
@@ -217,7 +210,7 @@ function OrderRow({ order }: { order: Order }) {
 
       {(expanded || editing) && (
         <tr className="bg-[var(--color-surface-alt)]">
-          <td colSpan={7} className="px-6 pb-4 pt-0">
+          <td colSpan={7} className="px-4 pb-4 pt-0">
             <div className="border-t border-[var(--color-border)] pt-3">
               <p className="text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider mb-3">
                 Detalle del pedido
@@ -362,13 +355,13 @@ export default function OrdersTable({ orders }: { orders: Order[] }) {
       <table className="w-full text-sm" style={{ minWidth: 320 }}>
         <thead>
           <tr className="border-b border-[var(--color-border)] bg-[var(--color-surface-alt)]">
-            <th className="hidden sm:table-cell px-4 py-3 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">ID</th>
-            <th className="px-4 py-3 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Cliente</th>
-            <th className="hidden sm:table-cell px-4 py-3 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Items</th>
-            <th className="px-4 py-3 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Total</th>
-            <th className="px-4 py-3 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Estado</th>
-            <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Fecha</th>
-            <th className="px-4 py-3" />
+            <th className="hidden sm:table-cell px-2 py-3 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">ID</th>
+            <th className="px-2 py-3 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Cliente</th>
+            <th className="hidden sm:table-cell px-2 py-3 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Items</th>
+            <th className="px-2 py-3 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Total</th>
+            <th className="px-2 py-3 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Estado</th>
+            <th className="hidden md:table-cell px-2 py-3 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Fecha</th>
+            <th className="px-2 py-3" />
           </tr>
         </thead>
         <tbody className="divide-y divide-[var(--color-border)]">
