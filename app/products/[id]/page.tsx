@@ -1,9 +1,8 @@
-import { getProducts } from "@/lib/services/Products.service";
 import Link from "next/link";
-import type { Product } from "@/app/types/product";
 import ProductActions from "@/app/components/ProductActions";
 import SellerInfo from "@/app/components/SellerInfo";
 import { getSellerById } from "@/lib/services/Sellers.service";
+import { getProductById } from "@/lib/services/Products.service";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -11,9 +10,7 @@ type Props = {
 
 export default async function ProductPage({ params }: Props) {
   const { id } = await params;
-  const PRODUCTS = await getProducts();
-  const product = PRODUCTS.find((p: Product) => p.id === id);
-
+  const product = await getProductById(id);
   if (!product) {
     return (
       <div className="p-6 md:p-10">
