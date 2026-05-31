@@ -39,7 +39,7 @@ Construida con Next.js, PostgreSQL, Prisma, Clerk Authentication y Tailwind CSS.
 
 ## Deploy
 
-https://zapasya-663hz9ybj-sofiacosta2024s-projects.vercel.app
+https://zapasya.vercel.app/
 
 ## Credenciales de acceso
 

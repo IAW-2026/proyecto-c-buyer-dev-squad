@@ -1,3 +1,4 @@
+import "dotenv/config";
 const ID = process.argv[2];
 
 if (!ID) {
@@ -9,7 +10,7 @@ async function updateOrderStatusDelivered() {
   process.env.APP_URL ?? "http://localhost:3000";
 
 const res = await fetch(
-  `${APP_URL}/api/orders/${ORDER_ID}/status`,
+  `${APP_URL}/api/orders/${ID}/status`,
   {
     method: "PATCH",
     headers: {

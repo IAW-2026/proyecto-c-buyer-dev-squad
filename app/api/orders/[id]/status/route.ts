@@ -7,8 +7,8 @@ export async function PATCH(
 
   const { id } = await context.params;
   const secret = req.headers.get("buyer-key");
-  const BUYER_SECRET = process.env.buyer_SECRET;
-
+  const BUYER_SECRET = process.env.BUYER_SECRET;
+  console.log("contrasena", BUYER_SECRET)
   if (!BUYER_SECRET || secret !== BUYER_SECRET) {
     return new Response("Clave inválida", { status: 403 });
   }
