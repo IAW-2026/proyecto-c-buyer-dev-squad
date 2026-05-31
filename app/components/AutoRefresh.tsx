@@ -10,7 +10,7 @@ export default function AutoRefresh() {
     const interval = setInterval(() => {
       router.refresh();
     }, 5000);
-
+    
     return () => clearInterval(interval);
   }, [router]);
 

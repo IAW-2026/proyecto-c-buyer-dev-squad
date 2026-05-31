@@ -5,23 +5,22 @@ if (!O_ID) {
 }
 
 async function updateOrderStatusShipped() {
-  const res = await fetch(
-    `http://localhost:3000/api/orders/${O_ID}/status`,
-    {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        "buyer-key": "buyer-dev-squad",
-      },
-      body: JSON.stringify({
-        status: "SHIPPED",
-      }),
-    }
-  );
+  const APP_URL =
+  process.env.APP_URL ?? "http://localhost:3000";
 
-  const data = await res.json();
-
-  console.log(data);
+const res = await fetch(
+  `${APP_URL}/api/orders/${ORDER_ID}/status`,
+  {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      "buyer-key": "buyer-dev-squad",
+    },
+    body: JSON.stringify({
+      status: "SHIPPED",
+    }),
+  }
+);
 }
 
 updateOrderStatusShipped();
