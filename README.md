@@ -39,7 +39,7 @@ Construida con Next.js, PostgreSQL, Prisma, Clerk Authentication y Tailwind CSS.
 
 ## Deploy
 
-https://[completar-url-de-vercel]
+https://zapasya-663hz9ybj-sofiacosta2024s-projects.vercel.app
 
 ## Credenciales de acceso
 
@@ -97,6 +97,7 @@ CLERK_SECRET_KEY=
 OPENAI_API_KEY=
 DATABASE_URL=
 BUYER_SECRET=
+APP_URL=
 ```
 ### Recomendaciones inteligentes con IA
 
