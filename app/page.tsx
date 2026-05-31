@@ -5,8 +5,10 @@ import Tabs from "./components/Tabs";
 import CartButton from "./components/CartButton";
 import Recommendations from "./components/Recommendations";
 import ProductGridSkeleton from "./components/ProductGridSkeleton";
-import { getBrands, getProducts} from "@/lib/services/Products.service";
+import { getProducts} from "@/lib/services/Products.service";
 import FiltersWrapper from "./components/FiltersWrapper";
+import LoadingProvider from "./components/LoadingProvider";
+import ProductsWrapper from "./components/ProductsWrapper";
 
 const categoryTitles: Record<string, string> = {
   hombre: "Zapatillas/Hombres",
@@ -42,13 +44,17 @@ function RecommendationsSkeleton() {
   );
 }
 
-async function ProductsSection({
-  searchParams,
-}: {
-  searchParams: any;
-}) {
-  const products = await getProducts(searchParams);
-  return <ProductList products={products.data} />;
+async function ProductsSection({ searchParams }: { searchParams: any }) {
+  const page = parseInt(searchParams.page ?? "1");
+  const products = await getProducts({ ...searchParams, page, limit: 8 });
+  return (
+    <ProductList
+      products={products.data}
+      totalPages={products.pagination.totalPages}
+      currentPage={page}
+      searchParams={searchParams}
+    />
+  );
 }
 
 export default async function Home(props: {
@@ -61,36 +67,40 @@ export default async function Home(props: {
 }) {
   const searchParams = await props.searchParams;
   return (
-    <main className="p-6 md:p-10 space-y-6">
-      <Navbar />
-      <Tabs />
+    <LoadingProvider>
+      <main className="p-6 md:p-10 space-y-6">
+        <Navbar />
+        <Tabs />
 
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <h1 className="text-2xl font-bold">
-          {searchParams.category
-            ? categoryTitles[searchParams.category] ?? "Productos"
-            : "Zapatillas"}
-        </h1>
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <h1 className="text-2xl font-bold">
+            {searchParams.category
+              ? categoryTitles[searchParams.category] ?? "Productos"
+              : "Zapatillas"}
+          </h1>
 
-        <Suspense fallback={<div className="h-10 w-48 bg-surface animate-pulse rounded" />}>
-          <FiltersWrapper category={searchParams.category} />
+          <Suspense fallback={<div className="h-10 w-48 bg-surface animate-pulse rounded" />}>
+            <FiltersWrapper category={searchParams.category} />
+          </Suspense>
+        </div>
+
+        <section>
+          <ProductsWrapper>
+            <Suspense
+              key={JSON.stringify(searchParams)}
+              fallback={<ProductGridSkeleton />}
+            >
+              <ProductsSection searchParams={searchParams} />
+            </Suspense>
+          </ProductsWrapper>
+        </section>
+
+        <CartButton />
+
+        <Suspense fallback={<RecommendationsSkeleton />}>
+          <Recommendations limit={6} productBasePath="/products" />
         </Suspense>
-      </div>
-
-      <section>
-        <Suspense
-          key={JSON.stringify(searchParams)}
-          fallback={<ProductGridSkeleton />}
-        >
-          <ProductsSection searchParams={searchParams} />
-        </Suspense>
-      </section>
-
-      <CartButton />
-
-      <Suspense fallback={<RecommendationsSkeleton />}>
-        <Recommendations limit={6} productBasePath="/products" />
-      </Suspense>
-    </main>
+      </main>
+    </LoadingProvider>
   );
 }

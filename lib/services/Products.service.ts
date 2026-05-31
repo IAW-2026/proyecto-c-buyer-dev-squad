@@ -1,5 +1,4 @@
 import { prisma } from "../prisma";
-import { getSellerById } from "./Sellers.service";
 
 type GetProductsParams = {
   category?: string;

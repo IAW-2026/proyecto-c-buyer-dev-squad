@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useUser, useClerk } from "@clerk/nextjs";
-import { useState, useEffect, useTransition, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import Loader from "./Loader";
+import { useLoading } from "./LoadingProvider";
 
 export default function Tabs() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+  const { isPending, startTransition } = useLoading();
 
   const currentCategory = searchParams.get("category");
   const currentSearch = searchParams.get("search") || "";
@@ -25,6 +26,28 @@ export default function Tabs() {
     { name: "Niño/a", category: "nino" },
     { name: "Mujer", category: "mujer" },
   ];
+
+  const handleCategoryClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    tabCategory: string | null
+  ) => {
+    e.preventDefault();
+    startTransition(() => {
+      const params = new URLSearchParams();
+      if (tabCategory) {
+        params.set("category", tabCategory);
+      }
+      const currentSearch = searchParams.get("search");
+      if (currentSearch) params.set("search", currentSearch);
+      const currentBrand = searchParams.get("brand");
+      if (currentBrand) params.set("brand", currentBrand);
+      const currentMin = searchParams.get("minPrice");
+      if (currentMin) params.set("minPrice", currentMin);
+      const currentMax = searchParams.get("maxPrice");
+      if (currentMax) params.set("maxPrice", currentMax);
+      router.push(`/?${params.toString()}`);
+    });
+  };
 
   const handlePedidosClick = (e: React.MouseEvent) => {
     if (!isSignedIn) {
@@ -66,6 +89,7 @@ export default function Tabs() {
               <Link
                 key={tab.name}
                 href={tab.category ? `/?category=${tab.category}` : "/"}
+                onClick={(e) => handleCategoryClick(e, tab.category)}
                 className={`pb-2 text-sm md:text-base font-medium transition-colors ${
                   isActive
                     ? "border-b-2 border-primary text-foreground"

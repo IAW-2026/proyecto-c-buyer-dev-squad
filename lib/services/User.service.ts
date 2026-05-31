@@ -1,16 +1,22 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
- 
+import { revalidatePath } from "next/cache";
+
 export async function getOrCreateUser(clerkId: string) {
-  const existing = await getUserByClerkId(clerkId);
-  if (existing) return existing;
- 
   const clerkUser = await currentUser();
-  return prisma.user.create({
-    data: {
+
+  return prisma.user.upsert({
+    where: {
+      clerkId,
+    },
+    update: {
+      email: clerkUser?.emailAddresses[0]?.emailAddress ?? "",
+      firstName: clerkUser?.firstName ?? "",
+      lastName: clerkUser?.lastName ?? "",
+    },
+    create: {
       clerkId,
       email: clerkUser?.emailAddresses[0]?.emailAddress ?? "",
       firstName: clerkUser?.firstName ?? "",

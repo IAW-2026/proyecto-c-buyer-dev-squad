@@ -1,8 +1,8 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useTransition } from "react";
-import Loader from "./Loader";
+import { useRef, useCallback, useEffect } from "react";
+import { useLoading } from "./LoadingProvider";
 
 interface FiltersProps {
     brands: string[];
@@ -10,29 +10,46 @@ interface FiltersProps {
 export default function Filters({ brands }: FiltersProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [isPending, startTransition] = useTransition();
+  const { startTransition } = useLoading();
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const updateFilter = (key: string, value: string) => {
-    startTransition(() => {
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, []);
+
+  const updateFilterDebounced = useCallback((key: string, value: string) => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
       const params = new URLSearchParams(searchParams.toString());
       if (value) {
         params.set(key, value);
       } else {
         params.delete(key);
       }
+      startTransition(() => {
+        router.push(`/?${params.toString()}`);
+      });
+    }, 300);
+  }, [router, searchParams, startTransition]);
+
+  const updateBrand = useCallback((value: string) => {
+    startTransition(() => {
+      const params = new URLSearchParams(searchParams.toString());
+      if (value) {
+        params.set("brand", value);
+      } else {
+        params.delete("brand");
+      }
       router.push(`/?${params.toString()}`);
     });
-  };
+  }, [router, searchParams, startTransition]);
 
   return (
     <div className="relative flex flex-col sm:flex-row gap-4">
-      {isPending && (
-        <div className="absolute inset-0 bg-background/50 z-10 flex items-center justify-center rounded">
-          <Loader size="sm" />
-        </div>
-      )}
       <select
-        onChange={(e) => updateFilter("brand", e.target.value)}
+        onChange={(e) => updateBrand(e.target.value)}
         className="bg-surface-alt text-foreground border border-muted p-2"
       >
         <option value="" className="bg-surface-alt text-foreground">
@@ -51,7 +68,7 @@ export default function Filters({ brands }: FiltersProps) {
           type="number"
           min={0}
           placeholder="Precio mínimo"
-          onChange={(e) => updateFilter("minPrice", e.target.value)}
+          onChange={(e) => updateFilterDebounced("minPrice", e.target.value)}
           className="border border-muted bg-surface-alt text-foreground p-2 pl-6"
         />
       </div>
@@ -63,7 +80,7 @@ export default function Filters({ brands }: FiltersProps) {
           type="number"
           min={0}
           placeholder="Precio máximo"
-          onChange={(e) => updateFilter("maxPrice", e.target.value)}
+          onChange={(e) => updateFilterDebounced("maxPrice", e.target.value)}
           className="border border-muted bg-surface-alt text-foreground p-2 pl-6"
         />
       </div>
