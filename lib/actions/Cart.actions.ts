@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@clerk/nextjs/server";
-import { getCart, addToCart, removeFromCart } from "@/lib/services/Cart.service";
+import { getCart, addToCart, removeFromCart, getCartCountService } from "@/lib/services/Cart.service";
 import { checkUserActive } from "@/lib/services/User.service";
 
 async function requireUser() {
@@ -50,10 +50,11 @@ export async function removeFromCartAction(
   );
 }
 export async function getCartCount(): Promise<number> {
-const { userId } = await auth();
+  const { userId } = await auth();
+
   if (!userId) {
     return 0;
   }
-  const cart = await getCart(userId);
-  return cart.reduce((acc, item) => acc + item.quantity, 0);
+
+  return getCartCountService(userId);
 }

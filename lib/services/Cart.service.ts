@@ -122,3 +122,21 @@ export async function getCartSummary(clerkId: string) {
     total,
   };
 }
+export async function getCartCountService(
+  clerkUserId: string
+) {
+  const user = await getOrCreateUser(
+    clerkUserId
+  );
+
+  const items =
+    await prisma.cartItem.findMany({
+      where: { userId: user.id },
+      select: { quantity: true },
+    });
+
+  return items.reduce(
+    (acc, item) => acc + item.quantity,
+    0
+  );
+}
