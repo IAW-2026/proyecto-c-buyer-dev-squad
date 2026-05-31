@@ -1,10 +1,25 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect } from "react";
 import { updateOrder, deleteOrder, deleteOrderItem } from "@/lib/actions/Order.actions";
 import { Order, OrderItem } from "@/app/types/order";
 import OrderStatusBadge from "./OrderStatusBadge";
 
+type EditableItem = OrderItem & {
+  quantityStr: string;
+  priceStr: string;
+};
+
+function toEditable(item: OrderItem): EditableItem {
+  return { ...item, quantityStr: String(item.quantity), priceStr: String(item.price) };
+}
+function toLocalDateString(date: Date | string) {
+  const d = new Date(date);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
 function OrderRow({ order }: { order: Order }) {
   const [expanded, setExpanded] = useState(false);
   const [editing, setEditing] = useState(false);
@@ -14,12 +29,29 @@ function OrderRow({ order }: { order: Order }) {
   const [firstName, setFirstName] = useState(order.user.firstName ?? "");
   const [lastName, setLastName] = useState(order.user.lastName ?? "");
   const [email, setEmail] = useState(order.user.email);
-  const [createdAt, setCreatedAt] = useState(
-    new Date(order.createdAt).toISOString().slice(0, 10)
+  const [createdAt, setCreatedAt] = useState(toLocalDateString(order.createdAt));
+  const [items, setItems] = useState<EditableItem[]>(order.items.map(toEditable));
+
+  useEffect(() => {
+    if (!isPending) {
+    setFirstName(order.user.firstName ?? "");
+    setLastName(order.user.lastName ?? "");
+    setEmail(order.user.email);
+    setCreatedAt(toLocalDateString(order.createdAt));
+    setItems(order.items.map(toEditable));
+    setEditing(false);
+    setExpanded(false);
+    }
+  }, [order]);
+
+  const calculatedTotal = items.reduce(
+    (acc, item) => acc + (parseInt(item.quantityStr) || 0) * (parseFloat(item.priceStr) || 0),
+    0
   );
 
-  const [items, setItems] = useState<OrderItem[]>(order.items);
-  const calculatedTotal = items.reduce((acc, item) => acc + item.quantity * item.price, 0);
+  const updateItemStr = (idx: number, field: "quantityStr" | "priceStr", val: string) => {
+    setItems((prev) => prev.map((it, i) => (i === idx ? { ...it, [field]: val } : it)));
+  };
 
   const handleSave = () => {
     startTransition(async () => {
@@ -29,11 +61,12 @@ function OrderRow({ order }: { order: Order }) {
         email,
         total: calculatedTotal,
         status: order.status,
-        createdAt: new Date(createdAt),
-        items: items.map((it) => ({ quantity: it.quantity, price: it.price })),
+        createdAt: new Date(`${createdAt}T12:00:00`),
+        items: items.map((it) => ({
+          quantity: parseInt(it.quantityStr) || 1,
+          price: parseFloat(it.priceStr) || 0,
+        })),
       });
-      setEditing(false);
-      setExpanded(false);
     });
   };
 
@@ -41,8 +74,8 @@ function OrderRow({ order }: { order: Order }) {
     setFirstName(order.user.firstName ?? "");
     setLastName(order.user.lastName ?? "");
     setEmail(order.user.email);
-    setCreatedAt(new Date(order.createdAt).toISOString().slice(0, 10));
-    setItems(order.items);
+    setCreatedAt(toLocalDateString(order.createdAt));
+    setItems(order.items.map(toEditable));
     setEditing(false);
   };
 
@@ -50,10 +83,6 @@ function OrderRow({ order }: { order: Order }) {
     startTransition(async () => {
       await deleteOrder(order.id);
     });
-  };
-
-  const updateItemField = (idx: number, field: "quantity" | "price", val: number) => {
-    setItems((prev) => prev.map((it, i) => (i === idx ? { ...it, [field]: val } : it)));
   };
 
   const removeItem = async (idx: number) => {
@@ -124,8 +153,8 @@ function OrderRow({ order }: { order: Order }) {
         </td>
 
         <td className="hidden sm:table-cell px-2 py-3 text-[var(--color-muted)] text-sm">
-          {items.reduce((acc, item) => acc + item.quantity, 0)} producto
-          {items.reduce((acc, item) => acc + item.quantity, 0) !== 1 ? "s" : ""}
+          {items.reduce((acc, item) => acc + (parseInt(item.quantityStr) || 0), 0)} producto
+          {items.reduce((acc, item) => acc + (parseInt(item.quantityStr) || 0), 0) !== 1 ? "s" : ""}
         </td>
 
         <td className="px-2 py-3 font-semibold text-[var(--color-foreground)]">
@@ -146,7 +175,7 @@ function OrderRow({ order }: { order: Order }) {
               className="px-2 py-1 text-xs rounded border border-[var(--color-border)] bg-[var(--color-background)] text-[var(--color-foreground)] focus:outline-none focus:border-[var(--color-primary)]"
             />
           ) : (
-            new Date(order.createdAt).toLocaleDateString("es-AR")
+            toLocalDateString(order.createdAt).split("-").reverse().join("/")
           )}
         </td>
 
@@ -218,7 +247,7 @@ function OrderRow({ order }: { order: Order }) {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {items.map((item, i) => (
                   <div
-                    key={i}
+                    key={item.id}
                     className="flex items-center gap-3 p-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-background)]"
                   >
                     <img
@@ -240,22 +269,21 @@ function OrderRow({ order }: { order: Order }) {
                           <label className="flex items-center gap-1 text-xs text-[var(--color-muted)]">
                             Cant.
                             <input
-                              type="number"
-                              min={1}
-                              value={item.quantity}
-                              onChange={(e) => updateItemField(i, "quantity", Number(e.target.value))}
+                              type="text"
+                              inputMode="numeric"
+                              value={item.quantityStr}
+                              onChange={(e) => updateItemStr(i, "quantityStr", e.target.value)}
                               className="w-12 px-1.5 py-0.5 rounded border border-[var(--color-border)] bg-[var(--color-background)] text-[var(--color-foreground)] focus:outline-none focus:border-[var(--color-primary)]"
                             />
                           </label>
                           <label className="flex items-center gap-1 text-xs text-[var(--color-muted)]">
                             $
                             <input
-                              type="number"
-                              min={0}
-                              step={0.01}
-                              value={item.price}
-                              onChange={(e) => updateItemField(i, "price", Number(e.target.value))}
-                              className="w-16 px-1.5 py-0.5 rounded border border-[var(--color-border)] bg-[var(--color-background)] text-[var(--color-foreground)] focus:outline-none focus:border-[var(--color-primary)]"
+                              type="text"
+                              inputMode="decimal"
+                              value={item.priceStr}
+                              onChange={(e) => updateItemStr(i, "priceStr", e.target.value)}
+                              className="w-20 px-1.5 py-0.5 rounded border border-[var(--color-border)] bg-[var(--color-background)] text-[var(--color-foreground)] focus:outline-none focus:border-[var(--color-primary)]"
                             />
                           </label>
                         </div>

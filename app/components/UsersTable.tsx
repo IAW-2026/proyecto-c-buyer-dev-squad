@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect } from "react";
 import { suspendUser, activateUser, deleteUser, updateUser } from "@/lib/services/User.service";
 
 type User = {
@@ -15,6 +15,14 @@ type User = {
   _count: { orders: number };
 };
 
+function toLocalDateString(date: Date | string) {
+  const d = new Date(date);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 function UserRow({ user }: { user: User }) {
   const [editing, setEditing] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -23,10 +31,17 @@ function UserRow({ user }: { user: User }) {
   const [firstName, setFirstName] = useState(user.firstName ?? "");
   const [lastName, setLastName] = useState(user.lastName ?? "");
   const [email, setEmail] = useState(user.email);
-  const [createdAt, setCreatedAt] = useState(
-    new Date(user.createdAt).toISOString().slice(0, 10)
-  );
-  const [orderCount, setOrderCount] = useState(user._count.orders);
+  const [createdAt, setCreatedAt] = useState(toLocalDateString(user.createdAt));
+
+  useEffect(() => {
+    if (!isPending) {
+      setFirstName(user.firstName ?? "");
+      setLastName(user.lastName ?? "");
+      setEmail(user.email);
+      setCreatedAt(toLocalDateString(user.createdAt));
+      setEditing(false);
+    }
+  }, [user]);
 
   const isSuspended = user.status === "SUSPENDED";
   const isAdmin = user.role === "ADMIN";
@@ -40,12 +55,12 @@ function UserRow({ user }: { user: User }) {
     : user.email[0].toUpperCase();
 
   const handleToggleSuspend = () => {
-  if (isAdmin) return;
-  startTransition(async () => {
-    if (isSuspended) await activateUser(user.id);
-    else await suspendUser(user.id);
-  });
-};
+    if (isAdmin) return;
+    startTransition(async () => {
+      if (isSuspended) await activateUser(user.id);
+      else await suspendUser(user.id);
+    });
+  };
 
   const handleSave = () => {
     startTransition(async () => {
@@ -53,10 +68,9 @@ function UserRow({ user }: { user: User }) {
         firstName: firstName || null,
         lastName: lastName || null,
         email,
-        createdAt: new Date(createdAt),
-        orderCount,
+        createdAt: new Date(`${createdAt}T12:00:00`),
+        orderCount: user._count.orders,
       });
-      setEditing(false);
     });
   };
 
@@ -64,8 +78,7 @@ function UserRow({ user }: { user: User }) {
     setFirstName(user.firstName ?? "");
     setLastName(user.lastName ?? "");
     setEmail(user.email);
-    setCreatedAt(new Date(user.createdAt).toISOString().slice(0, 10));
-    setOrderCount(user._count.orders);
+    setCreatedAt(toLocalDateString(user.createdAt));
     setEditing(false);
   };
 
@@ -82,7 +95,6 @@ function UserRow({ user }: { user: User }) {
           editing ? "bg-[var(--color-surface-alt)]" : "hover:bg-[var(--color-surface)]"
         }`}
       >
-        {/* Avatar + nombre */}
         <td className="px-3 py-1.5">
           <div className="flex items-center gap-3 min-w-0">
             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-zinc-600 to-zinc-900 dark:from-zinc-300 dark:to-zinc-500 flex items-center justify-center text-white dark:text-black text-xs font-bold flex-shrink-0 select-none">
@@ -113,7 +125,6 @@ function UserRow({ user }: { user: User }) {
           </div>
         </td>
 
-        {/* Email — oculto en mobile */}
         <td className="hidden sm:table-cell px-3 py-1.5 text-[var(--color-muted)] text-xs">
           {editing ? (
             <input
@@ -126,7 +137,6 @@ function UserRow({ user }: { user: User }) {
           )}
         </td>
 
-        {/* Estado */}
         <td className="px-3 py-1.5">
           <button
             onClick={handleToggleSuspend}
@@ -156,24 +166,13 @@ function UserRow({ user }: { user: User }) {
           </button>
         </td>
 
-        {/* Pedidos — oculto en mobile */}
+        {/* Pedidos: siempre solo lectura */}
         <td className="hidden sm:table-cell px-3 py-1.5">
-          {editing ? (
-            <input
-              type="number"
-              min={0}
-              value={orderCount}
-              onChange={(e) => setOrderCount(Number(e.target.value))}
-              className="w-16 px-2 py-1 text-xs rounded border border-[var(--color-border)] bg-[var(--color-background)] text-[var(--color-foreground)] focus:outline-none focus:border-[var(--color-primary)]"
-            />
-          ) : (
-            <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[var(--color-surface)] text-xs font-semibold text-[var(--color-foreground)]">
-              {user._count.orders}
-            </span>
-          )}
+          <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[var(--color-surface)] text-xs font-semibold text-[var(--color-foreground)]">
+            {user._count.orders}
+          </span>
         </td>
 
-        {/* Fecha — oculto en mobile */}
         <td className="hidden md:table-cell px-3 py-1.5 text-[var(--color-muted)] text-xs">
           {editing ? (
             <input
@@ -183,15 +182,10 @@ function UserRow({ user }: { user: User }) {
               className="px-2 py-1 text-xs rounded border border-[var(--color-border)] bg-[var(--color-background)] text-[var(--color-foreground)] focus:outline-none focus:border-[var(--color-primary)]"
             />
           ) : (
-            new Date(user.createdAt).toLocaleDateString("es-AR", {
-              day: "2-digit",
-              month: "short",
-              year: "numeric",
-            })
+            toLocalDateString(user.createdAt).split("-").reverse().join("/")
           )}
         </td>
 
-        {/* Acciones — siempre visibles */}
         <td className="px-3 py-1.5">
           <div className="flex items-center justify-end gap-1">
             {editing ? (
@@ -202,9 +196,16 @@ function UserRow({ user }: { user: User }) {
                   title="Guardar"
                   className="p-1.5 rounded-md btn-success text-white transition-colors disabled:opacity-50"
                 >
-                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                  </svg>
+                  {isPending ? (
+                    <svg className="w-3.5 h-3.5 animate-spin" viewBox="0 0 24 24" fill="none">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 100 8v4a8 8 0 01-8-8z" />
+                    </svg>
+                  ) : (
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                    </svg>
+                  )}
                 </button>
                 <button
                   onClick={handleCancel}
@@ -235,18 +236,8 @@ function UserRow({ user }: { user: User }) {
                 disabled={isPending}
                 className="p-1.5 rounded-md text-[var(--color-danger)] hover:bg-[var(--color-danger-light)] transition-colors disabled:opacity-40"
               >
-                <svg
-                  className="w-3.5 h-3.5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                  />
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                 </svg>
               </button>
             )}

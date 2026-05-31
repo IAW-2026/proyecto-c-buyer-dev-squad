@@ -15,9 +15,6 @@ export default function TopCustomersTable({
 }: TopCustomersTableProps) {
   return (
     <div className="admin-section">
-      <h2 className="admin-section-title">
-        Clientes con más pedidos
-      </h2>
 
       <div className="admin-table-wrapper">
         {sellers.length === 0 ? (

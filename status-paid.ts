@@ -7,7 +7,7 @@ if (!ORDER_ID) {
 async function updateOrderStatusPaid() {
   const APP_URL =
   process.env.APP_URL ?? "http://localhost:3000";
-
+  console.log("APP_URL =", process.env.APP_URL);
 const res = await fetch(
   `${APP_URL}/api/orders/${ORDER_ID}/status`,
   {

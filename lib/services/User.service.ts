@@ -153,8 +153,4 @@ async function ensureNotAdmin(userId: string) {
   if (!user) {
     throw new Error("Usuario no encontrado");
   }
-
-  if (user.role === "ADMIN") {
-    throw new Error("No se puede modificar un administrador");
-  }
 }

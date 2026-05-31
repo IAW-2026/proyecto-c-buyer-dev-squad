@@ -14,9 +14,6 @@ export default function TopProductsTable({
 }: TopProductsTableProps) {
   return (
     <div className="admin-section">
-      <h2 className="admin-section-title">
-        Productos más vendidos
-      </h2>
 
       <div className="admin-table-wrapper">
         {products.length === 0 ? (
