@@ -2,11 +2,11 @@ import { Suspense } from "react";
 import ProductList from "./components/ProductList";
 import Navbar from "./components/Navbar";
 import Tabs from "./components/Tabs";
-import Filters from "./components/Filters";
 import CartButton from "./components/CartButton";
 import Recommendations from "./components/Recommendations";
 import ProductGridSkeleton from "./components/ProductGridSkeleton";
 import { getBrands, getProducts} from "@/lib/services/Products.service";
+import FiltersWrapper from "./components/FiltersWrapper";
 
 const categoryTitles: Record<string, string> = {
   hombre: "Zapatillas/Hombres",
@@ -60,8 +60,6 @@ export default async function Home(props: {
   }>;
 }) {
   const searchParams = await props.searchParams;
-  const brandList = await getBrands(searchParams.category);
-
   return (
     <main className="p-6 md:p-10 space-y-6">
       <Navbar />
@@ -74,7 +72,9 @@ export default async function Home(props: {
             : "Zapatillas"}
         </h1>
 
-        <Filters brands={brandList} />
+        <Suspense fallback={<div className="h-10 w-48 bg-surface animate-pulse rounded" />}>
+          <FiltersWrapper category={searchParams.category} />
+        </Suspense>
       </div>
 
       <section>

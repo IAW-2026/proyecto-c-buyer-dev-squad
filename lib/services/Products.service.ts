@@ -34,37 +34,28 @@ export async function getProducts({
     ];
   }
 
-  if (minPrice || maxPrice) {
+  const min = minPrice ? parseFloat(minPrice.toString()) : undefined;
+  const max = maxPrice ? parseFloat(maxPrice.toString()) : undefined;
+  if (min !== undefined || max !== undefined) {
     where.price = {
-      ...(minPrice && { gte: minPrice }),
-      ...(maxPrice && { lte: maxPrice }),
+      ...(min && { gte: min }),
+      ...(max && { lte: max }),
     };
   }
 
   const [totalItems, products] = await Promise.all([
     prisma.product.count({ where }),
-
     prisma.product.findMany({
       where,
       skip: (page - 1) * limit,
       take: limit,
       orderBy: { createdAt: "desc" },
+      ...(includeSeller && { include: { seller: true } }),
     }),
   ]);
 
-  let data = products;
-
-  if (includeSeller) {
-    data = await Promise.all(
-      products.map(async (product) => {
-        const seller = await getSellerById(product.sellerId);
-        return { ...product, seller };
-      })
-    );
-  }
-
   return {
-    data,
+    data: products,
     pagination: {
       page,
       limit,
@@ -80,10 +71,11 @@ export async function getProductById(id: string) {
 }
 
 export async function getBrands(category?: string) {
-  const products = await prisma.product.findMany({
-    where: category ? { category } : undefined,
-    select: { brand: true },
-  });
-
-  return [...new Set(products.map((p) => p.brand))];
+  const brands = await prisma.product.findMany({
+  where: category ? { category } : undefined,
+  select: { brand: true },
+  distinct: ["brand"],
+  orderBy: { brand: "asc" },
+});
+return brands.map((p) => p.brand);
 }

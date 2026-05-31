@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useUser, useClerk } from "@clerk/nextjs";
-import { useState, useEffect, useTransition } from "react";
+import { useState, useEffect, useTransition, useRef } from "react";
 import Loader from "./Loader";
 
 export default function Tabs() {
@@ -32,18 +32,20 @@ export default function Tabs() {
       openSignIn({ forceRedirectUrl: "/pedidos" });
     }
   };
-
+  const isFirstRender = useRef(true);
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     const timeout = setTimeout(() => {
       startTransition(() => {
         const params = new URLSearchParams(searchParams.toString());
-
         if (search.trim()) {
           params.set("search", search.trim());
         } else {
           params.delete("search");
         }
-
         router.push(`/?${params.toString()}`);
       });
     }, 300);

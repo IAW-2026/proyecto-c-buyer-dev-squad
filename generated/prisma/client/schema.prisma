@@ -59,6 +59,11 @@ model Product {
   seller      Seller      @relation(fields: [sellerId], references: [id], onDelete: Cascade)
 
   @@index([sellerId])
+  @@index([category])
+  @@index([brand])
+  @@index([price])
+  @@index([category, brand])
+  @@index([category, price])
   @@map("products")
 }
 
