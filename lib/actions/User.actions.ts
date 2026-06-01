@@ -5,6 +5,8 @@ import { revalidatePath } from "next/cache";
 import {
   updateUserProfileData,
   checkUserActive,
+  getUsers,
+  getUserByClerkId,
   type UpdateUserProfileData,
 } from "@/lib/services/User.service";
 
@@ -22,4 +24,13 @@ export async function updateUserProfile(
   await updateUserProfileData(userId, formData);
 
   revalidatePath("/");
+}
+
+export async function loadMoreAdminUsers(search: string | null, page: number) {
+  const { userId } = await auth();
+  if (!userId) throw new Error("No autenticado");
+  const admin = await getUserByClerkId(userId);
+  if (!admin || admin.role !== "ADMIN") throw new Error("No autorizado");
+
+  return getUsers(search ?? undefined, page, 6);
 }

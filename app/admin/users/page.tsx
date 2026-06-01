@@ -5,13 +5,13 @@ export default async function UsersPage(props: {
   searchParams: Promise<{ search?: string }>;
 }) {
   const { search } = await props.searchParams;
-  const users = await getUsers(search);
+  const result = await getUsers(search, 1, 6);
 
   return (
     <div className="admin-page">
       <div className="admin-page-header">
         <h1 className="admin-page-title">Usuarios</h1>
-        <p className="admin-page-subtitle">{users.length} usuarios registrados</p>
+        <p className="admin-page-subtitle">{result.pagination.totalItems} usuarios registrados</p>
       </div>
 
       <div className="admin-search-bar">
@@ -28,7 +28,7 @@ export default async function UsersPage(props: {
         </form>
       </div>
 
-      <UsersTable users={users} />
+      <UsersTable key={search ?? ""} initialUsers={result.data} initialTotal={result.pagination.totalItems} search={search} />
     </div>
   );
 }

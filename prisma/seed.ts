@@ -315,7 +315,6 @@ const PRODUCTS = [
 
 async function main() {
   console.log("Seeding database...");
-
   for (const seller of SELLERS) {
     await prisma.seller.upsert({
       where: { id: seller.id },

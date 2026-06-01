@@ -5,13 +5,13 @@ export default async function OrdersPage(props: {
   searchParams: Promise<{ status?: string }>;
 }) {
   const { status } = await props.searchParams;
-  const orders = await getOrdersByStatus(status);
+  const result = await getOrdersByStatus(status, 1, 6);
   const counts = await getOrderStatusCounts();
   return (
     <div className="admin-page">
       <div className="admin-page-header">
         <h1 className="admin-page-title">Pedidos</h1>
-        <p className="admin-page-subtitle">{orders.length} pedidos encontrados</p>
+        <p className="admin-page-subtitle">{result.pagination.totalItems} pedidos encontrados</p>
       </div>
 
       <div className="status-filters">
@@ -35,7 +35,7 @@ export default async function OrdersPage(props: {
         ))}
       </div>
 
-      <OrdersTable orders={orders} />
+      <OrdersTable key={status ?? "ALL"} initialOrders={result.data} initialTotal={result.pagination.totalItems} status={status} />
     </div>
   );
 }

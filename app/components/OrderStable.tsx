@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition, useEffect } from "react";
-import { updateOrder, deleteOrder, deleteOrderItem } from "@/lib/actions/Order.actions";
+import { updateOrder, deleteOrder, deleteOrderItem, loadMoreAdminOrders } from "@/lib/actions/Order.actions";
 import { Order, OrderItem } from "@/app/types/order";
 import OrderStatusBadge from "./OrderStatusBadge";
 
@@ -366,7 +366,35 @@ function OrderRow({ order }: { order: Order }) {
   );
 }
 
-export default function OrdersTable({ orders }: { orders: Order[] }) {
+export default function OrdersTable({
+  initialOrders,
+  initialTotal,
+  status,
+}: {
+  initialOrders: Order[];
+  initialTotal: number;
+  status?: string;
+}) {
+  const [orders, setOrders] = useState(initialOrders);
+  const [page, setPage] = useState(1);
+  const [isPending, startTransition] = useTransition();
+
+  useEffect(() => {
+    setOrders(initialOrders);
+    setPage(1);
+  }, [initialOrders]);
+
+  const hasMore = orders.length < initialTotal;
+
+  const loadMore = () => {
+    const nextPage = page + 1;
+    startTransition(async () => {
+      const result = await loadMoreAdminOrders(status ?? null, nextPage);
+      setOrders((prev) => [...prev, ...result.data]);
+      setPage(nextPage);
+    });
+  };
+
   if (orders.length === 0) {
     return (
       <div className="text-center py-16 text-[var(--color-muted)]">
@@ -379,25 +407,39 @@ export default function OrdersTable({ orders }: { orders: Order[] }) {
   }
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-[var(--color-border)]" style={{ WebkitOverflowScrolling: "touch" }}>
-      <table className="w-full text-sm" style={{ minWidth: 320 }}>
-        <thead>
-          <tr className="border-b border-[var(--color-border)] bg-[var(--color-surface-alt)]">
-            <th className="hidden sm:table-cell px-2 py-3 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">ID</th>
-            <th className="px-2 py-3 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Cliente</th>
-            <th className="hidden sm:table-cell px-2 py-3 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Items</th>
-            <th className="px-2 py-3 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Total</th>
-            <th className="px-2 py-3 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Estado</th>
-            <th className="hidden md:table-cell px-2 py-3 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Fecha</th>
-            <th className="px-2 py-3" />
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-[var(--color-border)]">
-          {orders.map((order) => (
-            <OrderRow key={order.id} order={order} />
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <>
+      <div className="overflow-x-auto rounded-xl border border-[var(--color-border)]" style={{ WebkitOverflowScrolling: "touch" }}>
+        <table className="w-full text-sm" style={{ minWidth: 320 }}>
+          <thead>
+            <tr className="border-b border-[var(--color-border)] bg-[var(--color-surface-alt)]">
+              <th className="hidden sm:table-cell px-2 py-3 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">ID</th>
+              <th className="px-2 py-3 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Cliente</th>
+              <th className="hidden sm:table-cell px-2 py-3 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Items</th>
+              <th className="px-2 py-3 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Total</th>
+              <th className="px-2 py-3 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Estado</th>
+              <th className="hidden md:table-cell px-2 py-3 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Fecha</th>
+              <th className="px-2 py-3" />
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-[var(--color-border)]">
+            {orders.map((order) => (
+              <OrderRow key={order.id} order={order} />
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {hasMore && (
+        <div className="flex justify-center mt-6">
+          <button
+            onClick={loadMore}
+            disabled={isPending}
+            className="px-6 py-2 border border-[var(--color-border)] rounded-full text-sm font-medium text-[var(--color-foreground)] hover:bg-[var(--color-surface)] transition-colors disabled:opacity-50"
+          >
+            {isPending ? "Cargando..." : "Ver más"}
+          </button>
+        </div>
+      )}
+    </>
   );
 }

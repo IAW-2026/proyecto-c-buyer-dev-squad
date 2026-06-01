@@ -70,22 +70,39 @@ export async function updateUser(
   });
   revalidatePath("/admin/users");
 }
-export async function getUsers(search?: string) {
-  return prisma.user.findMany({
-    where: search
-      ? {
-          OR: [
-            { email: { contains: search, mode: "insensitive" } },
-            { firstName: { contains: search, mode: "insensitive" } },
-            { lastName: { contains: search, mode: "insensitive" } },
-          ],
-        }
-      : undefined,
-    include: {
-      _count: { select: { orders: true } },
+export async function getUsers(search?: string, page: number = 1, limit: number = 6) {
+  const where = search
+    ? {
+        OR: [
+          { email: { contains: search, mode: "insensitive" } },
+          { firstName: { contains: search, mode: "insensitive" } },
+          { lastName: { contains: search, mode: "insensitive" } },
+        ],
+      }
+    : undefined;
+
+  const [totalItems, users] = await Promise.all([
+    prisma.user.count({ where: where as any }),
+    prisma.user.findMany({
+      where: where as any,
+      include: {
+        _count: { select: { orders: true } },
+      },
+      orderBy: { createdAt: "desc" },
+      skip: (page - 1) * limit,
+      take: limit,
+    }),
+  ]);
+
+  return {
+    data: users as any[],
+    pagination: {
+      page,
+      limit,
+      totalItems,
+      totalPages: Math.ceil(totalItems / limit),
     },
-    orderBy: { createdAt: "desc" },
-  });
+  };
 }
 export async function getNavbarUser(clerkId: string) {
   return prisma.user.findUnique({

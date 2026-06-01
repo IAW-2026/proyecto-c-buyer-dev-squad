@@ -134,19 +134,36 @@ export async function getOrders({
     },
   };
 }
-export async function getOrdersByStatus(status?: string) {
-  return prisma.order.findMany({
-    where: status && status !== "ALL" ? { status: status as any } : undefined,
-    include: {
-      user: { select: { firstName: true, lastName: true, email: true } },
-      items: {
-        include: {
-          product: { select: { name: true, image: true } },
+export async function getOrdersByStatus(status?: string, page: number = 1, limit: number = 6) {
+  const where = status && status !== "ALL" ? { status: status as any } : undefined;
+
+  const [totalItems, orders] = await Promise.all([
+    prisma.order.count({ where }),
+    prisma.order.findMany({
+      where,
+      include: {
+        user: { select: { firstName: true, lastName: true, email: true } },
+        items: {
+          include: {
+            product: { select: { name: true, image: true } },
+          },
         },
       },
+      orderBy: { createdAt: "desc" },
+      skip: (page - 1) * limit,
+      take: limit,
+    }),
+  ]);
+
+  return {
+    data: orders,
+    pagination: {
+      page,
+      limit,
+      totalItems,
+      totalPages: Math.ceil(totalItems / limit),
     },
-    orderBy: { createdAt: "desc" },
-  });
+  };
 }
 export async function getOrderStatusCounts() {
   const statusCounts = await prisma.order.groupBy({

@@ -2,6 +2,7 @@
 
 import { useState, useTransition, useEffect } from "react";
 import { suspendUser, activateUser, deleteUser, updateUser } from "@/lib/services/User.service";
+import { loadMoreAdminUsers } from "@/lib/actions/User.actions";
 
 type User = {
   id: string;
@@ -292,7 +293,35 @@ function UserRow({ user }: { user: User }) {
   );
 }
 
-export default function UsersTable({ users }: { users: User[] }) {
+export default function UsersTable({
+  initialUsers,
+  initialTotal,
+  search,
+}: {
+  initialUsers: User[];
+  initialTotal: number;
+  search?: string;
+}) {
+  const [users, setUsers] = useState(initialUsers);
+  const [page, setPage] = useState(1);
+  const [isPending, startTransition] = useTransition();
+
+  useEffect(() => {
+    setUsers(initialUsers);
+    setPage(1);
+  }, [initialUsers]);
+
+  const hasMore = users.length < initialTotal;
+
+  const loadMore = () => {
+    const nextPage = page + 1;
+    startTransition(async () => {
+      const result = await loadMoreAdminUsers(search ?? null, nextPage);
+      setUsers((prev) => [...prev, ...result.data]);
+      setPage(nextPage);
+    });
+  };
+
   if (users.length === 0) {
     return (
       <div className="text-center py-16 text-[var(--color-muted)]">
@@ -305,24 +334,38 @@ export default function UsersTable({ users }: { users: User[] }) {
   }
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-[var(--color-border)]" style={{ WebkitOverflowScrolling: "touch" }}>
-      <table className="w-full text-sm" style={{ minWidth: 320 }}>
-        <thead>
-          <tr className="border-b border-[var(--color-border)] bg-[var(--color-surface-alt)]">
-            <th className="px-3 py-1.5 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Usuario</th>
-            <th className="hidden sm:table-cell px-3 py-1.5 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Email</th>
-            <th className="px-3 py-1.5 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Estado</th>
-            <th className="hidden sm:table-cell px-3 py-1.5 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Pedidos</th>
-            <th className="hidden md:table-cell px-3 py-1.5 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Registrado</th>
-            <th className="px-3 py-1.5" />
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-[var(--color-border)]">
-          {users.map((user) => (
-            <UserRow key={user.id} user={user} />
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <>
+      <div className="overflow-x-auto rounded-xl border border-[var(--color-border)]" style={{ WebkitOverflowScrolling: "touch" }}>
+        <table className="w-full text-sm" style={{ minWidth: 320 }}>
+          <thead>
+            <tr className="border-b border-[var(--color-border)] bg-[var(--color-surface-alt)]">
+              <th className="px-3 py-1.5 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Usuario</th>
+              <th className="hidden sm:table-cell px-3 py-1.5 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Email</th>
+              <th className="px-3 py-1.5 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Estado</th>
+              <th className="hidden sm:table-cell px-3 py-1.5 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Pedidos</th>
+              <th className="hidden md:table-cell px-3 py-1.5 text-left text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider whitespace-nowrap">Registrado</th>
+              <th className="px-3 py-1.5" />
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-[var(--color-border)]">
+            {users.map((user) => (
+              <UserRow key={user.id} user={user} />
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {hasMore && (
+        <div className="flex justify-center mt-6">
+          <button
+            onClick={loadMore}
+            disabled={isPending}
+            className="px-6 py-2 border border-[var(--color-border)] rounded-full text-sm font-medium text-[var(--color-foreground)] hover:bg-[var(--color-surface)] transition-colors disabled:opacity-50"
+          >
+            {isPending ? "Cargando..." : "Ver más"}
+          </button>
+        </div>
+      )}
+    </>
   );
 }

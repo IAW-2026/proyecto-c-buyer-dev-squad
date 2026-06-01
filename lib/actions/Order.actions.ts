@@ -9,6 +9,7 @@ import {
   deleteOrderService,
   deleteOrderItemService,
   getMoreOrders,
+  getOrdersByStatus,
 } from "@/lib/services/Orders.service";
 
 import { OrderStatusType } from "@/app/types/order";
@@ -99,4 +100,13 @@ export async function getFiveMoreOrders(
     return [];
   }
   return await getMoreOrders(userId,skip)
+}
+
+export async function loadMoreAdminOrders(status: string | null, page: number) {
+  const { userId } = await auth();
+  if (!userId) throw new Error("No autenticado");
+  const admin = await getUserByClerkId(userId);
+  if (!admin || admin.role !== "ADMIN") throw new Error("No autorizado");
+
+  return getOrdersByStatus(status ?? undefined, page, 6);
 }
