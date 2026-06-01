@@ -25,7 +25,7 @@ export default function OrdersList({
   initialOrders: any[];
 }) {
   const [orders, setOrders] = useState(initialOrders);
-  const [hasMore, setHasMore] = useState(true);
+  const [hasMore, setHasMore] = useState(initialOrders.length === 5);
   const [isPending, startTransition] = useTransition();
 
   const loadMore = () => {

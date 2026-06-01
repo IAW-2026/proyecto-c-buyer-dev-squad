@@ -31,7 +31,7 @@ export default async function PedidosPage() {
         </Link>
 
         <h1 className="text-2xl md:text-3xl font-bold text-foreground">
-          Mis últimos 5 pedidos
+          Mis últimos pedidos
         </h1>
       </div>
 
