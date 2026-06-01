@@ -36,7 +36,10 @@ export function LogOutButton() {
               </button>
 
               <button
-                onClick={() => signOut({ redirectUrl: "/" })}
+                onClick={async () => {
+                  await signOut();
+                  window.location.reload();
+                }}
                 className="px-4 py-2 rounded-lg btn-danger"
               >
                 Sí, salir

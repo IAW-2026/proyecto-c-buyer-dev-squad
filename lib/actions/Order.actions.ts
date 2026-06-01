@@ -99,7 +99,13 @@ export async function getFiveMoreOrders(
   if (!userId) {
     return [];
   }
-  return await getMoreOrders(userId,skip)
+  const user = await getUserByClerkId(userId);
+
+  if (!user) {
+    return [];
+  }
+
+  return getMoreOrders(user.id, skip);
 }
 
 export async function loadMoreAdminOrders(status: string | null, page: number) {
