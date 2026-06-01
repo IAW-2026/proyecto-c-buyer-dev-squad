@@ -10,8 +10,8 @@ https://zapasya.vercel.app/
 
 | Rol           | Email                    | Contraseña |
 | ------------- | ------------------------ | ---------- |
-| Administrador | [admin+clerktest@iaw.com]| iawuser#   |
-| Comprador     | [user+clerktest@iaw.com] | iawuser#   |
+| Administrador | [admin+clerk_test@iaw.com]| iawuser#   |
+| Comprador     | [user+clerk_test@iaw.com] | iawuser#   |
 
 ---
 
