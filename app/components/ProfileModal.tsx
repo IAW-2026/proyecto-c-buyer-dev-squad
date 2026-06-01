@@ -1,21 +1,32 @@
 "use client";
 
-import { useState, useTransition} from "react";
+import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { updateUserProfile } from "@/lib/actions/User.actions";
 
-type Props = {
-  user: {
-    firstName?: string | null;
-    lastName?: string | null;
-    phone?: string | null;
-    address?: string | null;
-    birthDate?: Date | null;
-  };
-  imageUrl: string;
-  onClose: () => void;
+type UserData = {
+  firstName?: string | null;
+  lastName?: string | null;
+  phone?: string | null;
+  address?: string | null;
+  birthDate?: Date | null;
 };
 
-export function ProfileModal({ user, imageUrl, onClose }: Props) {
+type Props = {
+  user: UserData;
+  imageUrl: string;
+  onClose: () => void;
+  onSave?: (data: {       
+    firstName: string;
+    lastName: string;
+    phone: string;
+    address: string;
+    birthDate: string;
+  }) => void;
+};
+
+export function ProfileModal({ user, imageUrl, onClose, onSave }: Props) {  
+  const router = useRouter();  // 👈 faltaba
   const [isPending, startTransition] = useTransition();
   const [form, setForm] = useState({
     firstName: user.firstName ?? "",
@@ -34,6 +45,8 @@ export function ProfileModal({ user, imageUrl, onClose }: Props) {
   const handleSubmit = () => {
     startTransition(async () => {
       await updateUserProfile(form);
+      onSave?.(form);  
+      router.refresh();
       onClose();
     });
   };

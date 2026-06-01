@@ -18,7 +18,7 @@ type Props = {
 
 export function UserAvatarMenu({ imageUrl, fullName, dbUser }: Props) {
   const [showProfile, setShowProfile] = useState(false);
-
+  const [currentUser, setCurrentUser] = useState(dbUser);
   return (
     <>
       <div className="flex items-center gap-3">
@@ -34,9 +34,13 @@ export function UserAvatarMenu({ imageUrl, fullName, dbUser }: Props) {
 
       {showProfile && (
         <ProfileModal
-          user={dbUser}
+          user={currentUser}
           imageUrl={imageUrl}
           onClose={() => setShowProfile(false)}
+          onSave={(updated) => setCurrentUser({
+            ...updated,
+            birthDate: updated.birthDate ? new Date(updated.birthDate) : null,
+          })}
         />
       )}
     </>
