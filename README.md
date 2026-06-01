@@ -45,8 +45,8 @@ https://zapasya.vercel.app/
 
 | Rol           | Email                   | Contraseña  |
 | ------------- | ----------------------- | ----------- |
-| Administrador | zapasya.clerk@gmail.com | ZapasYa11@  |
-| Comprador     | buyerzapasya@gmail.com  | dev-squad   |
+| Administrador | admin+clerktest@iaw.com | iawuser#    |
+| Comprador     | user+clerktest@iaw.com  | iawuser#    |
 
 ## Datos de prueba incluidos
 

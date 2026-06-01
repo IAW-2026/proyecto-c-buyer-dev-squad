@@ -7,6 +7,7 @@ import {
   checkUserActive,
   getUsers,
   getUserByClerkId,
+  getNavbarUser,
   type UpdateUserProfileData,
 } from "@/lib/services/User.service";
 
@@ -33,4 +34,10 @@ export async function loadMoreAdminUsers(search: string | null, page: number) {
   if (!admin || admin.role !== "ADMIN") throw new Error("No autorizado");
 
   return getUsers(search ?? undefined, page, 6);
+}
+
+export async function getNavbarUserAction() {
+  const { userId } = await auth();
+  if (!userId) return null;
+  return getNavbarUser(userId);
 }

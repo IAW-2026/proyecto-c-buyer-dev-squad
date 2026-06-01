@@ -7,9 +7,7 @@ export function LogInButton() {
   return (
     <button
       onClick={() =>
-        openSignIn({
-          forceRedirectUrl: "/", 
-        })
+        openSignIn()
       }
       className="text-sm px-5 py-2.5 rounded-xl btn-primary shadow-sm transition font-medium"
     >
