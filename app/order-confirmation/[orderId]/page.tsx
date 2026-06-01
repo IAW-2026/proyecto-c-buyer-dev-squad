@@ -4,6 +4,7 @@ import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import AutoRefresh from "@/app/components/AutoRefresh";
+import OrderButtons from "@/app/components/OrderButtons";
 import { getOrderConfirmationData } from "@/lib/services/Orders.service";
 
 export default async function OrderConfirmation({
@@ -138,20 +139,7 @@ export default async function OrderConfirmation({
           </ul>
         </div>
 
-        <div className="flex gap-4">
-          <Link
-            href="/"
-            className="flex-1 btn-info font-bold py-2 px-4 rounded-lg text-center transition"
-          >
-            Seguir Comprando
-          </Link>
-          <Link
-            href="/cart"
-            className="flex-1 btn-secondary font-bold py-2 px-4 rounded-lg text-center transition"
-          >
-            Ver Carrito
-          </Link>
-        </div>
+        <OrderButtons />
       </div>
     </main>
   );

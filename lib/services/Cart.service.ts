@@ -122,6 +122,14 @@ export async function getCartSummary(clerkId: string) {
     total,
   };
 }
+export async function clearCart(clerkUserId: string) {
+  const user = await getOrCreateUser(clerkUserId);
+
+  return prisma.cartItem.deleteMany({
+    where: { userId: user.id },
+  });
+}
+
 export async function getCartCountService(
   clerkUserId: string
 ) {

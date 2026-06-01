@@ -66,10 +66,6 @@ export async function createOrder(
       }),
     });
   */
-  await prisma.cartItem.deleteMany({
-    where: { userId },
-  });
-
   return order; 
 }
 

@@ -29,7 +29,7 @@ export default function CartList({ items, total }: any) {
     <div>
       <div className="mb-4">
         <button
-          onClick={() => router.back()}
+          onClick={() => router.push("/")}
           className="text-sm text-muted underline"
         >
           ← Volver
