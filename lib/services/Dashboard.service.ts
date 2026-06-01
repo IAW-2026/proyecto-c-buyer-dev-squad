@@ -136,7 +136,6 @@ export async function getDashboardStats() {
       id: true,
     },
     where: {
-      status: "PAID",
       createdAt: {
         gte: thirtyDaysAgo,
       },
