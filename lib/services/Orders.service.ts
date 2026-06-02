@@ -197,28 +197,28 @@ export async function getOrderConfirmationData(userId: string, orderId: string) 
   };
 }
 export async function getLastOrdersByUser(clerkId: string, limit = 5) {
-  const user = await getUserByClerkId(clerkId);
+  const user = await prisma.user.findUnique({
+    where: { clerkId },
+    include: {
+      orders: {
+        include: {
+          items: {
+            include: {
+              product: true,
+            },
+          },
+        },
+        orderBy: { createdAt: "desc" },
+        take: limit,
+      },
+    },
+  });
 
   if (!user) return null;
 
-  const orders = await prisma.order.findMany({
-    where: { userId: user.id },
-    include: {
-      items: {
-        include: {
-          product: true,
-        },
-      },
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-    take: limit,
-  });
-
   return {
     user,
-    orders,
+    orders: user.orders,
   };
 }
 
