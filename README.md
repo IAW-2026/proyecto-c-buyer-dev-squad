@@ -40,7 +40,6 @@ También incluye un panel de administración con métricas generales, gestión d
 
 ---
 
-## Notas para la corrección
 # Notas y comentarios para la corrección
 
 ## Aspectos a destacar
