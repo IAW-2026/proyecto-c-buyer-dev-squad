@@ -5,8 +5,10 @@ export default async function OrdersPage(props: {
   searchParams: Promise<{ status?: string }>;
 }) {
   const { status } = await props.searchParams;
-  const result = await getOrdersByStatus(status, 1, 6);
-  const counts = await getOrderStatusCounts();
+  const [result, counts] = await Promise.all([
+  getOrdersByStatus(status, 1, 6),
+  getOrderStatusCounts(),
+]);
   return (
     <div className="admin-page">
       <div className="admin-page-header">

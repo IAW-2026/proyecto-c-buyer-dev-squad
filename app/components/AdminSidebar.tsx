@@ -67,10 +67,6 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
 
         <div className="admin-sidebar-footer">
           <div className="admin-user-info">
-            <UserButton
-              userProfileMode="navigation"
-              userProfileUrl="/user-profile"
-            />
             <div className="admin-user-text">
               <p className="admin-user-name">
                 {user.firstName ?? ""} {user.lastName ?? ""}

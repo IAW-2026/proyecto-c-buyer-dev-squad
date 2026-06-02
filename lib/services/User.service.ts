@@ -88,7 +88,7 @@ export async function getUsers(search?: string, page: number = 1, limit: number 
       include: {
         _count: { select: { orders: true } },
       },
-      orderBy: { createdAt: "desc" },
+      orderBy: { email: "desc" },
       skip: (page - 1) * limit,
       take: limit,
     }),

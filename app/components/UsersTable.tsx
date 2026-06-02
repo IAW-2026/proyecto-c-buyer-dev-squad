@@ -24,6 +24,24 @@ function toLocalDateString(date: Date | string) {
   return `${year}-${month}-${day}`;
 }
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function validateEmail(v: string) {
+  if (!v.trim()) return "El email es obligatorio";
+  if (!EMAIL_RE.test(v.trim())) return "Email inválido";
+  return null;
+}
+
+function validateDate(v: string) {
+  if (!v) return "La fecha es obligatoria";
+  return null;
+}
+
+function FieldError({ msg }: { msg: string | null }) {
+  if (!msg) return null;
+  return <span className="text-[10px] text-[var(--color-danger)] leading-tight">{msg}</span>;
+}
+
 function UserRow({ user }: { user: User }) {
   const [editing, setEditing] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -34,6 +52,9 @@ function UserRow({ user }: { user: User }) {
   const [email, setEmail] = useState(user.email);
   const [createdAt, setCreatedAt] = useState(toLocalDateString(user.createdAt));
 
+  const [emailError, setEmailError] = useState<string | null>(null);
+  const [dateError, setDateError] = useState<string | null>(null);
+
   useEffect(() => {
     if (!isPending) {
       setFirstName(user.firstName ?? "");
@@ -41,8 +62,24 @@ function UserRow({ user }: { user: User }) {
       setEmail(user.email);
       setCreatedAt(toLocalDateString(user.createdAt));
       setEditing(false);
+      clearErrors();
     }
   }, [user]);
+
+  const clearErrors = () => {
+    setEmailError(null);
+    setDateError(null);
+  };
+
+  const runValidation = (): boolean => {
+    const eErr = validateEmail(email);
+    const dErr = validateDate(createdAt);
+    setEmailError(eErr);
+    setDateError(dErr);
+    return !eErr && !dErr;
+  };
+
+  const hasErrors = !!emailError || !!dateError;
 
   const isSuspended = user.status === "SUSPENDED";
   const isAdmin = user.role === "ADMIN";
@@ -64,11 +101,12 @@ function UserRow({ user }: { user: User }) {
   };
 
   const handleSave = () => {
+    if (!runValidation()) return;
     startTransition(async () => {
       await updateUser(user.id, {
-        firstName: firstName || null,
-        lastName: lastName || null,
-        email,
+        firstName: firstName.trim() || null,
+        lastName: lastName.trim() || null,
+        email: email.trim(),
         createdAt: new Date(`${createdAt}T12:00:00`),
         orderCount: user._count.orders,
       });
@@ -81,6 +119,7 @@ function UserRow({ user }: { user: User }) {
     setEmail(user.email);
     setCreatedAt(toLocalDateString(user.createdAt));
     setEditing(false);
+    clearErrors();
   };
 
   const handleDelete = () => {
@@ -128,11 +167,16 @@ function UserRow({ user }: { user: User }) {
 
         <td className="hidden sm:table-cell px-3 py-1.5 text-[var(--color-muted)] text-xs">
           {editing ? (
-            <input
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-2 py-1 text-xs rounded border border-[var(--color-border)] bg-[var(--color-background)] text-[var(--color-foreground)] focus:outline-none focus:border-[var(--color-primary)]"
-            />
+            <div className="flex flex-col gap-0.5">
+              <input
+                value={email}
+                onChange={(e) => { setEmail(e.target.value); setEmailError(null); }}
+                className={`w-full px-2 py-1 text-xs rounded border bg-[var(--color-background)] text-[var(--color-foreground)] focus:outline-none focus:border-[var(--color-primary)] ${
+                  emailError ? "border-[var(--color-danger)]" : "border-[var(--color-border)]"
+                }`}
+              />
+              <FieldError msg={emailError} />
+            </div>
           ) : (
             <span className="truncate block max-w-[180px]">{user.email}</span>
           )}
@@ -167,7 +211,6 @@ function UserRow({ user }: { user: User }) {
           </button>
         </td>
 
-        {/* Pedidos: siempre solo lectura */}
         <td className="hidden sm:table-cell px-3 py-1.5">
           <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[var(--color-surface)] text-xs font-semibold text-[var(--color-foreground)]">
             {user._count.orders}
@@ -176,25 +219,31 @@ function UserRow({ user }: { user: User }) {
 
         <td className="hidden md:table-cell px-3 py-1.5 text-[var(--color-muted)] text-xs">
           {editing ? (
-            <input
-              type="date"
-              value={createdAt}
-              onChange={(e) => setCreatedAt(e.target.value)}
-              className="px-2 py-1 text-xs rounded border border-[var(--color-border)] bg-[var(--color-background)] text-[var(--color-foreground)] focus:outline-none focus:border-[var(--color-primary)]"
-            />
+            <div className="flex flex-col gap-0.5">
+              <input
+                type="date"
+                value={createdAt}
+                onChange={(e) => { setCreatedAt(e.target.value); setDateError(null); }}
+                className={`px-2 py-1 text-xs rounded border bg-[var(--color-background)] text-[var(--color-foreground)] focus:outline-none focus:border-[var(--color-primary)] ${
+                  dateError ? "border-[var(--color-danger)]" : "border-[var(--color-border)]"
+                }`}
+              />
+              <FieldError msg={dateError} />
+            </div>
           ) : (
             toLocalDateString(user.createdAt).split("-").reverse().join("/")
           )}
         </td>
 
+        {/* Acciones */}
         <td className="px-3 py-1.5">
           <div className="flex items-center justify-end gap-1">
             {editing ? (
               <>
                 <button
                   onClick={handleSave}
-                  disabled={isPending}
-                  title="Guardar"
+                  disabled={isPending || hasErrors}
+                  title={hasErrors ? "Corregí los errores antes de guardar" : "Guardar"}
                   className="p-1.5 rounded-md btn-success text-white transition-colors disabled:opacity-50"
                 >
                   {isPending ? (

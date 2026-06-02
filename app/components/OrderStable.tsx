@@ -13,6 +13,7 @@ type EditableItem = OrderItem & {
 function toEditable(item: OrderItem): EditableItem {
   return { ...item, quantityStr: String(item.quantity), priceStr: String(item.price) };
 }
+
 function toLocalDateString(date: Date | string) {
   const d = new Date(date);
   const year = d.getFullYear();
@@ -20,6 +21,40 @@ function toLocalDateString(date: Date | string) {
   const day = String(d.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
 }
+
+//validación de mail
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function validateEmail(v: string) {
+  if (!v.trim()) return "El email es obligatorio";
+  if (!EMAIL_RE.test(v.trim())) return "Email inválido";
+  return null;
+}
+
+function validateQuantity(v: string) {
+  const n = parseInt(v, 10);
+  if (isNaN(n) || v.trim() === "") return "Cantidad inválida";
+  if (n < 1) return "Debe ser ≥ 1";
+  return null;
+}
+
+function validatePrice(v: string) {
+  const n = parseFloat(v);
+  if (isNaN(n) || v.trim() === "") return "Precio inválido";
+  if (n < 0) return "Debe ser ≥ 0";
+  return null;
+}
+
+function validateDate(v: string) {
+  if (!v) return "La fecha es obligatoria";
+  return null;
+}
+
+function FieldError({ msg }: { msg: string | null }) {
+  if (!msg) return null;
+  return <span className="text-[10px] text-[var(--color-danger)] leading-tight">{msg}</span>;
+}
+
 function OrderRow({ order }: { order: Order }) {
   const [expanded, setExpanded] = useState(false);
   const [editing, setEditing] = useState(false);
@@ -32,17 +67,62 @@ function OrderRow({ order }: { order: Order }) {
   const [createdAt, setCreatedAt] = useState(toLocalDateString(order.createdAt));
   const [items, setItems] = useState<EditableItem[]>(order.items.map(toEditable));
 
+  // Errores por campo
+  const [emailError, setEmailError] = useState<string | null>(null);
+  const [dateError, setDateError] = useState<string | null>(null);
+  const [itemErrors, setItemErrors] = useState<{ quantity: string | null; price: string | null }[]>(
+    () => order.items.map(() => ({ quantity: null, price: null }))
+  );
+  const [globalError, setGlobalError] = useState<string | null>(null);
+
   useEffect(() => {
     if (!isPending) {
-    setFirstName(order.user.firstName ?? "");
-    setLastName(order.user.lastName ?? "");
-    setEmail(order.user.email);
-    setCreatedAt(toLocalDateString(order.createdAt));
-    setItems(order.items.map(toEditable));
-    setEditing(false);
-    setExpanded(false);
+      setFirstName(order.user.firstName ?? "");
+      setLastName(order.user.lastName ?? "");
+      setEmail(order.user.email);
+      setCreatedAt(toLocalDateString(order.createdAt));
+      setItems(order.items.map(toEditable));
+      setEditing(false);
+      setExpanded(false);
+      clearErrors();
     }
   }, [order]);
+
+  const clearErrors = () => {
+    setEmailError(null);
+    setDateError(null);
+    setItemErrors(order.items.map(() => ({ quantity: null, price: null })));
+    setGlobalError(null);
+  };
+
+  // Valida todo y retorna true si es válido
+  const runValidation = (): boolean => {
+    let valid = true;
+
+    const eErr = validateEmail(email);
+    setEmailError(eErr);
+    if (eErr) valid = false;
+
+    const dErr = validateDate(createdAt);
+    setDateError(dErr);
+    if (dErr) valid = false;
+
+    if (items.length === 0) {
+      setGlobalError("El pedido debe tener al menos un producto");
+      valid = false;
+    } else {
+      setGlobalError(null);
+    }
+
+    const newItemErrors = items.map((it) => ({
+      quantity: validateQuantity(it.quantityStr),
+      price: validatePrice(it.priceStr),
+    }));
+    setItemErrors(newItemErrors);
+    if (newItemErrors.some((e) => e.quantity || e.price)) valid = false;
+
+    return valid;
+  };
 
   const calculatedTotal = items.reduce(
     (acc, item) => acc + (parseInt(item.quantityStr) || 0) * (parseFloat(item.priceStr) || 0),
@@ -51,20 +131,30 @@ function OrderRow({ order }: { order: Order }) {
 
   const updateItemStr = (idx: number, field: "quantityStr" | "priceStr", val: string) => {
     setItems((prev) => prev.map((it, i) => (i === idx ? { ...it, [field]: val } : it)));
+    // Limpiar error del campo modificado
+    setItemErrors((prev) =>
+      prev.map((e, i) =>
+        i === idx
+          ? { ...e, [field === "quantityStr" ? "quantity" : "price"]: null }
+          : e
+      )
+    );
   };
 
   const handleSave = () => {
+    if (!runValidation()) return;
+
     startTransition(async () => {
       await updateOrder(order.id, {
-        firstName: firstName || null,
-        lastName: lastName || null,
-        email,
+        firstName: firstName.trim() || null,
+        lastName: lastName.trim() || null,
+        email: email.trim(),
         total: calculatedTotal,
         status: order.status,
         createdAt: new Date(`${createdAt}T12:00:00`),
         items: items.map((it) => ({
-          quantity: parseInt(it.quantityStr) || 1,
-          price: parseFloat(it.priceStr) || 0,
+          quantity: parseInt(it.quantityStr, 10),
+          price: parseFloat(it.priceStr),
         })),
       });
     });
@@ -77,6 +167,7 @@ function OrderRow({ order }: { order: Order }) {
     setCreatedAt(toLocalDateString(order.createdAt));
     setItems(order.items.map(toEditable));
     setEditing(false);
+    clearErrors();
   };
 
   const handleDelete = () => {
@@ -91,6 +182,7 @@ function OrderRow({ order }: { order: Order }) {
     startTransition(async () => {
       await deleteOrderItem(item.id);
       setItems((prev) => prev.filter((_, i) => i !== idx));
+      setItemErrors((prev) => prev.filter((_, i) => i !== idx));
     });
   };
 
@@ -98,6 +190,12 @@ function OrderRow({ order }: { order: Order }) {
     order.user.firstName || order.user.lastName
       ? `${order.user.firstName ?? ""} ${order.user.lastName ?? ""}`.trim()
       : null;
+
+  const hasErrors =
+    !!emailError ||
+    !!dateError ||
+    !!globalError ||
+    itemErrors.some((e) => e.quantity || e.price);
 
   return (
     <>
@@ -134,11 +232,14 @@ function OrderRow({ order }: { order: Order }) {
               </div>
               <input
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => { setEmail(e.target.value); setEmailError(null); }}
                 placeholder="Email"
                 onClick={(e) => e.stopPropagation()}
-                className="w-full px-2 py-1 text-xs rounded border border-[var(--color-border)] bg-[var(--color-background)] text-[var(--color-foreground)] focus:outline-none focus:border-[var(--color-primary)]"
+                className={`w-full px-2 py-1 text-xs rounded border bg-[var(--color-background)] text-[var(--color-foreground)] focus:outline-none focus:border-[var(--color-primary)] ${
+                  emailError ? "border-[var(--color-danger)]" : "border-[var(--color-border)]"
+                }`}
               />
+              <FieldError msg={emailError} />
             </div>
           ) : (
             <div>
@@ -167,13 +268,18 @@ function OrderRow({ order }: { order: Order }) {
 
         <td className="hidden md:table-cell px-2 py-3 text-[var(--color-muted)] text-sm">
           {editing ? (
-            <input
-              type="date"
-              value={createdAt}
-              onChange={(e) => setCreatedAt(e.target.value)}
-              onClick={(e) => e.stopPropagation()}
-              className="px-2 py-1 text-xs rounded border border-[var(--color-border)] bg-[var(--color-background)] text-[var(--color-foreground)] focus:outline-none focus:border-[var(--color-primary)]"
-            />
+            <div className="flex flex-col gap-0.5">
+              <input
+                type="date"
+                value={createdAt}
+                onChange={(e) => { setCreatedAt(e.target.value); setDateError(null); }}
+                onClick={(e) => e.stopPropagation()}
+                className={`px-2 py-1 text-xs rounded border bg-[var(--color-background)] text-[var(--color-foreground)] focus:outline-none focus:border-[var(--color-primary)] ${
+                  dateError ? "border-[var(--color-danger)]" : "border-[var(--color-border)]"
+                }`}
+              />
+              <FieldError msg={dateError} />
+            </div>
           ) : (
             toLocalDateString(order.createdAt).split("-").reverse().join("/")
           )}
@@ -185,8 +291,8 @@ function OrderRow({ order }: { order: Order }) {
               <>
                 <button
                   onClick={handleSave}
-                  disabled={isPending}
-                  title="Guardar"
+                  disabled={isPending || hasErrors}
+                  title={hasErrors ? "Corregí los errores antes de guardar" : "Guardar"}
                   className="p-1.5 rounded-md btn-success transition-colors disabled:opacity-50"
                 >
                   {isPending ? (
@@ -244,6 +350,12 @@ function OrderRow({ order }: { order: Order }) {
               <p className="text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider mb-3">
                 Detalle del pedido
               </p>
+
+              {/* Error global (ej: sin items) */}
+              {globalError && (
+                <p className="text-xs text-[var(--color-danger)] mb-2">{globalError}</p>
+              )}
+
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {items.map((item, i) => (
                   <div
@@ -265,27 +377,39 @@ function OrderRow({ order }: { order: Order }) {
                         {item.color ? `Color: ${item.color}` : ""}
                       </p>
                       {editing ? (
-                        <div className="flex gap-2 mt-1.5">
-                          <label className="flex items-center gap-1 text-xs text-[var(--color-muted)]">
-                            Cant.
-                            <input
-                              type="text"
-                              inputMode="numeric"
-                              value={item.quantityStr}
-                              onChange={(e) => updateItemStr(i, "quantityStr", e.target.value)}
-                              className="w-12 px-1.5 py-0.5 rounded border border-[var(--color-border)] bg-[var(--color-background)] text-[var(--color-foreground)] focus:outline-none focus:border-[var(--color-primary)]"
-                            />
-                          </label>
-                          <label className="flex items-center gap-1 text-xs text-[var(--color-muted)]">
-                            $
-                            <input
-                              type="text"
-                              inputMode="decimal"
-                              value={item.priceStr}
-                              onChange={(e) => updateItemStr(i, "priceStr", e.target.value)}
-                              className="w-20 px-1.5 py-0.5 rounded border border-[var(--color-border)] bg-[var(--color-background)] text-[var(--color-foreground)] focus:outline-none focus:border-[var(--color-primary)]"
-                            />
-                          </label>
+                        <div className="flex flex-col gap-1 mt-1.5">
+                          <div className="flex gap-2">
+                            <label className="flex flex-col gap-0.5 text-xs text-[var(--color-muted)]">
+                              <span>Cant.</span>
+                              <input
+                                type="text"
+                                inputMode="numeric"
+                                value={item.quantityStr}
+                                onChange={(e) => updateItemStr(i, "quantityStr", e.target.value)}
+                                className={`w-12 px-1.5 py-0.5 rounded border bg-[var(--color-background)] text-[var(--color-foreground)] focus:outline-none focus:border-[var(--color-primary)] ${
+                                  itemErrors[i]?.quantity
+                                    ? "border-[var(--color-danger)]"
+                                    : "border-[var(--color-border)]"
+                                }`}
+                              />
+                              <FieldError msg={itemErrors[i]?.quantity ?? null} />
+                            </label>
+                            <label className="flex flex-col gap-0.5 text-xs text-[var(--color-muted)]">
+                              <span>Precio $</span>
+                              <input
+                                type="text"
+                                inputMode="decimal"
+                                value={item.priceStr}
+                                onChange={(e) => updateItemStr(i, "priceStr", e.target.value)}
+                                className={`w-20 px-1.5 py-0.5 rounded border bg-[var(--color-background)] text-[var(--color-foreground)] focus:outline-none focus:border-[var(--color-primary)] ${
+                                  itemErrors[i]?.price
+                                    ? "border-[var(--color-danger)]"
+                                    : "border-[var(--color-border)]"
+                                }`}
+                              />
+                              <FieldError msg={itemErrors[i]?.price ?? null} />
+                            </label>
+                          </div>
                         </div>
                       ) : (
                         <p className="text-sm font-semibold text-[var(--color-foreground)]">
