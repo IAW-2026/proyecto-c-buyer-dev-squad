@@ -82,6 +82,12 @@ export default function Navbar() {
           <ThemedLogo />
         </div>
         <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
+          <a
+            href="https://proyecto-c-seller-dev-squad.vercel.app/"
+            className="text-sm font-medium px-3 py-1.5 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
+          >
+            Vender
+          </a>
           <ThemeToggle />
           {isAdmin && (
             <Link

@@ -1,106 +1,41 @@
-import { Suspense } from "react";
-import ProductList from "./components/ProductList";
-import Navbar from "./components/Navbar";
-import Tabs from "./components/Tabs";
-import CartButton from "./components/CartButton";
-import Recommendations from "./components/Recommendations";
-import ProductGridSkeleton from "./components/ProductGridSkeleton";
-import { getProducts} from "@/lib/services/Products.service";
-import FiltersWrapper from "./components/FiltersWrapper";
-import LoadingProvider from "./components/LoadingProvider";
-import ProductsWrapper from "./components/ProductsWrapper";
+import Link from "next/link";
+import { Store, ShoppingBag } from "lucide-react";
+import ThemedLogo from "./components/ThemedLogo";
 
-const categoryTitles: Record<string, string> = {
-  hombre: "Zapatillas/Hombres",
-  mujer: "Zapatillas/Mujeres",
-  nino: "Zapatillas/Niños/as",
-  zapatillas: "Zapatillas",
-};
-
-function RecommendationsSkeleton() {
+export default function LandingPage() {
   return (
-    <section className="w-full py-10">
-      <div className="mb-6 flex flex-col gap-1">
-        <div className="h-6 w-40 rounded-md bg-surface animate-pulse" />
-        <div className="h-4 w-64 rounded-md bg-surface animate-pulse ml-6" />
+    <div className="min-h-screen flex flex-col items-center justify-center p-6 gap-12">
+      <div className="scale-150">
+        <ThemedLogo />
       </div>
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <div
-            key={i}
-            className="flex flex-col gap-2 rounded-xl overflow-hidden"
-            style={{ backgroundColor: "var(--color-surface-alt)" }}
-          >
-            <div className="aspect-square w-full bg-surface animate-pulse" />
-            <div className="flex flex-col gap-2 px-3 pb-3">
-              <div className="h-3 w-12 rounded bg-surface animate-pulse" />
-              <div className="h-4 w-full rounded bg-surface animate-pulse" />
-              <div className="h-4 w-16 rounded bg-surface animate-pulse mt-1" />
-            </div>
-          </div>
-        ))}
+
+      <p className="text-lg text-muted text-center max-w-md">
+        Elegí cómo querés entrar a ZapasYa
+      </p>
+
+      <div className="flex flex-col sm:flex-row gap-6 w-full max-w-lg">
+        <Link
+          href="https://proyecto-c-seller-dev-squad.vercel.app/"
+          className="flex-1 flex flex-col items-center gap-4 p-8 rounded-2xl border-2 border-muted bg-surface-alt hover:border-primary hover:bg-primary/5 transition-all group"
+        >
+          <Store className="w-12 h-12 text-muted group-hover:text-primary transition-colors" />
+          <span className="text-xl font-semibold">Vendedor</span>
+          <span className="text-sm text-muted text-center">
+            Accedé a tu tienda y gestioná tus productos
+          </span>
+        </Link>
+
+        <Link
+          href="/home"
+          className="flex-1 flex flex-col items-center gap-4 p-8 rounded-2xl border-2 border-muted bg-surface-alt hover:border-primary hover:bg-primary/5 transition-all group"
+        >
+          <ShoppingBag className="w-12 h-12 text-muted group-hover:text-primary transition-colors" />
+          <span className="text-xl font-semibold">Comprador</span>
+          <span className="text-sm text-muted text-center">
+            Explorá y comprá las mejores zapatillas
+          </span>
+        </Link>
       </div>
-    </section>
-  );
-}
-
-async function ProductsSection({ searchParams }: { searchParams: any }) {
-  const page = parseInt(searchParams.page ?? "1");
-  const products = await getProducts({ ...searchParams, page, limit: 8 });
-  return (
-    <ProductList
-      products={products.data}
-      totalPages={products.pagination.totalPages}
-      currentPage={page}
-      searchParams={searchParams}
-    />
-  );
-}
-
-export default async function Home(props: {
-  searchParams: Promise<{
-    category?: string;
-    brand?: string;
-    minPrice?: string;
-    maxPrice?: string;
-  }>;
-}) {
-  const searchParams = await props.searchParams;
-  return (
-    <LoadingProvider>
-      <main className="p-6 md:p-10 space-y-6">
-        <Navbar />
-        <Tabs />
-
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <h1 className="text-2xl font-bold">
-            {searchParams.category
-              ? categoryTitles[searchParams.category] ?? "Productos"
-              : "Zapatillas"}
-          </h1>
-
-          <Suspense fallback={<div className="h-10 w-48 bg-surface animate-pulse rounded" />}>
-            <FiltersWrapper category={searchParams.category} />
-          </Suspense>
-        </div>
-
-        <section>
-          <ProductsWrapper>
-            <Suspense
-              key={JSON.stringify(searchParams)}
-              fallback={<ProductGridSkeleton />}
-            >
-              <ProductsSection searchParams={searchParams} />
-            </Suspense>
-          </ProductsWrapper>
-        </section>
-
-        <CartButton />
-
-        <Suspense fallback={<RecommendationsSkeleton />}>
-          <Recommendations limit={6} productBasePath="/products" />
-        </Suspense>
-      </main>
-    </LoadingProvider>
+    </div>
   );
 }
