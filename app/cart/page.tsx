@@ -5,19 +5,19 @@ import { getCartSummary } from "@/lib/services/Cart.service";
 import { getUserByClerkId } from "@/lib/services/User.service";
 
 export default async function CartPage() {
-  const { userId } = await auth();
+  const { userId: clerkId } = await auth();
 
-  if (!userId) {
+  if (!clerkId) {
     redirect("/");
   }
 
-  const user = await getUserByClerkId(userId);
+  const user = await getUserByClerkId(clerkId);
 
   if (user?.status === "SUSPENDED") {
     redirect("/suspended");
   }
 
-  const { items, total } = await getCartSummary(userId);
+  const { items, total } = await getCartSummary(clerkId);
 
   return (
     <main className="p-6 md:p-10">

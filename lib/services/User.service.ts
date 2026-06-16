@@ -25,29 +25,29 @@ export async function getOrCreateUser(clerkId: string) {
   });
 }
 
-export async function suspendUser(userId: string) {
+export async function suspendUser(id: string) {
   await prisma.user.update({
-    where: { id: userId },
+    where: { id },
     data: { status: "SUSPENDED" },
   });
   revalidatePath("/admin/users");
 }
  
-export async function activateUser(userId: string) {
+export async function activateUser(id: string) {
   await prisma.user.update({
-    where: { id: userId },
+    where: { id },
     data: { status: "ACTIVE" },
   });
   revalidatePath("/admin/users");
 }
  
-export async function deleteUser(userId: string) {
-  await prisma.user.delete({ where: { id: userId } });
+export async function deleteUser(id: string) {
+  await prisma.user.delete({ where: { id } });
   revalidatePath("/admin/users");
 }
  
 export async function updateUser(
-  userId: string,
+  id: string,
   data: {
     firstName: string | null;
     lastName: string | null;
@@ -57,7 +57,7 @@ export async function updateUser(
   }
 ) {
   await prisma.user.update({
-    where: { id: userId },
+    where: { id },
     data: {
       firstName: data.firstName,
       lastName: data.lastName,

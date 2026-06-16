@@ -4,11 +4,11 @@ import { LogOutButton } from "../components/LogOutButton";
 import { getUserByClerkId } from "@/lib/services/User.service";
 
 export default async function SuspendedPage() {
-  const { userId } = await auth();
+  const { userId: clerkId } = await auth();
 
-  if (!userId) redirect("/");
+  if (!clerkId) redirect("/");
 
-  const user = await getUserByClerkId(userId);
+  const user = await getUserByClerkId(clerkId);
 
   if (user?.status !== "SUSPENDED") redirect("/");
 

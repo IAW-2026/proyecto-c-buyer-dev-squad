@@ -31,7 +31,7 @@ export default async function Page() {
 
   return (
     <CheckoutForm
-      userId={user.id}
+      id={user.id}
       cartItems={cartItems}
       initialData={{
         firstName: user.firstName ?? "",

@@ -13,7 +13,7 @@ export type CheckoutFormData = {
 };
 
 export async function processCheckout(
-  userId: string,
+  id: string,
   cartItems: OrderItem[],
   form: CheckoutFormData
 ) {
@@ -23,7 +23,7 @@ export async function processCheckout(
   );
 
   await prisma.user.update({
-    where: { id: userId },
+    where: { id },
     data: {
       firstName: form.firstName,
       lastName: form.lastName,
@@ -39,7 +39,7 @@ export async function processCheckout(
   });
 
   const order = await createOrder(
-    userId,
+    id,
     cartItems,
     total,
     form.firstName,
@@ -53,10 +53,10 @@ export async function processCheckout(
 }
 
 export async function getUserCheckoutData(
-  userId: string
+  id: string
 ) {
   return prisma.user.findUnique({
-    where: { id: userId },
+    where: { id },
     select: {
       firstName: true,
       lastName: true,

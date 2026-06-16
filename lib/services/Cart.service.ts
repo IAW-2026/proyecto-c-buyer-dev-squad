@@ -20,8 +20,8 @@ export async function getCartItems(clerkId: string): Promise<OrderItem[]> {
     color: item.color,
   }));
 }
-export async function getCart(clerkUserId: string) {
-  const user = await getOrCreateUser(clerkUserId);
+export async function getCart(clerkId: string) {
+  const user = await getOrCreateUser(clerkId);
 
   return prisma.cartItem.findMany({
     where: { userId: user.id },
@@ -30,13 +30,13 @@ export async function getCart(clerkUserId: string) {
 }
 
 export async function addToCart(
-  clerkUserId: string,
+  clerkId: string,
   productId: string,
   quantity: number,
   size: number,
   color: string
 ) {
-  const user = await getOrCreateUser(clerkUserId);
+  const user = await getOrCreateUser(clerkId);
 
   const product = await prisma.product.findUnique({
     where: { id: productId },
@@ -78,10 +78,10 @@ export async function addToCart(
 }
 
 export async function removeFromCart(
-  clerkUserId: string,
+  clerkId: string,
   cartItemId: string
 ) {
-  const user = await getOrCreateUser(clerkUserId);
+  const user = await getOrCreateUser(clerkId);
 
   const existingItem = await prisma.cartItem.findFirst({
     where: {
@@ -122,8 +122,8 @@ export async function getCartSummary(clerkId: string) {
     total,
   };
 }
-export async function clearCart(clerkUserId: string) {
-  const user = await getOrCreateUser(clerkUserId);
+export async function clearCart(clerkId: string) {
+  const user = await getOrCreateUser(clerkId);
 
   return prisma.cartItem.deleteMany({
     where: { userId: user.id },
@@ -131,10 +131,10 @@ export async function clearCart(clerkUserId: string) {
 }
 
 export async function getCartCountService(
-  clerkUserId: string
+  clerkId: string
 ) {
   const user = await getOrCreateUser(
-    clerkUserId
+    clerkId
   );
 
   const items =

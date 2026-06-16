@@ -8,13 +8,13 @@ import type { CheckoutFormData } from "@/lib/services/Checkout.service";
 import type { OrderItem } from "@/app/types/order";
 
 type Props = {
-  userId: string;
+  id: string;
   cartItems: OrderItem[];
   initialData: CheckoutFormData;
 };
 
 export default function CheckoutPage({
-  userId,
+  id,
   cartItems,
   initialData,
 }: Props) {
@@ -77,7 +77,7 @@ const [errors, setErrors] = useState<Partial<Record<keyof CheckoutFormData, stri
     if (!validate()) return;
     startTransition(async () => {
       try {
-        const { orderId } = await submitCheckout(userId, cartItems, form);
+        const { orderId } = await submitCheckout(id, cartItems, form);
         router.push(`/order-confirmation/${orderId}`);
       } catch (e) {
         console.error(e);

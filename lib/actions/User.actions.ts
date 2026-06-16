@@ -13,22 +13,22 @@ import {
 export async function updateUserProfile(
   formData: UpdateUserProfileData
 ) {
-  const { userId } = await auth();
+  const { userId: clerkId } = await auth();
 
-  if (!userId) {
+  if (!clerkId) {
     throw new Error("No autenticado");
   }
 
-  await checkUserActive(userId);
+  await checkUserActive(clerkId);
 
-  await updateUserProfileData(userId, formData);
+  await updateUserProfileData(clerkId, formData);
 
   revalidatePath("/");
 }
 
 export async function loadMoreAdminUsers(search: string | null, page: number) {
-  const { userId } = await auth();
-  if (!userId) throw new Error("No autenticado");
+  const { userId: clerkId } = await auth();
+  if (!clerkId) throw new Error("No autenticado");
   const clerkUser = await currentUser();
   const role = clerkUser?.publicMetadata?.role as string | undefined;
   if (role !== "ADMIN") throw new Error("No autorizado");
@@ -37,7 +37,7 @@ export async function loadMoreAdminUsers(search: string | null, page: number) {
 }
 
 export async function getNavbarUserAction() {
-  const { userId } = await auth();
-  if (!userId) return null;
-  return getNavbarUser(userId);
+  const { userId: clerkId } = await auth();
+  if (!clerkId) return null;
+  return getNavbarUser(clerkId);
 }

@@ -5,21 +5,21 @@ import { getCart, addToCart, removeFromCart, clearCart, getCartCountService } fr
 import { checkUserActive } from "@/lib/services/User.service";
 
 async function requireUser() {
-  const { userId } = await auth();
+  const { userId: clerkId } = await auth();
 
-  if (!userId) {
+  if (!clerkId) {
     throw new Error("Unauthorized");
   }
 
-  await checkUserActive(userId);
+  await checkUserActive(clerkId);
 
-  return userId;
+  return clerkId;
 }
 
 export async function getCartAction() {
-  const userId = await requireUser();
+  const clerkId = await requireUser();
 
-  return getCart(userId);
+  return getCart(clerkId);
 }
 
 export async function addToCartAction(
@@ -28,10 +28,10 @@ export async function addToCartAction(
   size: number,
   color: string
 ) {
-  const userId = await requireUser();
+  const clerkId = await requireUser();
 
   return addToCart(
-    userId,
+    clerkId,
     productId,
     quantity,
     size,
@@ -42,25 +42,25 @@ export async function addToCartAction(
 export async function removeFromCartAction(
   cartItemId: string
 ) {
-  const userId = await requireUser();
+  const clerkId = await requireUser();
 
   return removeFromCart(
-    userId,
+    clerkId,
     cartItemId
   );
 }
 export async function clearCartAction() {
-  const userId = await requireUser();
+  const clerkId = await requireUser();
 
-  return clearCart(userId);
+  return clearCart(clerkId);
 }
 
 export async function getCartCount(): Promise<number> {
-  const { userId } = await auth();
+  const { userId: clerkId } = await auth();
 
-  if (!userId) {
+  if (!clerkId) {
     return 0;
   }
 
-  return getCartCountService(userId);
+  return getCartCountService(clerkId);
 }

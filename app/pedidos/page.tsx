@@ -7,10 +7,10 @@ import { getLastOrdersByUser } from "@/lib/services/Orders.service";
 import { getUserByClerkId } from "@/lib/services/User.service";
 
 export default async function PedidosPage() {
-  const { userId } = await auth();
-  if (!userId) redirect("/");
+  const { userId: clerkId } = await auth();
+  if (!clerkId) redirect("/");
 
-  const result = await getLastOrdersByUser(userId, 5);
+  const result = await getLastOrdersByUser(clerkId, 5);
 
   if (!result) redirect("/");
   if (result.user.status === "SUSPENDED") redirect("/suspended");

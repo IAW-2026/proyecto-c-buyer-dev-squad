@@ -12,14 +12,14 @@ export default async function OrderConfirmation({
 }: {
   params: Promise<{ orderId: string }>;
 }) {
-  const { userId } = await auth();
+  const { userId: clerkId } = await auth();
 
-  if (!userId) redirect("/");
+  if (!clerkId) redirect("/");
 
   const { orderId } = await params;
 
   const { user, order } = await getOrderConfirmationData(
-    userId,
+    clerkId,
     orderId
   );
 

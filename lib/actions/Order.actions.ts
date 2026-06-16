@@ -16,8 +16,8 @@ import { OrderStatusType } from "@/app/types/order";
 import { getUserByClerkId } from "../services/User.service";
 
 async function requireAdmin() {
-  const { userId } = await auth();
-  if (!userId) throw new Error("No autenticado");
+  const { userId: clerkId } = await auth();
+  if (!clerkId) throw new Error("No autenticado");
 
   const clerkUser = await currentUser();
   const role = clerkUser?.publicMetadata?.role as string | undefined;
@@ -72,13 +72,13 @@ export async function deleteOrderItem(itemId: string) {
 }
 
 export async function loadMoreOrders(skip: number) {
-  const { userId } = await auth();
+  const { userId: clerkId } = await auth();
 
-  if (!userId) {
+  if (!clerkId) {
     return [];
   }
 
-  const user = await getUserByClerkId(userId);
+  const user = await getUserByClerkId(clerkId);
 
   if (!user) {
     return [];
@@ -89,12 +89,12 @@ export async function loadMoreOrders(skip: number) {
 export async function getFiveMoreOrders(
   skip: number
 ) {
-  const { userId } = await auth();
+  const { userId: clerkId } = await auth();
 
-  if (!userId) {
+  if (!clerkId) {
     return [];
   }
-  const user = await getUserByClerkId(userId);
+  const user = await getUserByClerkId(clerkId);
 
   if (!user) {
     return [];
@@ -104,8 +104,8 @@ export async function getFiveMoreOrders(
 }
 
 export async function loadMoreAdminOrders(status: string | null, page: number) {
-  const { userId } = await auth();
-  if (!userId) throw new Error("No autenticado");
+  const { userId: clerkId } = await auth();
+  if (!clerkId) throw new Error("No autenticado");
   const clerkUser = await currentUser();
   const role = clerkUser?.publicMetadata?.role as string | undefined;
   if (role !== "ADMIN") throw new Error("No autorizado");

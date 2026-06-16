@@ -3,7 +3,7 @@ import { OrderItem, OrderStatusType } from "@/app/types/order";
 import { getUserByClerkId } from "./User.service";
 
 type GetOrdersParams = {
-  userId?: string;
+  id?: string;
   orderId?: string;
   status?: OrderStatusType;
   page: number;
@@ -11,7 +11,7 @@ type GetOrdersParams = {
 };
 
 export async function createOrder(
-  userId: string,
+  id: string,
   items: OrderItem[],
   total: number,
   firstName: string,
@@ -22,7 +22,7 @@ export async function createOrder(
 ) {
   const order = await prisma.order.create({
     data: {
-      userId,
+      userId: id,
       total,
       receiverName: `${firstName} ${lastName}`,
       receiverPhone: phone,
@@ -70,7 +70,7 @@ export async function createOrder(
 }
 
 export async function getOrders({
-  userId,
+  id,
   orderId,
   status,
   page,
@@ -80,7 +80,7 @@ export async function getOrders({
     const order = await prisma.order.findFirst({
       where: {
         id: orderId,
-        ...(userId && { userId }),
+        ...(id && { userId: id }),
       },
       include: {
         items: {
@@ -95,7 +95,7 @@ export async function getOrders({
   }
 
   const where = {
-    ...(userId && { userId }),
+    ...(id && { userId: id }),
     ...(status && { status }),
   };
 
@@ -174,8 +174,8 @@ export async function getOrderStatusCounts() {
     ])
   ) as Record<string, number>;
 }
-export async function getOrderConfirmationData(userId: string, orderId: string) {
-  const user = await getUserByClerkId(userId);
+export async function getOrderConfirmationData(clerkId: string, orderId: string) {
+  const user = await getUserByClerkId(clerkId);
 
   if (!user) return { user: null, order: null };
 
@@ -304,12 +304,12 @@ export async function deleteOrderItemService(itemId: string) {
 }
 
 export async function getMoreOrders(
-  userId: string,
+  id: string,
   skip: number
 ) {
   return prisma.order.findMany({
     where: {
-      userId,
+      userId: id,
     },
     include: {
       items: {

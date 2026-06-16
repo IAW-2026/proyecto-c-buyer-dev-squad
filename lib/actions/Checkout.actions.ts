@@ -8,7 +8,7 @@ import { checkUserActive } from "@/lib/services/User.service";
 import { auth } from "@clerk/nextjs/server";
 
 export async function submitCheckout(
-  userId: string,
+  id: string,
   cartItems: OrderItem[],
   form: CheckoutFormData
 ): Promise<{ orderId: string }> {
@@ -18,7 +18,7 @@ export async function submitCheckout(
   }
 
   const order = await processCheckout(
-    userId,
+    id,
     cartItems,
     form
   );

@@ -8,15 +8,15 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { userId } = await auth();
-  if (!userId) redirect("/sign-in");
+  const { userId: clerkId } = await auth();
+  if (!clerkId) redirect("/sign-in");
 
   const clerkUser = await currentUser();
   const role = clerkUser?.publicMetadata?.role as string | undefined;
   if (role !== "ADMIN") redirect("/");
 
   const dbUser = await prisma.user.findUnique({
-    where: { clerkId: userId },
+    where: { clerkId },
     select: { status: true },
   });
 
