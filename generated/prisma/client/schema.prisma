@@ -16,7 +16,6 @@ model User {
   phone     String?
   address   String?
   birthDate DateTime?
-  role      Role       @default(USER)
   status    UserStatus @default(ACTIVE)
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
@@ -120,11 +119,6 @@ model OrderItem {
   @@index([orderId])
   @@index([productId])
   @@map("order_items")
-}
-
-enum Role {
-  USER
-  ADMIN
 }
 
 enum OrderStatus {

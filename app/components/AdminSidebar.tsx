@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { UserButton } from "@clerk/nextjs";
 import { useState } from "react";
 
 import { LayoutDashboard, Users, ShoppingBag, Package, ChevronRight, Menu, X } from "lucide-react";
@@ -18,7 +17,6 @@ interface AdminSidebarProps {
     firstName?: string | null;
     lastName?: string | null;
     email: string;
-    role: string;
   };
 }
 

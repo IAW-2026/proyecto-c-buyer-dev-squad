@@ -1,6 +1,6 @@
 "use server";
 
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 
 import {
@@ -17,16 +17,11 @@ import { getUserByClerkId } from "../services/User.service";
 
 async function requireAdmin() {
   const { userId } = await auth();
+  if (!userId) throw new Error("No autenticado");
 
-  if (!userId) {
-    throw new Error("No autenticado");
-  }
-
-  const admin = await getUserByClerkId(userId);
-
-  if (!admin || admin.role !== "ADMIN") {
-    throw new Error("No autorizado");
-  }
+  const clerkUser = await currentUser();
+  const role = clerkUser?.publicMetadata?.role as string | undefined;
+  if (role !== "ADMIN") throw new Error("No autorizado");
 }
 
 export async function updateOrderStatus(
@@ -111,8 +106,9 @@ export async function getFiveMoreOrders(
 export async function loadMoreAdminOrders(status: string | null, page: number) {
   const { userId } = await auth();
   if (!userId) throw new Error("No autenticado");
-  const admin = await getUserByClerkId(userId);
-  if (!admin || admin.role !== "ADMIN") throw new Error("No autorizado");
+  const clerkUser = await currentUser();
+  const role = clerkUser?.publicMetadata?.role as string | undefined;
+  if (role !== "ADMIN") throw new Error("No autorizado");
 
   return getOrdersByStatus(status ?? undefined, page, 6);
 }

@@ -1,4 +1,3 @@
-import Loader from "@/app/components/Loader";
 
 export default function OrdersLoading() {
   return (

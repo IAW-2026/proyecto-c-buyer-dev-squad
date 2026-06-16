@@ -34,7 +34,6 @@ export async function suspendUser(userId: string) {
 }
  
 export async function activateUser(userId: string) {
-  await ensureNotAdmin(userId);
   await prisma.user.update({
     where: { id: userId },
     data: { status: "ACTIVE" },
@@ -43,7 +42,6 @@ export async function activateUser(userId: string) {
 }
  
 export async function deleteUser(userId: string) {
-  await ensureNotAdmin(userId);
   await prisma.user.delete({ where: { id: userId } });
   revalidatePath("/admin/users");
 }
@@ -58,7 +56,6 @@ export async function updateUser(
     orderCount: number; // informativo, no se guarda en DB directamente
   }
 ) {
-  await ensureNotAdmin(userId);
   await prisma.user.update({
     where: { id: userId },
     data: {
@@ -108,7 +105,6 @@ export async function getNavbarUser(clerkId: string) {
   return prisma.user.findUnique({
     where: { clerkId },
     select: {
-      role: true,
       status: true,
       firstName: true,
       lastName: true,
@@ -160,14 +156,4 @@ export async function updateUserProfileData(
         : null,
     },
   });
-}
-async function ensureNotAdmin(userId: string) {
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    select: { role: true },
-  });
-
-  if (!user) {
-    throw new Error("Usuario no encontrado");
-  }
 }

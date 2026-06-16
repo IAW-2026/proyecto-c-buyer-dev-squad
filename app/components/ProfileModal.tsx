@@ -26,7 +26,7 @@ type Props = {
 };
 
 export function ProfileModal({ user, imageUrl, onClose, onSave }: Props) {  
-  const router = useRouter();  // 👈 faltaba
+  const router = useRouter(); 
   const [isPending, startTransition] = useTransition();
   const [form, setForm] = useState({
     firstName: user.firstName ?? "",

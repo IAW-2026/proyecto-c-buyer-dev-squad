@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { submitCheckout } from "@/lib/actions/Checkout.actions";
 import type { CheckoutFormData } from "@/lib/services/Checkout.service";
+//es un tipo
 import type { OrderItem } from "@/app/types/order";
 
 type Props = {

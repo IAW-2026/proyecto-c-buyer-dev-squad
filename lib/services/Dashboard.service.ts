@@ -144,7 +144,7 @@ export async function getDashboardStats() {
       createdAt: "asc",
     },
   });
-
+  //cuanto se vendió cada día, y cuántos pedidos se hicieron, en los últimos 30 días
   const salesMap = new Map<
     string,
     {

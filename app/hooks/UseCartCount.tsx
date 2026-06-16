@@ -26,6 +26,10 @@ export function useCartCount() {
     window.addEventListener("cartUpdated", update);
     return () => window.removeEventListener("cartUpdated", update);
   }, []);
-
+// se ejecuta una vez al montar el componente para obtener el conteo inicial del carrito.
+//  Luego, se agrega un event listener para escuchar el evento "cartUpdated" y 
+// actualizar el conteo cada vez que se dispare ese evento. 
+// El conteo se actualiza solo si el usuario está autenticado y 
+// los datos del usuario han sido cargados.
   return { count, loading: isPending };
 }

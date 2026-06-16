@@ -12,7 +12,6 @@ import { UserAvatarMenu } from "./UserAvatarMenu";
 import Link from "next/link";
 
 type DbUser = {
-  role: string | null;
   status: string | null;
   firstName: string | null;
   lastName: string | null;
@@ -43,6 +42,8 @@ export default function Navbar() {
     }
   }, [isSignedIn, isLoaded]);
 
+  const isAdmin = (user?.publicMetadata?.role as string) === "ADMIN";
+
   if (dbUser?.status === "SUSPENDED") {
     return (
       <nav className="w-full sticky top-0 z-50 border-b border-destructive/30 bg-destructive/5 shadow-sm">
@@ -61,20 +62,18 @@ export default function Navbar() {
     );
   }
 
-  if (!isLoaded || (isSignedIn && isPending && !dbUser)) {
+  if (!isLoaded) {
     return (
       <nav className="w-full sticky top-0 z-50 border-b border-muted bg-surface-alt shadow-sm">
         <div className="max-w-6xl mx-auto flex items-center justify-between px-2 sm:px-4 md:px-6 h-14 sm:h-16 md:h-20">
           <div className="scale-90 sm:scale-100 md:scale-110">
             <ThemedLogo />
           </div>
-          <Loader size="sm" text={isSignedIn ? "Iniciando sesión..." : undefined} />
+          <Loader size="sm" />
         </div>
       </nav>
     );
   }
-
-  const isAdmin = dbUser?.role === "ADMIN";
 
   return (
     <nav className="w-full sticky top-0 z-50 border-b border-muted bg-surface-alt shadow-sm">
