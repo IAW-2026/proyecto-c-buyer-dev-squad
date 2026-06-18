@@ -1,6 +1,6 @@
 import "server-only";
 
-const SELLER_API = process.env.seller_API;
+const SELLER_API = process.env.SELLER_API;
 
 if (!SELLER_API) {
   throw new Error("Falta NEXT_PUBLIC_SELLER_API en .env");
