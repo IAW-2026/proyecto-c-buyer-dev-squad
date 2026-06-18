@@ -22,7 +22,7 @@ export async function getRemoteProducts() {
 
 export async function getRemoteSellers() {
   const response = await fetch(
-    `${SELLER_API}/api/sellers`,
+    `${SELLER_API}/api/seller`,
     {
       cache: "no-store",
     }

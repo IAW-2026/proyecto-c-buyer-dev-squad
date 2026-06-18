@@ -1,16 +1,16 @@
 import { prisma } from "@/lib/prisma";
-import {getRemoteProducts, getRemoteSellers} from "@/lib/apis/seller-api";
+const SELLER_API = "https://proyecto-c-seller-dev-squad.vercel.app";
 
 async function main() {
   console.log("Fetching sellers...");
 
-  const sellers = await getRemoteSellers();
+  const sellersRes = await fetch(`${SELLER_API}/api/seller`, { cache: "no-store" });
+  if (!sellersRes.ok) throw new Error("Error obteniendo vendedores");
+  const sellers = await sellersRes.json();
 
   for (const seller of sellers) {
     await prisma.seller.upsert({
-      where: {
-        id: seller.id,
-      },
+      where: { id: seller.id },
       update: {
         name: seller.name,
         description: seller.description ?? "",
@@ -18,47 +18,35 @@ async function main() {
       },
       create: {
         id: seller.id,
-        clerkId:
-          seller.clerkId ??
-          `external-${seller.id}`,
+        clerkId: seller.clerkId ?? `external-${seller.id}`,
         name: seller.name,
-        email:
-          seller.email ??
-          `${seller.id}@external.com`,
-        description:
-          seller.description ?? "",
-        avatarUrl:
-          seller.avatarUrl ?? "",
+        email: seller.email ?? `${seller.id}@external.com`,
+        description: seller.description ?? "",
+        avatarUrl: seller.avatarUrl ?? "",
       },
     });
   }
 
+  console.log(`Synced ${sellers.length} sellers`);
   console.log("Fetching products...");
 
-  const products = await getRemoteProducts();
+  const productsRes = await fetch(`${SELLER_API}/api/products`, { cache: "no-store" });
+  if (!productsRes.ok) throw new Error("Error obteniendo productos");
+  const productsRaw = await productsRes.json();
+  const products = productsRaw.data ?? productsRaw;
 
   for (const product of products) {
     await prisma.product.upsert({
-      where: {
-        id: product.id,
-      },
+      where: { id: product.id },
       update: {
         name: product.name,
         price: Number(product.price),
         image: product.image ?? "",
         brand: product.brand ?? "",
         category: product.category ?? "",
-        direction:
-          product.direction ?? "",
-        description:
-          product.description ?? "",
-        sizes:
-          product.sizes?.map(
-            (s: any) =>
-              typeof s === "number"
-                ? s
-                : Number(s.size)
-          ) ?? [],
+        direction: product.direction ?? "",
+        description: product.description ?? "",
+        sizes: product.sizes?.map((s: any) => (typeof s === "number" ? s : Number(s.size))) ?? [],
         colors: product.colors ?? [],
         sellerId: product.sellerId,
       },
@@ -69,23 +57,16 @@ async function main() {
         image: product.image ?? "",
         brand: product.brand ?? "",
         category: product.category ?? "",
-        direction:
-          product.direction ?? "",
-        description:
-          product.description ?? "",
-        sizes:
-          product.sizes?.map(
-            (s: any) =>
-              typeof s === "number"
-                ? s
-                : Number(s.size)
-          ) ?? [],
+        direction: product.direction ?? "",
+        description: product.description ?? "",
+        sizes: product.sizes?.map((s: any) => (typeof s === "number" ? s : Number(s.size))) ?? [],
         colors: product.colors ?? [],
         sellerId: product.sellerId,
       },
     });
   }
 
+  console.log(`Synced ${products.length} products`);
   console.log("Se cargaron los datos correctamente!");
 }
 

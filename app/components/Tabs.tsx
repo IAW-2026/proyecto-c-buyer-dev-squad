@@ -45,7 +45,7 @@ export default function Tabs() {
       if (currentMin) params.set("minPrice", currentMin);
       const currentMax = searchParams.get("maxPrice");
       if (currentMax) params.set("maxPrice", currentMax);
-      router.push(`/?${params.toString()}`);
+      router.push(`/home?${params.toString()}`);
     });
   };
 
@@ -55,12 +55,10 @@ export default function Tabs() {
       openSignIn({ forceRedirectUrl: "/pedidos" });
     }
   };
-  const isFirstRender = useRef(true);
+  const initialSearch = useRef(currentSearch);
   useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
+    if (search === initialSearch.current) return;
+
     const timeout = setTimeout(() => {
       startTransition(() => {
         const params = new URLSearchParams(searchParams.toString());
@@ -69,12 +67,12 @@ export default function Tabs() {
         } else {
           params.delete("search");
         }
-        router.push(`/?${params.toString()}`);
+        router.push(`/home?${params.toString()}`);
       });
     }, 300);
 
     return () => clearTimeout(timeout);
-  }, [search]);
+  }, [search, searchParams, startTransition, router]);
 
   return (
     <div className="border-b px-4 md:px-10 py-4">
@@ -88,7 +86,7 @@ export default function Tabs() {
             return (
               <Link
                 key={tab.name}
-                href={tab.category ? `/?category=${tab.category}` : "/"}
+                href={tab.category ? `/home?category=${tab.category}` : "/home"}
                 onClick={(e) => handleCategoryClick(e, tab.category)}
                 className={`pb-2 text-sm md:text-base font-medium transition-colors ${
                   isActive
