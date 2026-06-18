@@ -101,6 +101,15 @@ export async function getUsers(search?: string, page: number = 1, limit: number 
     },
   };
 }
+export async function getUserById(id: string) {
+  return prisma.user.findUnique({
+    where: { id },
+    include: {
+      _count: { select: { orders: true } },
+    },
+  });
+}
+
 export async function getNavbarUser(clerkId: string) {
   return prisma.user.findUnique({
     where: { clerkId },
