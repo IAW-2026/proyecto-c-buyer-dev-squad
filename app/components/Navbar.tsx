@@ -1,6 +1,6 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
+import { useUser, useClerk } from "@clerk/nextjs";
 import { useEffect, useState, useTransition } from "react";
 import { getNavbarUserAction } from "@/lib/actions/User.actions";
 import Loader from "./Loader";
@@ -21,8 +21,11 @@ type DbUser = {
   birthDate: Date | null;
 };
 
+const SELLER_URL = "https://proyecto-c-seller-dev-squad.vercel.app/";
+
 export default function Navbar() {
   const { isSignedIn, isLoaded, user } = useUser();
+  const { openSignIn } = useClerk();
   const [dbUser, setDbUser] = useState<DbUser | null>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -44,6 +47,13 @@ export default function Navbar() {
   }, [isSignedIn, isLoaded]);
 
   const isAdmin = (user?.publicMetadata?.role as string) === "ADMIN";
+
+  const handleVenderClick = (e: React.MouseEvent) => {
+    if (!isSignedIn) {
+      e.preventDefault();
+      openSignIn({ forceRedirectUrl: SELLER_URL });
+    }
+  };
 
   if (dbUser?.status === "SUSPENDED") {
     return (
@@ -84,7 +94,8 @@ export default function Navbar() {
         </div>
         <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
           <a
-            href="https://proyecto-c-seller-dev-squad.vercel.app/"
+            href={SELLER_URL}
+            onClick={handleVenderClick}
             className="text-sm font-semibold px-4 py-2 rounded-xl bg-primary text-primary-foreground hover:scale-105 hover:shadow-lg hover:shadow-primary/25 active:scale-95 transition-all duration-200 flex items-center gap-2"
           >
             <Store className="w-4 h-4" />
