@@ -9,6 +9,7 @@ import { getProducts} from "@/lib/services/Products.service";
 import FiltersWrapper from "../components/FiltersWrapper";
 import LoadingProvider from "../components/LoadingProvider";
 import ProductsWrapper from "../components/ProductsWrapper";
+import SloganBanner from "../components/SloganBanner";
 
 const categoryTitles: Record<string, string> = {
   hombre: "Zapatillas/Hombres",
@@ -71,6 +72,8 @@ export default async function Home(props: {
       <main className="p-6 md:p-10 space-y-6">
         <Navbar />
         <Tabs />
+
+        <SloganBanner searchParams={searchParams} />
 
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <h1 className="text-2xl font-bold">
