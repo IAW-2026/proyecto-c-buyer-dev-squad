@@ -126,7 +126,7 @@ export default function OrdersList({
 
               {pedido.status !== "DELIVERED" && (
                 <Link
-                  href={`https://proyecto-c-shipping-dev-squad.vercel.app/api/shipments/${pedido.id}`}
+                  href={`${process.env.NEXT_PUBLIC_SHIPPING_URL}/api/shipments/${pedido.id}`}
                   className="px-4 py-2 rounded-xl border text-sm font-medium"
                 >
                   Ver estado del envío

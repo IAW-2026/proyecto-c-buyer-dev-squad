@@ -13,7 +13,9 @@ export default function SellerInfo({
   return (
     <div className="mt-auto flex gap-3 flex-wrap items-center">
       <SellerPopover seller={seller} />
-      <Link href="#" className="btn-secondary text-sm px-4 py-2 rounded-xl">
+      <Link
+      href={`${process.env.NEXT_PUBLIC_FEEDBACK_URL}/explorar/producto/${productId}`}
+      className="btn-secondary text-sm px-4 py-2 rounded-xl">
         ⭐ Ver reseñas
       </Link>
       <CartButton />

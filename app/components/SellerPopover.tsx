@@ -76,7 +76,7 @@ export function SellerPopover({ seller }: { seller: Seller }) {
             {seller.description}
           </p>
           <Link
-            href="#"
+            href={`${process.env.NEXT_PUBLIC_FEEDBACK_URL}/explorar/vendedor/${seller.id}`}
             className="btn-secondary text-sm px-4 py-2 rounded-xl"
           >
             ⭐ Ver opiniones

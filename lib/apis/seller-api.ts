@@ -1,15 +1,15 @@
 import "server-only";
 
-const SELLER_API =
-  "https://proyecto-c-seller-dev-squad.vercel.app";
+const SELLER_API = process.env.seller_API;
+
+if (!SELLER_API) {
+  throw new Error("Falta NEXT_PUBLIC_SELLER_API en .env");
+}
 
 export async function getRemoteProducts() {
-  const response = await fetch(
-    `${SELLER_API}/api/products`,
-    {
-      cache: "no-store",
-    }
-  );
+  const response = await fetch(`${SELLER_API}/api/products`, {
+    cache: "no-store",
+  });
 
   if (!response.ok) {
     throw new Error("Error obteniendo productos");
@@ -21,12 +21,9 @@ export async function getRemoteProducts() {
 }
 
 export async function getRemoteSellers() {
-  const response = await fetch(
-    `${SELLER_API}/api/seller`,
-    {
-      cache: "no-store",
-    }
-  );
+  const response = await fetch(`${SELLER_API}/api/seller`, {
+    cache: "no-store",
+  });
 
   if (!response.ok) {
     throw new Error("Error obteniendo vendedores");

@@ -9,6 +9,7 @@ import ThemeToggle from "./ThemeToggle";
 import { LogInButton } from "./LogInButton";
 import { LogOutButton } from "./LogOutButton";
 import { UserAvatarMenu } from "./UserAvatarMenu";
+import { Store } from "lucide-react";
 import Link from "next/link";
 
 type DbUser = {
@@ -84,8 +85,9 @@ export default function Navbar() {
         <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
           <a
             href="https://proyecto-c-seller-dev-squad.vercel.app/"
-            className="text-sm font-medium px-3 py-1.5 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
+            className="text-sm font-semibold px-4 py-2 rounded-xl bg-primary text-primary-foreground hover:scale-105 hover:shadow-lg hover:shadow-primary/25 active:scale-95 transition-all duration-200 flex items-center gap-2"
           >
+            <Store className="w-4 h-4" />
             Vender
           </a>
           <ThemeToggle />
