@@ -1,4 +1,104 @@
 import { prisma } from "@/lib/prisma";
+import {getRemoteProducts, getRemoteSellers} from "@/lib/apis/seller-api";
+
+async function main() {
+  console.log("Fetching sellers...");
+
+  const sellers = await getRemoteSellers();
+
+  for (const seller of sellers) {
+    await prisma.seller.upsert({
+      where: {
+        id: seller.id,
+      },
+      update: {
+        name: seller.name,
+        description: seller.description ?? "",
+        avatarUrl: seller.avatarUrl ?? "",
+      },
+      create: {
+        id: seller.id,
+        clerkId:
+          seller.clerkId ??
+          `external-${seller.id}`,
+        name: seller.name,
+        email:
+          seller.email ??
+          `${seller.id}@external.com`,
+        description:
+          seller.description ?? "",
+        avatarUrl:
+          seller.avatarUrl ?? "",
+      },
+    });
+  }
+
+  console.log("Fetching products...");
+
+  const products = await getRemoteProducts();
+
+  for (const product of products) {
+    await prisma.product.upsert({
+      where: {
+        id: product.id,
+      },
+      update: {
+        name: product.name,
+        price: Number(product.price),
+        image: product.image ?? "",
+        brand: product.brand ?? "",
+        category: product.category ?? "",
+        direction:
+          product.direction ?? "",
+        description:
+          product.description ?? "",
+        sizes:
+          product.sizes?.map(
+            (s: any) =>
+              typeof s === "number"
+                ? s
+                : Number(s.size)
+          ) ?? [],
+        colors: product.colors ?? [],
+        sellerId: product.sellerId,
+      },
+      create: {
+        id: product.id,
+        name: product.name,
+        price: Number(product.price),
+        image: product.image ?? "",
+        brand: product.brand ?? "",
+        category: product.category ?? "",
+        direction:
+          product.direction ?? "",
+        description:
+          product.description ?? "",
+        sizes:
+          product.sizes?.map(
+            (s: any) =>
+              typeof s === "number"
+                ? s
+                : Number(s.size)
+          ) ?? [],
+        colors: product.colors ?? [],
+        sellerId: product.sellerId,
+      },
+    });
+  }
+
+  console.log("Se cargaron los datos correctamente!");
+}
+
+main()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
+  /* ETAPA 2
+import { prisma } from "@/lib/prisma";
 
 const SELLERS = [
   {
@@ -357,3 +457,4 @@ main()
   .finally(async () => {
     await prisma.$disconnect();
   });
+  */

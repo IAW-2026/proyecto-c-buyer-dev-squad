@@ -1,3 +1,4 @@
+import { getRemoteProducts } from "../apis/seller-api";
 import { prisma } from "../prisma";
 
 type GetProductsParams = {
@@ -77,4 +78,58 @@ export async function getBrands(category?: string) {
   orderBy: { brand: "asc" },
 });
 return brands.map((p) => p.brand);
+}
+export async function syncProducts() {
+  const products = await getRemoteProducts();
+
+  for (const product of products) {
+    await prisma.product.upsert({
+      where: {
+        id: product.id,
+      },
+      update: {
+        name: product.name,
+        price: Number(product.price),
+        image: product.image ?? "",
+        brand: product.brand ?? "",
+        category: product.category ?? "",
+        direction:
+          product.direction ?? "",
+        description:
+          product.description ?? "",
+        sizes:
+          product.sizes?.map(
+            (s: any) =>
+              typeof s === "number"
+                ? s
+                : Number(s.size)
+          ) ?? [],
+        colors: product.colors ?? [],
+        sellerId: product.sellerId,
+      },
+      create: {
+        id: product.id,
+        name: product.name,
+        price: Number(product.price),
+        image: product.image ?? "",
+        brand: product.brand ?? "",
+        category: product.category ?? "",
+        direction:
+          product.direction ?? "",
+        description:
+          product.description ?? "",
+        sizes:
+          product.sizes?.map(
+            (s: any) =>
+              typeof s === "number"
+                ? s
+                : Number(s.size)
+          ) ?? [],
+        colors: product.colors ?? [],
+        sellerId: product.sellerId,
+      },
+    });
+  }
+
+  console.log("Se actualizaron los productos correctamente!");
 }
