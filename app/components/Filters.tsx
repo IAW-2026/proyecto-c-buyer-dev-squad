@@ -29,7 +29,7 @@ export default function Filters({ brands }: FiltersProps) {
         params.delete(key);
       }
       startTransition(() => {
-        router.push(`/?${params.toString()}`);
+        router.push(`/home?${params.toString()}`);
       });
     }, 300);
   }, [router, searchParams, startTransition]);
@@ -42,7 +42,7 @@ export default function Filters({ brands }: FiltersProps) {
       } else {
         params.delete("brand");
       }
-      router.push(`/?${params.toString()}`);
+      router.push(`/home?${params.toString()}`);
     });
   }, [router, searchParams, startTransition]);
 
