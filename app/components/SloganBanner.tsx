@@ -10,9 +10,11 @@ export default function SloganBanner({ searchParams }: { searchParams: Record<st
       <Image
         src="/images/slogan.png"
         alt="Slogan"
-        width={800}
-        height={400}
+        width={1920}
+        height={819}
         className="w-full h-auto"
+        sizes="100vw"
+        quality={100}
         priority
       />
     </div>

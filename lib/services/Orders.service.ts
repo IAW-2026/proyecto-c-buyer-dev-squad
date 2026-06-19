@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { OrderItem, OrderStatusType } from "@/app/types/order";
 import { getUserByClerkId } from "./User.service";
+import { postOrder } from "../apis/payments-api";
 
 type GetOrdersParams = {
   id?: string;
@@ -46,26 +47,7 @@ export async function createOrder(
       items: true,
     },
   });
-     /*Cuando se crea la orden, se hará una llamada a un servicio externo de payments
-    para iniciar el proceso de pago y este lo envía a shipping y seller. Por ejemplo:
-   await fetch("https://payments.com/orders", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.PAYMENTS_API_KEY}`,
-      },
-      body: JSON.stringify({
-        orderId: order.id,
-        total,
-        firstName,
-        lastName,
-        phone,
-        deliveryType,
-        address,
-        items,
-      }),
-    });
-  */
+  await postOrder(order);
   return order; 
 }
 
