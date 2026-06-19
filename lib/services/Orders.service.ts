@@ -186,7 +186,11 @@ export async function getLastOrdersByUser(clerkId: string, limit = 5) {
         include: {
           items: {
             include: {
-              product: true,
+              product: {
+                include: {
+                  seller: true,
+                },
+              },
             },
           },
         },
@@ -296,7 +300,11 @@ export async function getMoreOrders(
     include: {
       items: {
         include: {
-          product: true,
+          product: {
+            include: {
+              seller: true,
+            },
+          },
         },
       },
     },

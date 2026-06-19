@@ -98,6 +98,12 @@ export default function OrdersList({
                       {item.color}
                       {` · x${item.quantity}`}
                     </p>
+
+                    {item.product?.seller && (
+                      <p className="text-xs text-muted mt-1">
+                        Vendido por: {item.product.seller.name}
+                      </p>
+                    )}
                   </div>
 
                   <div className="flex flex-col gap-2 items-end">
@@ -107,12 +113,23 @@ export default function OrdersList({
                     </p>
 
                     {pedido.status === "DELIVERED" && (
-                      <Link
-                        href="#"
-                        className="text-info underline text-xs font-medium hover:opacity-80 transition"
-                      >
-                        Agregar reseña
-                      </Link>
+                      <div className="flex flex-col items-end gap-1">
+                        <Link
+                          href={`${process.env.NEXT_PUBLIC_FEEDBACK_URL}/dashboard/crear-resena?tipo=product&id=${item.productId}`}
+                          className="text-info underline text-xs font-medium hover:opacity-80 transition"
+                        >
+                          Agregar reseña
+                        </Link>
+
+                        {item.product?.seller && (
+                          <Link
+                            href={`${process.env.NEXT_PUBLIC_FEEDBACK_URL}/dashboard/crear-resena?tipo=seller&id=${item.product.seller.id}`}
+                            className="text-info underline text-xs font-medium hover:opacity-80 transition"
+                          >
+                            Dejar opinión
+                          </Link>
+                        )}
+                      </div>
                     )}
                   </div>
                 </div>
