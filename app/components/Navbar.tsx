@@ -93,7 +93,7 @@ export default function Navbar() {
         </div>
         <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
           <a
-            href={process.env.NEXT_PUBLIC_SELLER_URL}
+            href={`${process.env.NEXT_PUBLIC_SELLER_URL}/dashboard`}
             onClick={handleVenderClick}
             className="text-sm font-semibold px-4 py-2 rounded-xl bg-primary text-primary-foreground hover:scale-105 hover:shadow-lg hover:shadow-primary/25 active:scale-95 transition-all duration-200 flex items-center gap-2"
           >
