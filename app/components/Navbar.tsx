@@ -11,7 +11,6 @@ import { LogOutButton } from "./LogOutButton";
 import { UserAvatarMenu } from "./UserAvatarMenu";
 import { Store } from "lucide-react";
 import Link from "next/link";
-import process from "process";
 
 type DbUser = {
   status: string | null;
@@ -22,6 +21,7 @@ type DbUser = {
   birthDate: Date | null;
 };
 
+const SELLER_URL = `${process.env.NEXT_PUBLIC_SELLER_URL}/dashboard`;
 export default function Navbar() {
   const { isSignedIn, isLoaded, user } = useUser();
   const { openSignIn } = useClerk();
@@ -50,7 +50,7 @@ export default function Navbar() {
   const handleVenderClick = (e: React.MouseEvent) => {
     if (!isSignedIn) {
       e.preventDefault();
-      openSignIn({ forceRedirectUrl: `${process.env.SELLER_API}/dashboard` });
+      openSignIn({ forceRedirectUrl: SELLER_URL });
     }
   };
 
@@ -93,7 +93,7 @@ export default function Navbar() {
         </div>
         <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
           <a
-            href={`${process.env.SELLER_API}/dashboard`}
+            href={SELLER_URL}
             onClick={handleVenderClick}
             className="text-sm font-semibold px-4 py-2 rounded-xl bg-primary text-primary-foreground hover:scale-105 hover:shadow-lg hover:shadow-primary/25 active:scale-95 transition-all duration-200 flex items-center gap-2"
           >
