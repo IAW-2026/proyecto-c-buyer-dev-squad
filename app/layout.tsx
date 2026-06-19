@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import ThemeProvider from "./components/ThemeProvider";
+import { UserSyncHandler } from "./components/UserSyncHandler";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,7 +33,10 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <body className="min-h-full flex flex-col">
-          <ThemeProvider>{children}</ThemeProvider>
+          <ThemeProvider>
+            <UserSyncHandler />
+            {children}
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>
