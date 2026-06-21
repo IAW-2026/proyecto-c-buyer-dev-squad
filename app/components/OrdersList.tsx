@@ -3,7 +3,10 @@
 import { useState, useTransition } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 import { getFiveMoreOrders } from "@/lib/actions/Order.actions";
+import { getShipmentTrackingUrl } from "@/lib/actions/Shipment.actions";
 
 const statusLabel: Record<string, string> = {
   PENDING: "En proceso",
@@ -24,9 +27,14 @@ export default function OrdersList({
 }: {
   initialOrders: any[];
 }) {
+  const router = useRouter();
   const [orders, setOrders] = useState(initialOrders);
   const [hasMore, setHasMore] = useState(initialOrders.length === 5);
   const [isPending, startTransition] = useTransition();
+
+  // Trackea qué pedido está generando su token ahora mismo, para
+  // deshabilitar solo ESE botón y no toda la lista.
+  const [loadingOrderId, setLoadingOrderId] = useState<string | null>(null);
 
   const loadMore = () => {
     startTransition(async () => {
@@ -38,6 +46,23 @@ export default function OrdersList({
 
       setOrders((prev) => [...prev, ...newOrders]);
     });
+  };
+
+  const handleTrackShipment = async (orderId: string) => {
+    setLoadingOrderId(orderId);
+    try {
+      const url = await getShipmentTrackingUrl(orderId);
+      router.push(url);
+    } catch (err) {
+      console.error("No se pudo generar el link de tracking:", err);
+      // Fallback: lleva igual a la página de shipping, sin token.
+      // El usuario va a tener que loguearse ahí, pero no se queda trabado.
+      router.push(
+        `${process.env.NEXT_PUBLIC_SHIPPING_URL}/dashboard/shipments/${orderId}`
+      );
+    } finally {
+      setLoadingOrderId(null);
+    }
   };
 
   return (
@@ -142,12 +167,15 @@ export default function OrdersList({
               </p>
 
               {pedido.status !== "DELIVERED" && (
-                <Link
-                  href={`${process.env.NEXT_PUBLIC_SHIPPING_URL}/dashboard/shipments/${pedido.id}`}
-                  className="px-4 py-2 rounded-xl border text-sm font-medium"
+                <button
+                  onClick={() => handleTrackShipment(pedido.id)}
+                  disabled={loadingOrderId === pedido.id}
+                  className="px-4 py-2 rounded-xl border text-sm font-medium hover:opacity-80 transition disabled:opacity-50"
                 >
-                  Ver estado del envío
-                </Link>
+                  {loadingOrderId === pedido.id
+                    ? "Generando link..."
+                    : "Ver estado del envío"}
+                </button>
               )}
             </div>
           </div>
