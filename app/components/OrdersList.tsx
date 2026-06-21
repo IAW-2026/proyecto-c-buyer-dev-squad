@@ -2,11 +2,11 @@
 
 import { useState, useTransition } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { getFiveMoreOrders } from "@/lib/actions/Order.actions";
 import { getShipmentTrackingUrl } from "@/lib/actions/Shipment.actions";
+import { getCreateReviewUrl } from "@/lib/actions/handoff.actions";
 
 const statusLabel: Record<string, string> = {
   PENDING: "En proceso",
@@ -36,6 +36,12 @@ export default function OrdersList({
   // deshabilitar solo ESE botón y no toda la lista.
   const [loadingOrderId, setLoadingOrderId] = useState<string | null>(null);
 
+  // Trackea qué link de reseña (producto o vendedor, por item) está
+  // generando su token ahora mismo.
+  const [loadingReviewKey, setLoadingReviewKey] = useState<string | null>(
+    null
+  );
+
   const loadMore = () => {
     startTransition(async () => {
       const newOrders = await getFiveMoreOrders(orders.length);
@@ -62,6 +68,26 @@ export default function OrdersList({
       );
     } finally {
       setLoadingOrderId(null);
+    }
+  };
+
+  const handleCreateReview = async (
+    tipo: "product" | "seller",
+    targetId: string,
+    key: string
+  ) => {
+    setLoadingReviewKey(key);
+    try {
+      const url = await getCreateReviewUrl(tipo, targetId);
+      router.push(url);
+    } catch (err) {
+      console.error("No se pudo generar el link de reseña:", err);
+      // Fallback: igual que con el tracking, manda sin token.
+      router.push(
+        `${process.env.NEXT_PUBLIC_FEEDBACK_URL}/dashboard/crear-resena?tipo=${tipo}&id=${targetId}`
+      );
+    } finally {
+      setLoadingReviewKey(null);
     }
   };
 
@@ -98,67 +124,92 @@ export default function OrdersList({
             </div>
 
             <div className="flex flex-col gap-3">
-              {pedido.items.map((item: any) => (
-                <div
-                  key={item.id}
-                  className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4"
-                >
-                  <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden bg-surface flex-shrink-0">
-                    <Image
-                      src={item.product.image}
-                      alt={item.name}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
+              {pedido.items.map((item: any) => {
+                const productKey = `${item.id}-product`;
+                const sellerKey = `${item.id}-seller`;
 
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium text-sm truncate text-foreground">
-                      {item.name}
-                    </p>
+                return (
+                  <div
+                    key={item.id}
+                    className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4"
+                  >
+                    <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden bg-surface flex-shrink-0">
+                      <Image
+                        src={item.product.image}
+                        alt={item.name}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
 
-                    <p className="text-xs text-muted">
-                      {item.size && `Talle ${item.size}`}
-                      {item.size && item.color && " · "}
-                      {item.color}
-                      {` · x${item.quantity}`}
-                    </p>
-
-                    {item.product?.seller && (
-                      <p className="text-xs text-muted mt-1">
-                        Vendido por: {item.product.seller.name}
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-sm truncate text-foreground">
+                        {item.name}
                       </p>
-                    )}
-                  </div>
 
-                  <div className="flex flex-col gap-2 items-end">
-                    <p className="text-sm font-semibold text-foreground">
-                      $
-                      {(item.price * item.quantity).toLocaleString("es-AR")}
-                    </p>
+                      <p className="text-xs text-muted">
+                        {item.size && `Talle ${item.size}`}
+                        {item.size && item.color && " · "}
+                        {item.color}
+                        {` · x${item.quantity}`}
+                      </p>
 
-                    {pedido.status === "DELIVERED" && (
-                      <div className="flex flex-col items-end gap-1">
-                        <Link
-                          href={`${process.env.NEXT_PUBLIC_FEEDBACK_URL}/dashboard/crear-resena?tipo=product&id=${item.productId}`}
-                          className="text-info underline text-xs font-medium hover:opacity-80 transition"
-                        >
-                          Agregar reseña
-                        </Link>
+                      {item.product?.seller && (
+                        <p className="text-xs text-muted mt-1">
+                          Vendido por: {item.product.seller.name}
+                        </p>
+                      )}
+                    </div>
 
-                        {item.product?.seller && (
-                          <Link
-                            href={`${process.env.NEXT_PUBLIC_FEEDBACK_URL}/dashboard/crear-resena?tipo=seller&id=${item.product.seller.id}`}
-                            className="text-info underline text-xs font-medium hover:opacity-80 transition"
-                          >
-                            Dejar opinión
-                          </Link>
+                    <div className="flex flex-col gap-2 items-end">
+                      <p className="text-sm font-semibold text-foreground">
+                        $
+                        {(item.price * item.quantity).toLocaleString(
+                          "es-AR"
                         )}
-                      </div>
-                    )}
+                      </p>
+
+                      {pedido.status === "DELIVERED" && (
+                        <div className="flex flex-col items-end gap-1">
+                          <button
+                            onClick={() =>
+                              handleCreateReview(
+                                "product",
+                                item.productId,
+                                productKey
+                              )
+                            }
+                            disabled={loadingReviewKey === productKey}
+                            className="text-info underline text-xs font-medium hover:opacity-80 transition disabled:opacity-50"
+                          >
+                            {loadingReviewKey === productKey
+                              ? "Generando link..."
+                              : "Agregar reseña"}
+                          </button>
+
+                          {item.product?.seller && (
+                            <button
+                              onClick={() =>
+                                handleCreateReview(
+                                  "seller",
+                                  item.product.seller.id,
+                                  sellerKey
+                                )
+                              }
+                              disabled={loadingReviewKey === sellerKey}
+                              className="text-info underline text-xs font-medium hover:opacity-80 transition disabled:opacity-50"
+                            >
+                              {loadingReviewKey === sellerKey
+                                ? "Generando link..."
+                                : "Dejar opinión"}
+                            </button>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             <div className="mt-4 pt-4 border-t border-muted flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">

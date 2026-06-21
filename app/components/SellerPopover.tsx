@@ -1,11 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import type { Seller } from "../types/seller";
+import { getSellerReviewsUrl } from "@/lib/actions/handoff.actions";
 
 export function SellerPopover({ seller }: { seller: Seller }) {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [loadingReviews, setLoadingReviews] = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -17,6 +20,22 @@ export function SellerPopover({ seller }: { seller: Seller }) {
     if (open) document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [open]);
+
+  const handleViewReviews = async () => {
+    setLoadingReviews(true);
+    try {
+      const url = await getSellerReviewsUrl(seller.id);
+      router.push(url);
+    } catch (err) {
+      console.error("No se pudo generar el link de opiniones:", err);
+      // Fallback: misma página, sin token.
+      router.push(
+        `${process.env.NEXT_PUBLIC_FEEDBACK_URL}/explorar/vendedor/${seller.id}`
+      );
+    } finally {
+      setLoadingReviews(false);
+    }
+  };
 
   return (
     <div className="relative" ref={popoverRef}>
@@ -75,12 +94,14 @@ export function SellerPopover({ seller }: { seller: Seller }) {
           <p className="text-sm text-muted leading-relaxed line-clamp-4">
             {seller.description}
           </p>
-          <Link
-            href={`${process.env.NEXT_PUBLIC_FEEDBACK_URL}/explorar/vendedor/${seller.id}`}
-            className="btn-secondary text-sm px-4 py-2 rounded-xl"
+
+          <button
+            onClick={handleViewReviews}
+            disabled={loadingReviews}
+            className="btn-secondary text-sm px-4 py-2 rounded-xl disabled:opacity-50"
           >
-            ⭐ Ver opiniones
-          </Link>
+            {loadingReviews ? "Generando link..." : "⭐ Ver opiniones"}
+          </button>
         </div>
       )}
     </div>
