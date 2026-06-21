@@ -1,7 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { OrderItem, OrderStatusType } from "@/app/types/order";
 import { getUserByClerkId } from "./User.service";
-import { postOrder } from "../apis/payments-api";
 
 type GetOrdersParams = {
   id?: string;
@@ -77,7 +76,6 @@ export async function createOrder(
     imageUrl: item.image,
   })),
 };
-  await postOrder(paymentOrder);
   return order; 
 }
 
