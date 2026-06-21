@@ -18,7 +18,7 @@ export async function getCreateReviewUrl(
 
   const token = await generateToken(secret, { userId, targetId });
 
-  return `https://feedback-app.vercel.app/dashboard/crear-resena?tipo=${tipo}&id=${targetId}&token=${token}`;
+  return `${process.env.NEXT_PUBLIC_FEEDBACK_URL}/dashboard/crear-resena?tipo=${tipo}&id=${targetId}&token=${token}`;
 }
 
 // Buyer App — link a ver las opiniones de un vendedor
@@ -29,7 +29,7 @@ export async function getSellerReviewsUrl(sellerId: string) {
   const secret = process.env.API_KEY_SELLER_APP!;
   const token = await generateToken(secret, { userId, targetId: sellerId });
 
-  return `https://feedback-app.vercel.app/explorar/vendedor/${sellerId}?token=${token}`;
+  return `${process.env.NEXT_PUBLIC_FEEDBACK_URL}/explorar/vendedor/${sellerId}?token=${token}`;
 }
 
 // Buyer App — link a ver las reseñas de un producto
@@ -42,5 +42,5 @@ export async function getProductReviewsUrl(productId: string) {
     targetId: productId,
   });
 
-  return `https://feedback-app.vercel.app/explorar/producto/${productId}?token=${token}`;
+  return `${process.env.NEXT_PUBLIC_FEEDBACK_URL}/explorar/producto/${productId}?token=${token}`;
 }
