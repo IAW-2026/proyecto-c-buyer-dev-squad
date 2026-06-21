@@ -2,7 +2,9 @@
 
 import { useUser, useClerk } from "@clerk/nextjs";
 import { useEffect, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { getNavbarUserAction } from "@/lib/actions/User.actions";
+import { getSellerDashboardUrl } from "@/lib/actions/Seller.actions";
 import Loader from "./Loader";
 import ThemedLogo from "./ThemedLogo";
 import ThemeToggle from "./ThemeToggle";
@@ -23,10 +25,12 @@ type DbUser = {
 
 const SELLER_URL = `${process.env.NEXT_PUBLIC_SELLER_URL}/dashboard`;
 export default function Navbar() {
+  const router = useRouter();
   const { isSignedIn, isLoaded, user } = useUser();
   const { openSignIn } = useClerk();
   const [dbUser, setDbUser] = useState<DbUser | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [loadingSellerUrl, setLoadingSellerUrl] = useState(false);
 
   useEffect(() => {
     if (!isLoaded) return;
@@ -47,10 +51,24 @@ export default function Navbar() {
 
   const isAdmin = (user?.publicMetadata?.role as string) === "ADMIN";
 
-  const handleVenderClick = (e: React.MouseEvent) => {
+  const handleVenderClick = async (e: React.MouseEvent) => {
+    e.preventDefault();
+
     if (!isSignedIn) {
-      e.preventDefault();
       openSignIn({ forceRedirectUrl: SELLER_URL });
+      return;
+    }
+
+    setLoadingSellerUrl(true);
+    try {
+      const url = await getSellerDashboardUrl();
+      router.push(url);
+    } catch (err) {
+      console.error("No se pudo generar el link del seller dashboard:", err);
+      // Fallback: lleva igual al dashboard, sin token de handoff.
+      router.push(SELLER_URL);
+    } finally {
+      setLoadingSellerUrl(false);
     }
   };
 
@@ -95,10 +113,11 @@ export default function Navbar() {
           <a
             href={SELLER_URL}
             onClick={handleVenderClick}
-            className="text-sm font-semibold px-4 py-2 rounded-xl bg-primary text-primary-foreground hover:scale-105 hover:shadow-lg hover:shadow-primary/25 active:scale-95 transition-all duration-200 flex items-center gap-2"
+            aria-disabled={loadingSellerUrl}
+            className="text-sm font-semibold px-4 py-2 rounded-xl bg-primary text-primary-foreground hover:scale-105 hover:shadow-lg hover:shadow-primary/25 active:scale-95 transition-all duration-200 flex items-center gap-2 disabled:opacity-50"
           >
             <Store className="w-4 h-4" />
-            Vender
+            {loadingSellerUrl ? "Generando link..." : "Vender"}
           </a>
           <ThemeToggle />
           {isAdmin && (
