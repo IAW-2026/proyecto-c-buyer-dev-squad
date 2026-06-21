@@ -81,7 +81,7 @@ const [errors, setErrors] = useState<Partial<Record<keyof CheckoutFormData, stri
       try {
         const { orderId } = await submitCheckout(id, cartItems, form);
         if (paymentsApiUrl) {
-          window.location.href = paymentsApiUrl;
+          window.location.href = `${paymentsApiUrl}/${orderId}`;
         } else {
           router.push(`/order-confirmation/${orderId}`);
         }
