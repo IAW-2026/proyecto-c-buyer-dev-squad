@@ -43,11 +43,41 @@ export async function createOrder(
       },
     },
 
-    include: {
-      items: true,
+      include: {
+    items: {
+      include: {
+        product: true,
+      },
     },
-  });
-  await postOrder(order);
+  },
+});
+  const addresses = order.items
+    .map(item => item.product.direction)
+    .filter(Boolean);
+  const originAddress = addresses.join(", ");
+  const paymentOrder = {
+  orderId: order.id,
+  userId: order.userId,
+  total: order.total,
+
+  discount: 0,
+  shipping: 0,
+  originAddress: originAddress || "No address",
+  status: order.status,
+  address: order.shippingAddress,
+  carrier: order.deliveryType === "MAIL" ? "MAIL" : "PICKUP",
+
+  items: order.items.map((item) => ({
+    productId: item.productId,
+    name: item.name,
+    price: item.price,
+    quantity: item.quantity,
+    size: item.size,
+    color: item.color,
+    imageUrl: item.image,
+  })),
+};
+  await postOrder(paymentOrder);
   return order; 
 }
 

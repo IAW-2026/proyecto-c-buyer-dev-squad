@@ -29,6 +29,8 @@ export default async function Page() {
 
   const { user, cartItems } = data;
 
+  const paymentsApiUrl = process.env.PAYMENTS_API_URL;
+
   return (
     <CheckoutForm
       id={user.id}
@@ -41,6 +43,7 @@ export default async function Page() {
         deliveryType: "pickup",
         address: user.address ?? "",
       }}
+      paymentsApiUrl={paymentsApiUrl}
     />
   );
 }

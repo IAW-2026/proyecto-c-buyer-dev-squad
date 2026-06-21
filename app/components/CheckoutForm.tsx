@@ -11,12 +11,14 @@ type Props = {
   id: string;
   cartItems: OrderItem[];
   initialData: CheckoutFormData;
+  paymentsApiUrl?: string;
 };
 
 export default function CheckoutPage({
   id,
   cartItems,
   initialData,
+  paymentsApiUrl,
 }: Props) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -78,7 +80,11 @@ const [errors, setErrors] = useState<Partial<Record<keyof CheckoutFormData, stri
     startTransition(async () => {
       try {
         const { orderId } = await submitCheckout(id, cartItems, form);
-        router.push(`/order-confirmation/${orderId}`);
+        if (paymentsApiUrl) {
+          window.location.href = paymentsApiUrl;
+        } else {
+          router.push(`/order-confirmation/${orderId}`);
+        }
       } catch (e) {
         console.error(e);
         setErrors({

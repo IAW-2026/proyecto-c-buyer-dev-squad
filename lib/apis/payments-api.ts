@@ -19,6 +19,4 @@ export async function postOrder(order: unknown) {
   if (!res.ok) {
     throw new Error(`Payments API error: ${res.status}`);
   }
-
-  return res.json();
 }

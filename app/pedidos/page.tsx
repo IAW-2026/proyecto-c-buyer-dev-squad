@@ -4,7 +4,6 @@ import Link from "next/link";
 
 import OrdersList from "../components/OrdersList";
 import { getLastOrdersByUser } from "@/lib/services/Orders.service";
-import { getUserByClerkId } from "@/lib/services/User.service";
 
 export default async function PedidosPage() {
   const { userId: clerkId } = await auth();
