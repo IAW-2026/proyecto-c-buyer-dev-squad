@@ -30,19 +30,21 @@ export async function createOrder(
     .map(item => directionMap.get(item.productId))
     .filter(Boolean)
     .join(", ");
-
+  const resolvedAddress = deliveryType === "pickup"
+    ? (originAddress || address || "")
+    : (address || "");
   const order = await prisma.order.create({
     data: {
       userId: id,
       total,
       discount: 0,
       shipping: 0,
-      address: address || "",
+      address: resolvedAddress,
       originAddress: originAddress || "No address",
       receiverName: `${firstName} ${lastName}`,
       receiverPhone: phone,
       deliveryType,
-      shippingAddress: address,
+      shippingAddress: resolvedAddress,
       status: "PENDING",
       items: {
         create: items.map((item) => ({
