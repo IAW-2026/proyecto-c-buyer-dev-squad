@@ -6,6 +6,8 @@ import TopProductsTable from "../components/TopProductsTable";
 import TopCustomerTable from "../components/TopCustomerTable";
 import { getDashboardStats } from "@/lib/services/Dashboard.service";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminDashboard() {
   const stats = await getDashboardStats();
   return (
