@@ -60,6 +60,7 @@ export default function ProductList({
             />
             <h2>{p.name}</h2>
             <p className="font-bold">${p.price}</p>
+            <p className="text-xs text-muted mt-1">{p.direction}</p>
           </Link>
         ))}
       </div>

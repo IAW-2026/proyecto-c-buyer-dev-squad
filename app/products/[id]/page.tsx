@@ -59,6 +59,11 @@ export default async function ProductPage({ params }: Props) {
             </p>
           </div>
 
+          <div className="mt-3 p-4 border border-muted rounded-xl bg-surface">
+            <h2 className="font-semibold mb-1 text-sm">Dirección</h2>
+            <p className="text-muted text-sm">{product.direction}</p>
+          </div>
+
           <div className="mt-4">
             <ProductActions
               sizes={product.sizes}

@@ -126,6 +126,9 @@ function ProductCard({
         <span className="mt-1 text-sm font-semibold text-primary">
           ${product.price.toFixed(2)}
         </span>
+        <span className="text-xs text-muted truncate">
+          {product.direction}
+        </span>
       </div>
     </Link>
   );
