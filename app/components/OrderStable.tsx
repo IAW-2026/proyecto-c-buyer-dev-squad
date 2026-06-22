@@ -363,7 +363,7 @@ function OrderRow({ order }: { order: Order }) {
                     className="flex items-center gap-3 p-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-background)]"
                   >
                     <img
-                      src={item.image}
+                      src={item.imageUrl}
                       alt={item.name}
                       className="w-12 h-12 rounded-md object-cover flex-shrink-0"
                     />

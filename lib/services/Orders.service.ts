@@ -20,10 +20,25 @@ export async function createOrder(
   deliveryType: string,
   address?: string
 ) {
+  const productIds = items.map(item => item.productId);
+  const products = await prisma.product.findMany({
+    where: { id: { in: productIds } },
+    select: { id: true, direction: true },
+  });
+  const directionMap = new Map(products.map(p => [p.id, p.direction]));
+  const originAddress = items
+    .map(item => directionMap.get(item.productId))
+    .filter(Boolean)
+    .join(", ");
+
   const order = await prisma.order.create({
     data: {
       userId: id,
       total,
+      discount: 0,
+      shipping: 0,
+      address: address || "",
+      originAddress: originAddress || "No address",
       receiverName: `${firstName} ${lastName}`,
       receiverPhone: phone,
       deliveryType,
@@ -33,50 +48,25 @@ export async function createOrder(
         create: items.map((item) => ({
           productId: item.productId,
           name: item.name,
-          image: item.image,
+          imageUrl: item.imageUrl,
           quantity: item.quantity,
           price: item.price,
           size: item.size,
           color: item.color,
+          sellerId: item.sellerId,
         })),
       },
     },
-
-      include: {
-    items: {
-      include: {
-        product: true,
+    include: {
+      items: {
+        include: {
+          product: true,
+        },
       },
     },
-  },
-});
-  const addresses = order.items
-    .map(item => item.product.direction)
-    .filter(Boolean);
-  const originAddress = addresses.join(", ");
-  const paymentOrder = {
-  orderId: order.id,
-  userId: order.userId,
-  total: order.total,
+  });
 
-  discount: 0,
-  shipping: 0,
-  originAddress: originAddress || "No address",
-  status: order.status,
-  address: order.shippingAddress,
-  carrier: order.deliveryType === "MAIL" ? "MAIL" : "PICKUP",
-
-  items: order.items.map((item) => ({
-    productId: item.productId,
-    name: item.name,
-    price: item.price,
-    quantity: item.quantity,
-    size: item.size,
-    color: item.color,
-    imageUrl: item.image,
-  })),
-};
-  return order; 
+  return order;
 }
 
 export async function getOrders({

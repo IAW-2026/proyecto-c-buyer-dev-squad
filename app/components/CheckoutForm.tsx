@@ -236,7 +236,7 @@ const [errors, setErrors] = useState<Partial<Record<keyof CheckoutFormData, stri
             >
               <div className="flex items-center gap-3">
                 <img
-                  src={item.image}
+                  src={item.imageUrl}
                   alt={item.name}
                   className="w-14 h-14 object-cover rounded-lg"
                 />

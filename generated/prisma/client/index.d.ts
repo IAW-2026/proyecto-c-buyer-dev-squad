@@ -6205,16 +6205,24 @@ export namespace Prisma {
 
   export type OrderAvgAggregateOutputType = {
     total: number | null
+    discount: number | null
+    shipping: number | null
   }
 
   export type OrderSumAggregateOutputType = {
     total: number | null
+    discount: number | null
+    shipping: number | null
   }
 
   export type OrderMinAggregateOutputType = {
     id: string | null
     userId: string | null
     total: number | null
+    discount: number | null
+    shipping: number | null
+    address: string | null
+    originAddress: string | null
     status: $Enums.OrderStatus | null
     receiverName: string | null
     receiverPhone: string | null
@@ -6228,6 +6236,10 @@ export namespace Prisma {
     id: string | null
     userId: string | null
     total: number | null
+    discount: number | null
+    shipping: number | null
+    address: string | null
+    originAddress: string | null
     status: $Enums.OrderStatus | null
     receiverName: string | null
     receiverPhone: string | null
@@ -6241,6 +6253,10 @@ export namespace Prisma {
     id: number
     userId: number
     total: number
+    discount: number
+    shipping: number
+    address: number
+    originAddress: number
     status: number
     receiverName: number
     receiverPhone: number
@@ -6254,16 +6270,24 @@ export namespace Prisma {
 
   export type OrderAvgAggregateInputType = {
     total?: true
+    discount?: true
+    shipping?: true
   }
 
   export type OrderSumAggregateInputType = {
     total?: true
+    discount?: true
+    shipping?: true
   }
 
   export type OrderMinAggregateInputType = {
     id?: true
     userId?: true
     total?: true
+    discount?: true
+    shipping?: true
+    address?: true
+    originAddress?: true
     status?: true
     receiverName?: true
     receiverPhone?: true
@@ -6277,6 +6301,10 @@ export namespace Prisma {
     id?: true
     userId?: true
     total?: true
+    discount?: true
+    shipping?: true
+    address?: true
+    originAddress?: true
     status?: true
     receiverName?: true
     receiverPhone?: true
@@ -6290,6 +6318,10 @@ export namespace Prisma {
     id?: true
     userId?: true
     total?: true
+    discount?: true
+    shipping?: true
+    address?: true
+    originAddress?: true
     status?: true
     receiverName?: true
     receiverPhone?: true
@@ -6390,6 +6422,10 @@ export namespace Prisma {
     id: string
     userId: string
     total: number
+    discount: number
+    shipping: number
+    address: string | null
+    originAddress: string | null
     status: $Enums.OrderStatus
     receiverName: string
     receiverPhone: string
@@ -6422,6 +6458,10 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     total?: boolean
+    discount?: boolean
+    shipping?: boolean
+    address?: boolean
+    originAddress?: boolean
     status?: boolean
     receiverName?: boolean
     receiverPhone?: boolean
@@ -6438,6 +6478,10 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     total?: boolean
+    discount?: boolean
+    shipping?: boolean
+    address?: boolean
+    originAddress?: boolean
     status?: boolean
     receiverName?: boolean
     receiverPhone?: boolean
@@ -6452,6 +6496,10 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     total?: boolean
+    discount?: boolean
+    shipping?: boolean
+    address?: boolean
+    originAddress?: boolean
     status?: boolean
     receiverName?: boolean
     receiverPhone?: boolean
@@ -6466,6 +6514,10 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     total?: boolean
+    discount?: boolean
+    shipping?: boolean
+    address?: boolean
+    originAddress?: boolean
     status?: boolean
     receiverName?: boolean
     receiverPhone?: boolean
@@ -6475,7 +6527,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "total" | "status" | "receiverName" | "receiverPhone" | "deliveryType" | "shippingAddress" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "total" | "discount" | "shipping" | "address" | "originAddress" | "status" | "receiverName" | "receiverPhone" | "deliveryType" | "shippingAddress" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     items?: boolean | Order$itemsArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -6498,6 +6550,10 @@ export namespace Prisma {
       id: string
       userId: string
       total: number
+      discount: number
+      shipping: number
+      address: string | null
+      originAddress: string | null
       status: $Enums.OrderStatus
       receiverName: string
       receiverPhone: string
@@ -6933,6 +6989,10 @@ export namespace Prisma {
     readonly id: FieldRef<"Order", 'String'>
     readonly userId: FieldRef<"Order", 'String'>
     readonly total: FieldRef<"Order", 'Float'>
+    readonly discount: FieldRef<"Order", 'Float'>
+    readonly shipping: FieldRef<"Order", 'Float'>
+    readonly address: FieldRef<"Order", 'String'>
+    readonly originAddress: FieldRef<"Order", 'String'>
     readonly status: FieldRef<"Order", 'OrderStatus'>
     readonly receiverName: FieldRef<"Order", 'String'>
     readonly receiverPhone: FieldRef<"Order", 'String'>
@@ -7412,7 +7472,8 @@ export namespace Prisma {
     orderId: string | null
     productId: string | null
     name: string | null
-    image: string | null
+    imageUrl: string | null
+    sellerId: string | null
     quantity: number | null
     price: number | null
     size: number | null
@@ -7425,7 +7486,8 @@ export namespace Prisma {
     orderId: string | null
     productId: string | null
     name: string | null
-    image: string | null
+    imageUrl: string | null
+    sellerId: string | null
     quantity: number | null
     price: number | null
     size: number | null
@@ -7438,7 +7500,8 @@ export namespace Prisma {
     orderId: number
     productId: number
     name: number
-    image: number
+    imageUrl: number
+    sellerId: number
     quantity: number
     price: number
     size: number
@@ -7465,7 +7528,8 @@ export namespace Prisma {
     orderId?: true
     productId?: true
     name?: true
-    image?: true
+    imageUrl?: true
+    sellerId?: true
     quantity?: true
     price?: true
     size?: true
@@ -7478,7 +7542,8 @@ export namespace Prisma {
     orderId?: true
     productId?: true
     name?: true
-    image?: true
+    imageUrl?: true
+    sellerId?: true
     quantity?: true
     price?: true
     size?: true
@@ -7491,7 +7556,8 @@ export namespace Prisma {
     orderId?: true
     productId?: true
     name?: true
-    image?: true
+    imageUrl?: true
+    sellerId?: true
     quantity?: true
     price?: true
     size?: true
@@ -7591,7 +7657,8 @@ export namespace Prisma {
     orderId: string
     productId: string
     name: string
-    image: string
+    imageUrl: string
+    sellerId: string
     quantity: number
     price: number
     size: number
@@ -7623,7 +7690,8 @@ export namespace Prisma {
     orderId?: boolean
     productId?: boolean
     name?: boolean
-    image?: boolean
+    imageUrl?: boolean
+    sellerId?: boolean
     quantity?: boolean
     price?: boolean
     size?: boolean
@@ -7638,7 +7706,8 @@ export namespace Prisma {
     orderId?: boolean
     productId?: boolean
     name?: boolean
-    image?: boolean
+    imageUrl?: boolean
+    sellerId?: boolean
     quantity?: boolean
     price?: boolean
     size?: boolean
@@ -7653,7 +7722,8 @@ export namespace Prisma {
     orderId?: boolean
     productId?: boolean
     name?: boolean
-    image?: boolean
+    imageUrl?: boolean
+    sellerId?: boolean
     quantity?: boolean
     price?: boolean
     size?: boolean
@@ -7668,7 +7738,8 @@ export namespace Prisma {
     orderId?: boolean
     productId?: boolean
     name?: boolean
-    image?: boolean
+    imageUrl?: boolean
+    sellerId?: boolean
     quantity?: boolean
     price?: boolean
     size?: boolean
@@ -7676,7 +7747,7 @@ export namespace Prisma {
     createdAt?: boolean
   }
 
-  export type OrderItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderId" | "productId" | "name" | "image" | "quantity" | "price" | "size" | "color" | "createdAt", ExtArgs["result"]["orderItem"]>
+  export type OrderItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderId" | "productId" | "name" | "imageUrl" | "sellerId" | "quantity" | "price" | "size" | "color" | "createdAt", ExtArgs["result"]["orderItem"]>
   export type OrderItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     order?: boolean | OrderDefaultArgs<ExtArgs>
     product?: boolean | ProductDefaultArgs<ExtArgs>
@@ -7701,7 +7772,8 @@ export namespace Prisma {
       orderId: string
       productId: string
       name: string
-      image: string
+      imageUrl: string
+      sellerId: string
       quantity: number
       price: number
       size: number
@@ -8136,7 +8208,8 @@ export namespace Prisma {
     readonly orderId: FieldRef<"OrderItem", 'String'>
     readonly productId: FieldRef<"OrderItem", 'String'>
     readonly name: FieldRef<"OrderItem", 'String'>
-    readonly image: FieldRef<"OrderItem", 'String'>
+    readonly imageUrl: FieldRef<"OrderItem", 'String'>
+    readonly sellerId: FieldRef<"OrderItem", 'String'>
     readonly quantity: FieldRef<"OrderItem", 'Int'>
     readonly price: FieldRef<"OrderItem", 'Float'>
     readonly size: FieldRef<"OrderItem", 'Int'>
@@ -8643,6 +8716,10 @@ export namespace Prisma {
     id: 'id',
     userId: 'userId',
     total: 'total',
+    discount: 'discount',
+    shipping: 'shipping',
+    address: 'address',
+    originAddress: 'originAddress',
     status: 'status',
     receiverName: 'receiverName',
     receiverPhone: 'receiverPhone',
@@ -8660,7 +8737,8 @@ export namespace Prisma {
     orderId: 'orderId',
     productId: 'productId',
     name: 'name',
-    image: 'image',
+    imageUrl: 'imageUrl',
+    sellerId: 'sellerId',
     quantity: 'quantity',
     price: 'price',
     size: 'size',
@@ -9131,6 +9209,10 @@ export namespace Prisma {
     id?: StringFilter<"Order"> | string
     userId?: StringFilter<"Order"> | string
     total?: FloatFilter<"Order"> | number
+    discount?: FloatFilter<"Order"> | number
+    shipping?: FloatFilter<"Order"> | number
+    address?: StringNullableFilter<"Order"> | string | null
+    originAddress?: StringNullableFilter<"Order"> | string | null
     status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
     receiverName?: StringFilter<"Order"> | string
     receiverPhone?: StringFilter<"Order"> | string
@@ -9146,6 +9228,10 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     total?: SortOrder
+    discount?: SortOrder
+    shipping?: SortOrder
+    address?: SortOrderInput | SortOrder
+    originAddress?: SortOrderInput | SortOrder
     status?: SortOrder
     receiverName?: SortOrder
     receiverPhone?: SortOrder
@@ -9164,6 +9250,10 @@ export namespace Prisma {
     NOT?: OrderWhereInput | OrderWhereInput[]
     userId?: StringFilter<"Order"> | string
     total?: FloatFilter<"Order"> | number
+    discount?: FloatFilter<"Order"> | number
+    shipping?: FloatFilter<"Order"> | number
+    address?: StringNullableFilter<"Order"> | string | null
+    originAddress?: StringNullableFilter<"Order"> | string | null
     status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
     receiverName?: StringFilter<"Order"> | string
     receiverPhone?: StringFilter<"Order"> | string
@@ -9179,6 +9269,10 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     total?: SortOrder
+    discount?: SortOrder
+    shipping?: SortOrder
+    address?: SortOrderInput | SortOrder
+    originAddress?: SortOrderInput | SortOrder
     status?: SortOrder
     receiverName?: SortOrder
     receiverPhone?: SortOrder
@@ -9200,6 +9294,10 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Order"> | string
     userId?: StringWithAggregatesFilter<"Order"> | string
     total?: FloatWithAggregatesFilter<"Order"> | number
+    discount?: FloatWithAggregatesFilter<"Order"> | number
+    shipping?: FloatWithAggregatesFilter<"Order"> | number
+    address?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    originAddress?: StringNullableWithAggregatesFilter<"Order"> | string | null
     status?: EnumOrderStatusWithAggregatesFilter<"Order"> | $Enums.OrderStatus
     receiverName?: StringWithAggregatesFilter<"Order"> | string
     receiverPhone?: StringWithAggregatesFilter<"Order"> | string
@@ -9217,7 +9315,8 @@ export namespace Prisma {
     orderId?: StringFilter<"OrderItem"> | string
     productId?: StringFilter<"OrderItem"> | string
     name?: StringFilter<"OrderItem"> | string
-    image?: StringFilter<"OrderItem"> | string
+    imageUrl?: StringFilter<"OrderItem"> | string
+    sellerId?: StringFilter<"OrderItem"> | string
     quantity?: IntFilter<"OrderItem"> | number
     price?: FloatFilter<"OrderItem"> | number
     size?: IntFilter<"OrderItem"> | number
@@ -9232,7 +9331,8 @@ export namespace Prisma {
     orderId?: SortOrder
     productId?: SortOrder
     name?: SortOrder
-    image?: SortOrder
+    imageUrl?: SortOrder
+    sellerId?: SortOrder
     quantity?: SortOrder
     price?: SortOrder
     size?: SortOrder
@@ -9250,7 +9350,8 @@ export namespace Prisma {
     orderId?: StringFilter<"OrderItem"> | string
     productId?: StringFilter<"OrderItem"> | string
     name?: StringFilter<"OrderItem"> | string
-    image?: StringFilter<"OrderItem"> | string
+    imageUrl?: StringFilter<"OrderItem"> | string
+    sellerId?: StringFilter<"OrderItem"> | string
     quantity?: IntFilter<"OrderItem"> | number
     price?: FloatFilter<"OrderItem"> | number
     size?: IntFilter<"OrderItem"> | number
@@ -9265,7 +9366,8 @@ export namespace Prisma {
     orderId?: SortOrder
     productId?: SortOrder
     name?: SortOrder
-    image?: SortOrder
+    imageUrl?: SortOrder
+    sellerId?: SortOrder
     quantity?: SortOrder
     price?: SortOrder
     size?: SortOrder
@@ -9286,7 +9388,8 @@ export namespace Prisma {
     orderId?: StringWithAggregatesFilter<"OrderItem"> | string
     productId?: StringWithAggregatesFilter<"OrderItem"> | string
     name?: StringWithAggregatesFilter<"OrderItem"> | string
-    image?: StringWithAggregatesFilter<"OrderItem"> | string
+    imageUrl?: StringWithAggregatesFilter<"OrderItem"> | string
+    sellerId?: StringWithAggregatesFilter<"OrderItem"> | string
     quantity?: IntWithAggregatesFilter<"OrderItem"> | number
     price?: FloatWithAggregatesFilter<"OrderItem"> | number
     size?: IntWithAggregatesFilter<"OrderItem"> | number
@@ -9678,6 +9781,10 @@ export namespace Prisma {
   export type OrderCreateInput = {
     id?: string
     total: number
+    discount?: number
+    shipping?: number
+    address?: string | null
+    originAddress?: string | null
     status?: $Enums.OrderStatus
     receiverName: string
     receiverPhone: string
@@ -9693,6 +9800,10 @@ export namespace Prisma {
     id?: string
     userId: string
     total: number
+    discount?: number
+    shipping?: number
+    address?: string | null
+    originAddress?: string | null
     status?: $Enums.OrderStatus
     receiverName: string
     receiverPhone: string
@@ -9706,6 +9817,10 @@ export namespace Prisma {
   export type OrderUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     total?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    shipping?: FloatFieldUpdateOperationsInput | number
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    originAddress?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     receiverName?: StringFieldUpdateOperationsInput | string
     receiverPhone?: StringFieldUpdateOperationsInput | string
@@ -9721,6 +9836,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     total?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    shipping?: FloatFieldUpdateOperationsInput | number
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    originAddress?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     receiverName?: StringFieldUpdateOperationsInput | string
     receiverPhone?: StringFieldUpdateOperationsInput | string
@@ -9735,6 +9854,10 @@ export namespace Prisma {
     id?: string
     userId: string
     total: number
+    discount?: number
+    shipping?: number
+    address?: string | null
+    originAddress?: string | null
     status?: $Enums.OrderStatus
     receiverName: string
     receiverPhone: string
@@ -9747,6 +9870,10 @@ export namespace Prisma {
   export type OrderUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     total?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    shipping?: FloatFieldUpdateOperationsInput | number
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    originAddress?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     receiverName?: StringFieldUpdateOperationsInput | string
     receiverPhone?: StringFieldUpdateOperationsInput | string
@@ -9760,6 +9887,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     total?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    shipping?: FloatFieldUpdateOperationsInput | number
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    originAddress?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     receiverName?: StringFieldUpdateOperationsInput | string
     receiverPhone?: StringFieldUpdateOperationsInput | string
@@ -9772,7 +9903,8 @@ export namespace Prisma {
   export type OrderItemCreateInput = {
     id?: string
     name: string
-    image: string
+    imageUrl?: string
+    sellerId?: string
     quantity: number
     price: number
     size: number
@@ -9787,7 +9919,8 @@ export namespace Prisma {
     orderId: string
     productId: string
     name: string
-    image: string
+    imageUrl?: string
+    sellerId?: string
     quantity: number
     price: number
     size: number
@@ -9798,7 +9931,8 @@ export namespace Prisma {
   export type OrderItemUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    image?: StringFieldUpdateOperationsInput | string
+    imageUrl?: StringFieldUpdateOperationsInput | string
+    sellerId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
@@ -9813,7 +9947,8 @@ export namespace Prisma {
     orderId?: StringFieldUpdateOperationsInput | string
     productId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    image?: StringFieldUpdateOperationsInput | string
+    imageUrl?: StringFieldUpdateOperationsInput | string
+    sellerId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
@@ -9826,7 +9961,8 @@ export namespace Prisma {
     orderId: string
     productId: string
     name: string
-    image: string
+    imageUrl?: string
+    sellerId?: string
     quantity: number
     price: number
     size: number
@@ -9837,7 +9973,8 @@ export namespace Prisma {
   export type OrderItemUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    image?: StringFieldUpdateOperationsInput | string
+    imageUrl?: StringFieldUpdateOperationsInput | string
+    sellerId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
@@ -9850,7 +9987,8 @@ export namespace Prisma {
     orderId?: StringFieldUpdateOperationsInput | string
     productId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    image?: StringFieldUpdateOperationsInput | string
+    imageUrl?: StringFieldUpdateOperationsInput | string
+    sellerId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
@@ -10311,6 +10449,10 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     total?: SortOrder
+    discount?: SortOrder
+    shipping?: SortOrder
+    address?: SortOrder
+    originAddress?: SortOrder
     status?: SortOrder
     receiverName?: SortOrder
     receiverPhone?: SortOrder
@@ -10322,12 +10464,18 @@ export namespace Prisma {
 
   export type OrderAvgOrderByAggregateInput = {
     total?: SortOrder
+    discount?: SortOrder
+    shipping?: SortOrder
   }
 
   export type OrderMaxOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
     total?: SortOrder
+    discount?: SortOrder
+    shipping?: SortOrder
+    address?: SortOrder
+    originAddress?: SortOrder
     status?: SortOrder
     receiverName?: SortOrder
     receiverPhone?: SortOrder
@@ -10341,6 +10489,10 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     total?: SortOrder
+    discount?: SortOrder
+    shipping?: SortOrder
+    address?: SortOrder
+    originAddress?: SortOrder
     status?: SortOrder
     receiverName?: SortOrder
     receiverPhone?: SortOrder
@@ -10352,6 +10504,8 @@ export namespace Prisma {
 
   export type OrderSumOrderByAggregateInput = {
     total?: SortOrder
+    discount?: SortOrder
+    shipping?: SortOrder
   }
 
   export type EnumOrderStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -10374,7 +10528,8 @@ export namespace Prisma {
     orderId?: SortOrder
     productId?: SortOrder
     name?: SortOrder
-    image?: SortOrder
+    imageUrl?: SortOrder
+    sellerId?: SortOrder
     quantity?: SortOrder
     price?: SortOrder
     size?: SortOrder
@@ -10393,7 +10548,8 @@ export namespace Prisma {
     orderId?: SortOrder
     productId?: SortOrder
     name?: SortOrder
-    image?: SortOrder
+    imageUrl?: SortOrder
+    sellerId?: SortOrder
     quantity?: SortOrder
     price?: SortOrder
     size?: SortOrder
@@ -10406,7 +10562,8 @@ export namespace Prisma {
     orderId?: SortOrder
     productId?: SortOrder
     name?: SortOrder
-    image?: SortOrder
+    imageUrl?: SortOrder
+    sellerId?: SortOrder
     quantity?: SortOrder
     price?: SortOrder
     size?: SortOrder
@@ -11058,6 +11215,10 @@ export namespace Prisma {
   export type OrderCreateWithoutUserInput = {
     id?: string
     total: number
+    discount?: number
+    shipping?: number
+    address?: string | null
+    originAddress?: string | null
     status?: $Enums.OrderStatus
     receiverName: string
     receiverPhone: string
@@ -11071,6 +11232,10 @@ export namespace Prisma {
   export type OrderUncheckedCreateWithoutUserInput = {
     id?: string
     total: number
+    discount?: number
+    shipping?: number
+    address?: string | null
+    originAddress?: string | null
     status?: $Enums.OrderStatus
     receiverName: string
     receiverPhone: string
@@ -11144,6 +11309,10 @@ export namespace Prisma {
     id?: StringFilter<"Order"> | string
     userId?: StringFilter<"Order"> | string
     total?: FloatFilter<"Order"> | number
+    discount?: FloatFilter<"Order"> | number
+    shipping?: FloatFilter<"Order"> | number
+    address?: StringNullableFilter<"Order"> | string | null
+    originAddress?: StringNullableFilter<"Order"> | string | null
     status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
     receiverName?: StringFilter<"Order"> | string
     receiverPhone?: StringFilter<"Order"> | string
@@ -11265,7 +11434,8 @@ export namespace Prisma {
   export type OrderItemCreateWithoutProductInput = {
     id?: string
     name: string
-    image: string
+    imageUrl?: string
+    sellerId?: string
     quantity: number
     price: number
     size: number
@@ -11278,7 +11448,8 @@ export namespace Prisma {
     id?: string
     orderId: string
     name: string
-    image: string
+    imageUrl?: string
+    sellerId?: string
     quantity: number
     price: number
     size: number
@@ -11363,7 +11534,8 @@ export namespace Prisma {
     orderId?: StringFilter<"OrderItem"> | string
     productId?: StringFilter<"OrderItem"> | string
     name?: StringFilter<"OrderItem"> | string
-    image?: StringFilter<"OrderItem"> | string
+    imageUrl?: StringFilter<"OrderItem"> | string
+    sellerId?: StringFilter<"OrderItem"> | string
     quantity?: IntFilter<"OrderItem"> | number
     price?: FloatFilter<"OrderItem"> | number
     size?: IntFilter<"OrderItem"> | number
@@ -11567,7 +11739,8 @@ export namespace Prisma {
   export type OrderItemCreateWithoutOrderInput = {
     id?: string
     name: string
-    image: string
+    imageUrl?: string
+    sellerId?: string
     quantity: number
     price: number
     size: number
@@ -11580,7 +11753,8 @@ export namespace Prisma {
     id?: string
     productId: string
     name: string
-    image: string
+    imageUrl?: string
+    sellerId?: string
     quantity: number
     price: number
     size: number
@@ -11693,6 +11867,10 @@ export namespace Prisma {
   export type OrderCreateWithoutItemsInput = {
     id?: string
     total: number
+    discount?: number
+    shipping?: number
+    address?: string | null
+    originAddress?: string | null
     status?: $Enums.OrderStatus
     receiverName: string
     receiverPhone: string
@@ -11707,6 +11885,10 @@ export namespace Prisma {
     id?: string
     userId: string
     total: number
+    discount?: number
+    shipping?: number
+    address?: string | null
+    originAddress?: string | null
     status?: $Enums.OrderStatus
     receiverName: string
     receiverPhone: string
@@ -11774,6 +11956,10 @@ export namespace Prisma {
   export type OrderUpdateWithoutItemsInput = {
     id?: StringFieldUpdateOperationsInput | string
     total?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    shipping?: FloatFieldUpdateOperationsInput | number
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    originAddress?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     receiverName?: StringFieldUpdateOperationsInput | string
     receiverPhone?: StringFieldUpdateOperationsInput | string
@@ -11788,6 +11974,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     total?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    shipping?: FloatFieldUpdateOperationsInput | number
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    originAddress?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     receiverName?: StringFieldUpdateOperationsInput | string
     receiverPhone?: StringFieldUpdateOperationsInput | string
@@ -11855,6 +12045,10 @@ export namespace Prisma {
   export type OrderCreateManyUserInput = {
     id?: string
     total: number
+    discount?: number
+    shipping?: number
+    address?: string | null
+    originAddress?: string | null
     status?: $Enums.OrderStatus
     receiverName: string
     receiverPhone: string
@@ -11897,6 +12091,10 @@ export namespace Prisma {
   export type OrderUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     total?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    shipping?: FloatFieldUpdateOperationsInput | number
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    originAddress?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     receiverName?: StringFieldUpdateOperationsInput | string
     receiverPhone?: StringFieldUpdateOperationsInput | string
@@ -11910,6 +12108,10 @@ export namespace Prisma {
   export type OrderUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     total?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    shipping?: FloatFieldUpdateOperationsInput | number
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    originAddress?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     receiverName?: StringFieldUpdateOperationsInput | string
     receiverPhone?: StringFieldUpdateOperationsInput | string
@@ -11923,6 +12125,10 @@ export namespace Prisma {
   export type OrderUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     total?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    shipping?: FloatFieldUpdateOperationsInput | number
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    originAddress?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     receiverName?: StringFieldUpdateOperationsInput | string
     receiverPhone?: StringFieldUpdateOperationsInput | string
@@ -12010,7 +12216,8 @@ export namespace Prisma {
     id?: string
     orderId: string
     name: string
-    image: string
+    imageUrl?: string
+    sellerId?: string
     quantity: number
     price: number
     size: number
@@ -12051,7 +12258,8 @@ export namespace Prisma {
   export type OrderItemUpdateWithoutProductInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    image?: StringFieldUpdateOperationsInput | string
+    imageUrl?: StringFieldUpdateOperationsInput | string
+    sellerId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
@@ -12064,7 +12272,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     orderId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    image?: StringFieldUpdateOperationsInput | string
+    imageUrl?: StringFieldUpdateOperationsInput | string
+    sellerId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
@@ -12076,7 +12285,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     orderId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    image?: StringFieldUpdateOperationsInput | string
+    imageUrl?: StringFieldUpdateOperationsInput | string
+    sellerId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
@@ -12088,7 +12298,8 @@ export namespace Prisma {
     id?: string
     productId: string
     name: string
-    image: string
+    imageUrl?: string
+    sellerId?: string
     quantity: number
     price: number
     size: number
@@ -12099,7 +12310,8 @@ export namespace Prisma {
   export type OrderItemUpdateWithoutOrderInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    image?: StringFieldUpdateOperationsInput | string
+    imageUrl?: StringFieldUpdateOperationsInput | string
+    sellerId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
@@ -12112,7 +12324,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     productId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    image?: StringFieldUpdateOperationsInput | string
+    imageUrl?: StringFieldUpdateOperationsInput | string
+    sellerId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
@@ -12124,7 +12337,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     productId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    image?: StringFieldUpdateOperationsInput | string
+    imageUrl?: StringFieldUpdateOperationsInput | string
+    sellerId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
