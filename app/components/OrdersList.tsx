@@ -217,7 +217,7 @@ export default function OrdersList({
                 Total: ${pedido.total.toLocaleString("es-AR")}
               </p>
 
-              {pedido.status !== "DELIVERED" && (
+              {pedido.status !== "PENDING" && pedido.status !== "DELIVERED" && (
                 <button
                   onClick={() => handleTrackShipment(pedido.id)}
                   disabled={loadingOrderId === pedido.id}

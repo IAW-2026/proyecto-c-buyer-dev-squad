@@ -21,3 +21,26 @@ export async function PATCH(
 
   return Response.json(order);
 }
+
+export async function ORDERPATCH(
+  req: Request,
+  context: { params: Promise<{ id: string }> }
+) {
+  const { id } = await context.params;
+
+  const secret = req.headers.get("buyer-key");
+  const BUYER_SECRET = process.env.BUYER_SECRET;
+
+  if (!BUYER_SECRET || secret !== BUYER_SECRET) {
+    return new Response("Clave inválida", { status: 403 });
+  }
+
+  const data = await req.json();
+
+  const order = await prisma.order.update({
+    where: { id },
+    data,
+  });
+
+  return Response.json(order);
+}
