@@ -79,12 +79,14 @@ const [errors, setErrors] = useState<Partial<Record<keyof CheckoutFormData, stri
     if (!validate()) return;
     startTransition(async () => {
       try {
-        const { orderId } = await submitCheckout(id, cartItems, form);
-        if (paymentsApiUrl) {
-          window.location.href = `${paymentsApiUrl}/${orderId}`;
-        } else {
-          router.push(`/order-confirmation/${orderId}`);
-        }
+      const { orderId } = await submitCheckout(id, cartItems, form);
+      if (paymentsApiUrl) {
+        const { getPaymentsUrl } = await import("@/lib/actions/Payments.action");
+        const url = await getPaymentsUrl(orderId)
+        window.location.href = url
+      } else {
+        router.push(`/order-confirmation/${orderId}`)
+      }
       } catch (e) {
         console.error(e);
         setErrors({
