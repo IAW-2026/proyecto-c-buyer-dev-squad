@@ -49,7 +49,7 @@ export default function Navbar() {
     }
   }, [isSignedIn, isLoaded]);
 
-  const isAdmin = (user?.publicMetadata?.role as string) === "ADMIN";
+  const isAdmin = (user?.publicMetadata?.role as string) === "admin";
 
   const handleVenderClick = async (e: React.MouseEvent) => {
     e.preventDefault();

@@ -13,7 +13,7 @@ export default async function AdminLayout({
 
   const clerkUser = await currentUser();
   const role = clerkUser?.publicMetadata?.role as string | undefined;
-  if (role !== "ADMIN") redirect("/");
+  if (role !== "admin") redirect("/");
 
   const dbUser = await prisma.user.findUnique({
     where: { clerkId },

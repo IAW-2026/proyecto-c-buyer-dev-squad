@@ -21,7 +21,7 @@ async function requireAdmin() {
 
   const clerkUser = await currentUser();
   const role = clerkUser?.publicMetadata?.role as string | undefined;
-  if (role !== "ADMIN") throw new Error("No autorizado");
+  if (role !== "admin") throw new Error("No autorizado");
 }
 
 export async function updateOrderStatus(
@@ -108,7 +108,7 @@ export async function loadMoreAdminOrders(status: string | null, page: number) {
   if (!clerkId) throw new Error("No autenticado");
   const clerkUser = await currentUser();
   const role = clerkUser?.publicMetadata?.role as string | undefined;
-  if (role !== "ADMIN") throw new Error("No autorizado");
+  if (role !== "admin") throw new Error("No autorizado");
 
   return getOrdersByStatus(status ?? undefined, page, 6);
 }

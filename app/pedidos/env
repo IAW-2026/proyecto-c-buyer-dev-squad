@@ -1,0 +1,32 @@
+# Feedback App
+FEEDBACK_API_URL=https://proyecto-c-feedback-dev-squad.vercel.app/
+FEEDBACK_API_KEY=fb-api-key-control-plane-1234567890
+
+# Seller App (para productos y vendedores)
+NEXT_PUBLIC_SELLER_APP_URL=https://proyecto-c-seller-dev-squad.vercel.app/
+SELLER_API_KEY=zapasya_2026_secret
+NEXT_PUBLIC_SUPERADMIN_KEY=secret_key_seller
+
+# Buyer App (para órdenes y usuarios)
+BUYER_API_URL=https://zapasya.vercel.app
+BUYER_API_KEY=buyer-dev-squad
+
+#Logistics App (para envíos)
+SHIPPING_APP_URL=https://proyecto-c-shipping-dev-squad.vercel.app/
+SHIPPING_API_KEY=shipping-api-key-1234567890
+
+#Payments App
+NEXT_PUBLIC_PAYMENTS_API_URL=https://proyecto-c-payments-dev-squad.vercel.app/
+PAYMENTS_API_KEY=payments-api-key-zapasya-2026
+PAYMENTS_VERCEL_BYPASS=bZi0dpqGZseDYd1sKCjofQVaoaJbIj85
+
+# Base de datos PostgreSQL (para persistencia propia)
+DATABASE_URL=postgresql://neondb_owner:npg_XvSnc6oGA9wz@ep-restless-wave-aiq570h6-pooler.c-4.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+
+# Clerk (autenticación)
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_b24tYmFybmFjbGUtOTcuY2xlcmsuYWNjb3VudHMuZGV2JA
+CLERK_SECRET_KEY=sk_test_YllJw2yS8fPvSI86CfsSFzyjF3Ixhy1wZ2nSPJPxIk
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL=/admin/usuarios
+NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL=/

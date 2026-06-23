@@ -31,7 +31,7 @@ export async function loadMoreAdminUsers(search: string | null, page: number) {
   if (!clerkId) throw new Error("No autenticado");
   const clerkUser = await currentUser();
   const role = clerkUser?.publicMetadata?.role as string | undefined;
-  if (role !== "ADMIN") throw new Error("No autorizado");
+  if (role !== "admin") throw new Error("No autorizado");
 
   return getUsers(search ?? undefined, page, 6);
 }
