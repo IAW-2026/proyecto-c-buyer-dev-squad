@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { OrderItem, OrderStatusType } from "@/app/types/order";
-import { getUserByClerkId } from "./User.service";
+import { getOrCreateUser, getUserByClerkId } from "./User.service";
 
 type GetOrdersParams = {
   clerkId?: string;
@@ -20,6 +20,7 @@ export async function createOrder(
   deliveryType: string,
   address?: string
 ) {
+  const user = await getOrCreateUser(clerkId);
   const productIds = items.map(item => item.productId);
   const products = await prisma.product.findMany({
     where: { id: { in: productIds } },
@@ -35,7 +36,7 @@ export async function createOrder(
     : (address || "");
   const order = await prisma.order.create({
     data: {
-      userId: clerkId,
+      userId: user.id,
       total,
       discount: 0,
       shipping: 0,
@@ -78,11 +79,13 @@ export async function getOrders({
   page,
   limit,
 }: GetOrdersParams) {
+  const user = clerkId ? await getOrCreateUser(clerkId) : null;
+
   if (orderId) {
     const order = await prisma.order.findFirst({
       where: {
         id: orderId,
-        ...(clerkId && { userId: clerkId }),
+        ...(user && { userId: user.id }),
       },
       include: {
         items: {
@@ -97,7 +100,7 @@ export async function getOrders({
   }
 
   const where = {
-    ...(clerkId && { userId: clerkId }),
+    ...(user && { userId: user.id }),
     ...(status && { status }),
   };
 
@@ -184,7 +187,7 @@ export async function getOrderConfirmationData(clerkId: string, orderId: string)
   const order = await prisma.order.findFirst({
     where: {
       id: orderId,
-      userId: clerkId,
+      userId: user.id,
     },
     include: {
       items: {
@@ -266,7 +269,7 @@ export async function updateOrderService(
 
   if (order) {
     await prisma.user.update({
-      where: { clerkId: order.userId },
+      where: { id: order.userId },
       data: {
         firstName: data.firstName,
         lastName: data.lastName,
@@ -313,9 +316,10 @@ export async function getMoreOrders(
   clerkId: string,
   skip: number
 ) {
+  const user = await getOrCreateUser(clerkId);
   return prisma.order.findMany({
     where: {
-      userId: clerkId,
+      userId: user.id,
     },
     include: {
       items: {

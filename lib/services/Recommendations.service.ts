@@ -1,11 +1,13 @@
 import { prisma } from "@/lib/prisma";
 import OpenAI from "openai";
+import { getOrCreateUser } from "./User.service";
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 export async function getRecommendations(clerkId: string, limit: number) {
+  const user = await getOrCreateUser(clerkId);
   const orders = await prisma.order.findMany({
-    where: { userId: clerkId, status: "DELIVERED" },
+    where: { userId: user.id, status: "DELIVERED" },
     include: { items: { include: { product: true } } },
     orderBy: { createdAt: "desc" },
     take: 10,
