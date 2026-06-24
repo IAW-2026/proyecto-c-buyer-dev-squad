@@ -8,17 +8,15 @@ import { checkUserActive } from "@/lib/services/User.service";
 import { auth } from "@clerk/nextjs/server";
 
 export async function submitCheckout(
-  id: string,
   cartItems: OrderItem[],
   form: CheckoutFormData
 ): Promise<{ orderId: string }> {
   const { userId: clerkId } = await auth();
-  if (clerkId) {
-    await checkUserActive(clerkId);
-  }
+  if (!clerkId) throw new Error("No autenticado");
+  await checkUserActive(clerkId);
 
   const order = await processCheckout(
-    id,
+    clerkId,
     cartItems,
     form
   );

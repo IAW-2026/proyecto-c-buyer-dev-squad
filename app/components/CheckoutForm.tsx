@@ -8,14 +8,12 @@ import type { CheckoutFormData } from "@/lib/services/Checkout.service";
 import type { OrderItem } from "@/app/types/order";
 
 type Props = {
-  id: string;
   cartItems: OrderItem[];
   initialData: CheckoutFormData;
   paymentsApiUrl?: string;
 };
 
 export default function CheckoutPage({
-  id,
   cartItems,
   initialData,
   paymentsApiUrl,
@@ -79,7 +77,7 @@ const [errors, setErrors] = useState<Partial<Record<keyof CheckoutFormData, stri
     if (!validate()) return;
     startTransition(async () => {
       try {
-      const { orderId } = await submitCheckout(id, cartItems, form);
+      const { orderId } = await submitCheckout(cartItems, form);
       if (paymentsApiUrl) {
         const { getPaymentsUrl } = await import("@/lib/actions/Payments.action");
         const url = await getPaymentsUrl(orderId)

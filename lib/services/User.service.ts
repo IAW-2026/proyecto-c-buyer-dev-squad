@@ -25,29 +25,29 @@ export async function getOrCreateUser(clerkId: string) {
   });
 }
 
-export async function suspendUser(id: string) {
+export async function suspendUser(clerkId: string) {
   await prisma.user.update({
-    where: { id },
+    where: { clerkId },
     data: { status: "SUSPENDED" },
   });
   revalidatePath("/admin/users");
 }
  
-export async function activateUser(id: string) {
+export async function activateUser(clerkId: string) {
   await prisma.user.update({
-    where: { id },
+    where: { clerkId },
     data: { status: "ACTIVE" },
   });
   revalidatePath("/admin/users");
 }
  
-export async function deleteUser(id: string) {
-  await prisma.user.delete({ where: { id } });
+export async function deleteUser(clerkId: string) {
+  await prisma.user.delete({ where: { clerkId } });
   revalidatePath("/admin/users");
 }
  
 export async function updateUser(
-  id: string,
+  clerkId: string,
   data: {
     firstName: string | null;
     lastName: string | null;
@@ -57,7 +57,7 @@ export async function updateUser(
   }
 ) {
   await prisma.user.update({
-    where: { id },
+    where: { clerkId },
     data: {
       firstName: data.firstName,
       lastName: data.lastName,
@@ -101,15 +101,6 @@ export async function getUsers(search?: string, page: number = 1, limit: number 
     },
   };
 }
-export async function getUserById(id: string) {
-  return prisma.user.findUnique({
-    where: { id },
-    include: {
-      _count: { select: { orders: true } },
-    },
-  });
-}
-
 export async function getNavbarUser(clerkId: string) {
   return prisma.user.findUnique({
     where: { clerkId },

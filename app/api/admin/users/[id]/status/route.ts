@@ -1,5 +1,5 @@
 import { authenticateAdminApi } from "@/lib/admin-api-auth";
-import { getUserById, suspendUser, activateUser } from "@/lib/services/User.service";
+import { getUserByClerkId, suspendUser, activateUser } from "@/lib/services/User.service";
 
 export async function PATCH(req: Request, context: { params: Promise<{ id: string }> }): Promise<Response> {
   const authError = authenticateAdminApi(req);
@@ -9,7 +9,7 @@ export async function PATCH(req: Request, context: { params: Promise<{ id: strin
     const { id } = await context.params;
     const body = await req.json();
 
-    const user = await getUserById(id);
+    const user = await getUserByClerkId(id);
     if (!user) {
       return Response.json({ error: "User not found" }, { status: 404 });
     }

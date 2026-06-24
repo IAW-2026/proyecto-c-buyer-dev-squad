@@ -104,7 +104,7 @@ export async function getDashboardStats() {
       topSellersRaw.map(async (item) => {
         const user = await prisma.user.findUnique({
           where: {
-            id: item.userId,
+            clerkId: item.userId,
           },
           select: {
             firstName: true,

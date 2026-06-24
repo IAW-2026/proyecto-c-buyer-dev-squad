@@ -8,8 +8,7 @@ datasource db {
 }
 
 model User {
-  id          String     @id @default(uuid())
-  clerkId     String     @unique
+  clerkId     String     @id
   email       String     @unique
   firstName   String?
   lastName    String?
@@ -76,7 +75,7 @@ model CartItem {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [clerkId], onDelete: Cascade)
 
   @@unique([userId, productId, size, color])
   @@index([productId])
@@ -100,7 +99,7 @@ model Order {
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
   items           OrderItem[]
-  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user            User        @relation(fields: [userId], references: [clerkId], onDelete: Cascade)
 
   @@index([userId])
   @@map("orders")

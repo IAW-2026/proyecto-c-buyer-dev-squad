@@ -4,9 +4,9 @@ import type { OrderItem } from "@/app/types/order";
 import { getOrCreateUser } from "./User.service";
 
 export async function getCartItems(clerkId: string): Promise<OrderItem[]> {
-  const user = await getOrCreateUser(clerkId);
+  await getOrCreateUser(clerkId);
   const items = await prisma.cartItem.findMany({
-    where: { userId: user.id },
+    where: { userId: clerkId },
     include: { product: true },
   });
   return items.map((item) => ({
@@ -22,10 +22,10 @@ export async function getCartItems(clerkId: string): Promise<OrderItem[]> {
   }));
 }
 export async function getCart(clerkId: string) {
-  const user = await getOrCreateUser(clerkId);
+  await getOrCreateUser(clerkId);
 
   return prisma.cartItem.findMany({
-    where: { userId: user.id },
+    where: { userId: clerkId },
     include: { product: true },
   });
 }
@@ -37,7 +37,7 @@ export async function addToCart(
   size: number,
   color: string
 ) {
-  const user = await getOrCreateUser(clerkId);
+  await getOrCreateUser(clerkId);
 
   const product = await prisma.product.findUnique({
     where: { id: productId },
@@ -50,7 +50,7 @@ export async function addToCart(
   const existingItem = await prisma.cartItem.findFirst({
     where: {
       productId,
-      userId: user.id,
+      userId: clerkId,
       size,
       color,
     },
@@ -69,7 +69,7 @@ export async function addToCart(
   return prisma.cartItem.create({
     data: {
       productId,
-      userId: user.id,
+      userId: clerkId,
       quantity,
       size,
       color,
@@ -82,12 +82,12 @@ export async function removeFromCart(
   clerkId: string,
   cartItemId: string
 ) {
-  const user = await getOrCreateUser(clerkId);
+  await getOrCreateUser(clerkId);
 
   const existingItem = await prisma.cartItem.findFirst({
     where: {
       id: cartItemId,
-      userId: user.id,
+      userId: clerkId,
     },
   });
 
@@ -124,23 +124,21 @@ export async function getCartSummary(clerkId: string) {
   };
 }
 export async function clearCart(clerkId: string) {
-  const user = await getOrCreateUser(clerkId);
+  await getOrCreateUser(clerkId);
 
   return prisma.cartItem.deleteMany({
-    where: { userId: user.id },
+    where: { userId: clerkId },
   });
 }
 
 export async function getCartCountService(
   clerkId: string
 ) {
-  const user = await getOrCreateUser(
-    clerkId
-  );
+  await getOrCreateUser(clerkId);
 
   const items =
     await prisma.cartItem.findMany({
-      where: { userId: user.id },
+      where: { userId: clerkId },
       select: { quantity: true },
     });
 

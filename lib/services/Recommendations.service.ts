@@ -3,9 +3,9 @@ import OpenAI from "openai";
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-export async function getRecommendations(id: string, limit: number) {
+export async function getRecommendations(clerkId: string, limit: number) {
   const orders = await prisma.order.findMany({
-    where: { userId: id, status: "DELIVERED" },
+    where: { userId: clerkId, status: "DELIVERED" },
     include: { items: { include: { product: true } } },
     orderBy: { createdAt: "desc" },
     take: 10,
@@ -116,10 +116,9 @@ export interface RecommendationsResponse {
 
 export async function getRecommendationsForUser(
   clerkId: string,
-  id: string,
   limit: number
 ): Promise<RecommendationsResponse> {
-  return getRecommendations(id, limit);
+  return getRecommendations(clerkId, limit);
 }
 
 export async function getFallbackRecommendationsService(limit: number) {

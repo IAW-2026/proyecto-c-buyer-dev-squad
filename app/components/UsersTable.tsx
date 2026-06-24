@@ -5,7 +5,6 @@ import { suspendUser, activateUser, deleteUser, updateUser } from "@/lib/service
 import { loadMoreAdminUsers } from "@/lib/actions/User.actions";
 
 type User = {
-  id: string;
   clerkId: string;
   email: string;
   firstName: string | null;
@@ -92,15 +91,15 @@ function UserRow({ user }: { user: User }) {
 
   const handleToggleSuspend = () => {
     startTransition(async () => {
-      if (isSuspended) await activateUser(user.id);
-      else await suspendUser(user.id);
+      if (isSuspended) await activateUser(user.clerkId);
+      else await suspendUser(user.clerkId);
     });
   };
 
   const handleSave = () => {
     if (!runValidation()) return;
     startTransition(async () => {
-      await updateUser(user.id, {
+      await updateUser(user.clerkId, {
         firstName: firstName.trim() || null,
         lastName: lastName.trim() || null,
         email: email.trim(),
@@ -121,7 +120,7 @@ function UserRow({ user }: { user: User }) {
 
   const handleDelete = () => {
     startTransition(async () => {
-      await deleteUser(user.id);
+      await deleteUser(user.clerkId);
     });
   };
 
@@ -387,7 +386,7 @@ export default function UsersTable({
           </thead>
           <tbody className="divide-y divide-[var(--color-border)]">
             {users.map((user) => (
-              <UserRow key={user.id} user={user} />
+              <UserRow key={user.clerkId} user={user} />
             ))}
           </tbody>
         </table>

@@ -84,7 +84,7 @@ export async function loadMoreOrders(skip: number) {
     return [];
   }
 
-  return getMoreOrders(user.id, skip);
+  return getMoreOrders(clerkId, skip);
 }
 export async function getFiveMoreOrders(
   skip: number
@@ -100,7 +100,7 @@ export async function getFiveMoreOrders(
     return [];
   }
 
-  return getMoreOrders(user.id, skip);
+  return getMoreOrders(clerkId, skip);
 }
 
 export async function loadMoreAdminOrders(status: string | null, page: number) {

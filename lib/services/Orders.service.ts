@@ -3,7 +3,7 @@ import { OrderItem, OrderStatusType } from "@/app/types/order";
 import { getUserByClerkId } from "./User.service";
 
 type GetOrdersParams = {
-  id?: string;
+  clerkId?: string;
   orderId?: string;
   status?: OrderStatusType;
   page: number;
@@ -11,7 +11,7 @@ type GetOrdersParams = {
 };
 
 export async function createOrder(
-  id: string,
+  clerkId: string,
   items: OrderItem[],
   total: number,
   firstName: string,
@@ -35,7 +35,7 @@ export async function createOrder(
     : (address || "");
   const order = await prisma.order.create({
     data: {
-      userId: id,
+      userId: clerkId,
       total,
       discount: 0,
       shipping: 0,
@@ -72,7 +72,7 @@ export async function createOrder(
 }
 
 export async function getOrders({
-  id,
+  clerkId,
   orderId,
   status,
   page,
@@ -82,7 +82,7 @@ export async function getOrders({
     const order = await prisma.order.findFirst({
       where: {
         id: orderId,
-        ...(id && { userId: id }),
+        ...(clerkId && { userId: clerkId }),
       },
       include: {
         items: {
@@ -97,7 +97,7 @@ export async function getOrders({
   }
 
   const where = {
-    ...(id && { userId: id }),
+    ...(clerkId && { userId: clerkId }),
     ...(status && { status }),
   };
 
@@ -184,7 +184,7 @@ export async function getOrderConfirmationData(clerkId: string, orderId: string)
   const order = await prisma.order.findFirst({
     where: {
       id: orderId,
-      userId: user.id,
+      userId: clerkId,
     },
     include: {
       items: {
@@ -266,7 +266,7 @@ export async function updateOrderService(
 
   if (order) {
     await prisma.user.update({
-      where: { id: order.userId },
+      where: { clerkId: order.userId },
       data: {
         firstName: data.firstName,
         lastName: data.lastName,
@@ -310,12 +310,12 @@ export async function deleteOrderItemService(itemId: string) {
 }
 
 export async function getMoreOrders(
-  id: string,
+  clerkId: string,
   skip: number
 ) {
   return prisma.order.findMany({
     where: {
-      userId: id,
+      userId: clerkId,
     },
     include: {
       items: {

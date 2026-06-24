@@ -1,0 +1,22 @@
+FEEDBACK_API_URL=https://proyecto-c-feedback-dev-squad.vercel.app/
+API_KEY_ANALYTICS=fb-api-key-analytics-0987654321
+
+NEXT_PUBLIC_SELLER_APP_URL=https://proyecto-c-seller-dev-squad.vercel.app
+NEXT_PUBLIC_SUPERADMIN_KEY=secret_key_seller
+
+NEXT_PUBLIC_PAYMENTS_API_URL=https://proyecto-c-payments-dev-squad.vercel.app/
+PAYMENTS_API_KEY=payments-api-key-zapasya-2026
+PAYMENTS_VERCEL_BYPASS=bZi0dpqGZseDYd1sKCjofQVaoaJbIj85
+
+SHIPPING_APP_URL=https://proyecto-c-shipping-dev-squad.vercel.app/
+SHIPPING_API_KEY=shipping-api-key-1234567890
+
+BUYER_API_KEY=buyer-dev-squad
+
+# Clerk (autenticación)
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_b24tYmFybmFjbGUtOTcuY2xlcmsuYWNjb3VudHMuZGV2JA
+CLERK_SECRET_KEY=sk_test_YllJw2yS8fPvSI86CfsSFzyjF3Ixhy1wZ2nSPJPxIk
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL=/dashboard
+NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL=/

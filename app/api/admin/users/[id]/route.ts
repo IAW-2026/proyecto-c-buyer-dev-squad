@@ -1,5 +1,5 @@
 import { authenticateAdminApi } from "@/lib/admin-api-auth";
-import { getUserById, updateUser, deleteUser } from "@/lib/services/User.service";
+import { getUserByClerkId, updateUser, deleteUser } from "@/lib/services/User.service";
 
 export async function GET(req: Request, context: { params: Promise<{ id: string }> }): Promise<Response> {
   const authError = authenticateAdminApi(req);
@@ -7,7 +7,7 @@ export async function GET(req: Request, context: { params: Promise<{ id: string 
 
   try {
     const { id } = await context.params;
-    const user = await getUserById(id);
+    const user = await getUserByClerkId(id);
 
     if (!user) {
       return Response.json({ error: "User not found" }, { status: 404 });
@@ -28,7 +28,7 @@ export async function PATCH(req: Request, context: { params: Promise<{ id: strin
     const { id } = await context.params;
     const body = await req.json();
 
-    const user = await getUserById(id);
+    const user = await getUserByClerkId(id);
     if (!user) {
       return Response.json({ error: "User not found" }, { status: 404 });
     }
@@ -55,7 +55,7 @@ export async function DELETE(req: Request, context: { params: Promise<{ id: stri
   try {
     const { id } = await context.params;
 
-    const user = await getUserById(id);
+    const user = await getUserByClerkId(id);
     if (!user) {
       return Response.json({ error: "User not found" }, { status: 404 });
     }

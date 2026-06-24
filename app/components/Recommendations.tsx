@@ -29,7 +29,6 @@ export default async function Recommendations({
     if (user) {
       data = await getRecommendationsForUser(
         clerkId,
-        user.id,
         limit
       );
     } else {
