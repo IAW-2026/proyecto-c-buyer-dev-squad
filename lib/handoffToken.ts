@@ -26,14 +26,14 @@ async function getKey(secret: string) {
 }
 
 type HandoffPayload = {
-  userId: string;
+  clerkId: string;
   targetId: string;
   exp: number;
 };
 
 export async function generateToken(
   secret: string,
-  data: { userId: string; targetId: string },
+  data: { clerkId: string; targetId: string },
   ttlSeconds = 180
 ): Promise<string> {
   const payload: HandoffPayload = {
@@ -55,7 +55,7 @@ export async function verifyToken(
   secret: string,
   token: string,
   expectedTargetId: string
-): Promise<{ userId: string } | null> {
+): Promise<{ clerkId: string } | null> {
   const [payloadB64, sigB64] = token.split(".");
   if (!payloadB64 || !sigB64) return null;
 
@@ -76,7 +76,7 @@ export async function verifyToken(
     if (payload.exp < Math.floor(Date.now() / 1000)) return null;
     if (payload.targetId !== expectedTargetId) return null;
 
-    return { userId: payload.userId };
+    return { clerkId: payload.clerkId };
   } catch {
     return null;
   }

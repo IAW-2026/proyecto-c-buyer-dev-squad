@@ -4,14 +4,14 @@ import { auth } from "@clerk/nextjs/server";
 import { generateSellerToken } from "@/lib/SellerToken";
 
 export async function getSellerDashboardUrl() {
-  const { userId } = await auth();
+  const { userId: clerkId } = await auth();
 
-  if (!userId) {
+  if (!clerkId) {
     throw new Error("No autenticado");
   }
 
   const token = await generateSellerToken({
-    userId,
+    clerkId,
   });
 
   return `${process.env.NEXT_PUBLIC_SELLER_URL}/auth/handoff?token=${token}`;

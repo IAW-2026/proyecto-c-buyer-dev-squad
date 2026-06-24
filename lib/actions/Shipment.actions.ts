@@ -14,12 +14,12 @@ import { generateShipmentToken } from "../shipmentToken";
  * Devuelve la URL completa ya armada con el token, lista para redirigir.
  */
 export async function getShipmentTrackingUrl(orderId: string): Promise<string> {
-  const { userId } = await auth();
-  if (!userId) {
+  const { userId: clerkId } = await auth();
+  if (!clerkId) {
     throw new Error("No autenticado");
   }
 
-  const token = await generateShipmentToken({ userId, orderId });
+  const token = await generateShipmentToken({ clerkId, orderId });
 
   return `${process.env.NEXT_PUBLIC_SHIPPING_URL}/dashboard/shipments/${orderId}?token=${token}`;
 }
