@@ -11,7 +11,7 @@ async function getKey() {
     ["sign", "verify"]
   );
 }
-
+//red
 function base64urlEncode(bytes: ArrayBuffer): string {
   const arr = new Uint8Array(bytes);
 
