@@ -52,7 +52,7 @@ export function ProfileModal({ user, imageUrl, onClose, onSave }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+   <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/50 backdrop-blur-sm pt-20">
       <div className="bg-surface border border-muted rounded-2xl shadow-xl w-full max-w-md mx-4 p-6">
         <div className="flex items-center gap-4 mb-6">
           <img

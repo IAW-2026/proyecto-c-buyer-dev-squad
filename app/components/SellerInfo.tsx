@@ -43,7 +43,7 @@ export default function SellerInfo({
         disabled={loadingReviews}
         className="btn-secondary text-sm px-4 py-2 rounded-xl disabled:opacity-50"
       >
-        {loadingReviews ? "Generando link..." : "⭐ Ver reseñas"}
+        {loadingReviews ? "Generando link..." : "Ver reseñas"}
       </button>
       <CartButton />
     </div>

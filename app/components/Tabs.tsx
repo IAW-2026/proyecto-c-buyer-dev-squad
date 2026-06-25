@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useUser, useClerk } from "@clerk/nextjs";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Loader from "./Loader";
 import { useLoading } from "./LoadingProvider";
 
@@ -45,7 +45,7 @@ export default function Tabs() {
       if (currentMin) params.set("minPrice", currentMin);
       const currentMax = searchParams.get("maxPrice");
       if (currentMax) params.set("maxPrice", currentMax);
-      router.push(`/home?${params.toString()}`);
+      router.push(`/tienda?${params.toString()}`);
     });
   };
 
@@ -55,19 +55,20 @@ export default function Tabs() {
       openSignIn({ forceRedirectUrl: "/pedidos" });
     }
   };
-  const initialSearch = useRef(currentSearch);
   useEffect(() => {
-    if (search === initialSearch.current) return;
+    const currentSearchParam = searchParams.get("search") || "";
+    const trimmed = search.trim();
+    if (trimmed === currentSearchParam) return;
 
     const timeout = setTimeout(() => {
       startTransition(() => {
         const params = new URLSearchParams(searchParams.toString());
-        if (search.trim()) {
-          params.set("search", search.trim());
+        if (trimmed) {
+          params.set("search", trimmed);
         } else {
           params.delete("search");
         }
-        router.push(`/home?${params.toString()}`);
+        router.push(`/tienda?${params.toString()}`);
       });
     }, 300);
 
@@ -75,23 +76,23 @@ export default function Tabs() {
   }, [search, searchParams, startTransition, router]);
 
   return (
-    <div className="border-b px-4 md:px-10 py-4">
+    <div className="border-b border-[var(--color-border)] px-4 md:px-10 py-4">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-        
+
         {/* Tabs */}
-        <div className="flex flex-wrap gap-4 md:gap-6">
+        <div className="flex flex-wrap gap-2">
           {tabs.map((tab) => {
             const isActive = tab.category === currentCategory;
 
             return (
               <Link
                 key={tab.name}
-                href={tab.category ? `/home?category=${tab.category}` : "/home"}
+                href={tab.category ? `/tienda?category=${tab.category}` : "/tienda"}
                 onClick={(e) => handleCategoryClick(e, tab.category)}
-                className={`pb-2 text-sm md:text-base font-medium transition-colors ${
+                className={`px-4 py-2 rounded-full text-sm md:text-base font-medium transition-colors ${
                   isActive
-                    ? "border-b-2 border-primary text-foreground"
-                    : "text-muted hover:text-foreground"
+                    ? "bg-[var(--color-primary)] text-[var(--color-on-primary)]"
+                    : "text-[var(--color-muted)] hover:bg-[var(--color-surface-alt)] hover:text-[var(--color-foreground)]"
                 }`}
               >
                 {tab.name}
@@ -104,10 +105,10 @@ export default function Tabs() {
           <div className="relative w-full lg:max-w-md">
             <input
               type="text"
-              placeholder="🔍 Buscar productos..."
+              placeholder="Buscar productos..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full px-4 py-2 rounded-full border border-muted bg-surface text-sm focus:outline-none focus:ring-2 focus:ring-primary pr-10"
+              className="w-full px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-alt)] text-sm text-[var(--color-foreground)] placeholder:text-[var(--color-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent transition-all pr-10"
             />
             {isPending && (
               <div className="absolute right-3 top-1/2 -translate-y-1/2">
@@ -121,9 +122,9 @@ export default function Tabs() {
           <Link
             href="/pedidos"
             onClick={handlePedidosClick}
-            className="flex items-center justify-center whitespace-nowrap px-4 py-2 rounded-full border border-primary text-primary text-sm font-medium hover:bg-primary hover:text-white transition-colors w-full lg:w-auto"
+            className="flex items-center justify-center whitespace-nowrap px-4 py-2 rounded-full border border-[var(--color-border)] text-[var(--color-foreground)] text-sm font-medium hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] transition-colors w-full lg:w-auto"
           >
-            📦 Ver mis pedidos
+            Mis pedidos
           </Link>
         </div>
       </div>

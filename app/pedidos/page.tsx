@@ -19,7 +19,7 @@ export default async function PedidosPage() {
   return (
     <main className="w-full px-4 sm:px-6 md:px-10 max-w-6xl mx-auto">
       <div className="flex items-center gap-4 mb-8">
-        <Link href="/" className="text-sm text-muted underline">
+        <Link href="/tienda" className="text-sm text-muted underline">
           ← Volver
         </Link>
 
@@ -30,8 +30,11 @@ export default async function PedidosPage() {
 
       {orders.length === 0 ? (
         <div className="text-center py-20 text-muted">
-          <p className="text-5xl mb-4">📦</p>
-
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[var(--color-surface)] flex items-center justify-center">
+            <svg className="w-8 h-8 text-[var(--color-muted)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+            </svg>
+          </div>
           <p className="text-lg font-medium">
             Todavía no tenés pedidos
           </p>

@@ -1,15 +1,15 @@
 "use client";
 
-import Link from "next/link";
 import { useState, useTransition } from "react";
 import { fetchProductsAction } from "@/lib/actions/Products.actions";
 import type { Product } from "../types/product";
+import ModernProductCard from "./ModernProductCard";
 
 interface Props {
   products: Product[];
   totalPages: number;
   currentPage: number;
-  searchParams: Record<number, number>;
+  searchParams: Record<string, string | undefined>;
 }
 
 export default function ProductList({
@@ -46,33 +46,36 @@ export default function ProductList({
   };
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div className="flex flex-col gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
         {products.map((p) => (
-          <Link
-            key={p.id}
-            href={`/products/${p.id}`}
-            className="border p-4 rounded-xl block"
-          >
-            <img
-              src={p.image}
-              className="h-40 w-full object-cover rounded-xl mb-3"
-            />
-            <h2>{p.name}</h2>
-            <p className="font-bold">${p.price}</p>
-            <p className="text-xs text-muted mt-1">{p.direction}</p>
-          </Link>
+          <ModernProductCard key={p.id} product={p} />
         ))}
       </div>
 
       {page < totalPages && (
-        <div className="flex justify-center">
+        <div className="flex justify-center pt-4">
           <button
             onClick={loadMore}
             disabled={isPending}
-            className="px-6 py-2 border rounded-full"
+            className="group relative inline-flex items-center justify-center gap-2 px-10 py-4 border-2 border-[var(--color-border)] text-[var(--color-foreground)] font-semibold text-sm rounded-full overflow-hidden transition-all duration-300 hover:border-[var(--color-primary)] hover:scale-[1.02] active:scale-95 disabled:opacity-50"
           >
-            {isPending ? "Cargando..." : "Ver más"}
+            {isPending ? (
+              <>
+                <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" />
+                  <path fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                </svg>
+                Cargando...
+              </>
+            ) : (
+              <>
+                Ver más productos
+                <svg className="w-4 h-4 transition-transform duration-300 group-hover:translate-y-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </>
+            )}
           </button>
         </div>
       )}

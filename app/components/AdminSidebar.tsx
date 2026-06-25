@@ -72,7 +72,7 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
               <p className="admin-user-role">Administrador</p>
             </div>
           </div>
-          <Link href="/" className="admin-back-link">
+          <Link href="/tienda" className="admin-back-link">
             ← Volver a la tienda
           </Link>
         </div>

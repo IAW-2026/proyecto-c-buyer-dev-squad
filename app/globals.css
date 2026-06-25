@@ -45,10 +45,10 @@ body {
   --color-info: #2563eb;
   --color-info-dark: #1d4ed8;
   --color-info-light: #dbeafe;
-  --color-muted: #9a9da3;
+  --color-muted: #131111;
   --color-muted-light: #f3f4f6;
   --color-border: #d1d5db;
-  --color-surface: #6b72802d;
+  --color-surface: #6b728081;
   --color-surface-alt: #f8fafc;
 }
 
@@ -945,3 +945,33 @@ body {
     text-align: center;
   }
 }
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.animation-delay-100 { animation-delay: 100ms; }
+.animation-delay-200 { animation-delay: 200ms; }
+.animation-delay-300 { animation-delay: 300ms; }
+.animation-delay-400 { animation-delay: 400ms; }
+.animation-delay-500 { animation-delay: 500ms; }

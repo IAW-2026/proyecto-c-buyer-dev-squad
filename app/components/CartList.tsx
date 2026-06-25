@@ -62,9 +62,9 @@ export default function CartList({ items, total }: any) {
         {items.map((item: any) => (
           <div
             key={item.id}
-            className="flex items-center gap-4 border border-muted p-4 rounded-xl bg-surface"
+            className="flex items-center gap-4 border border-[var(--color-border)] p-4 rounded-xl bg-[var(--color-background)] hover:shadow-sm transition-shadow"
           >
-            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden bg-surface-alt border border-muted flex-shrink-0">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden bg-[var(--color-surface)] border border-[var(--color-border)] flex-shrink-0">
               <img
                 src={item.imageUrl || "/placeholder.png"}
                 alt={item.name}
@@ -76,25 +76,25 @@ export default function CartList({ items, total }: any) {
             </div>
 
             <div className="flex-1 min-w-0">
-              <h2 className="text-base font-semibold text-foreground truncate">
+              <h2 className="text-base font-semibold text-[var(--color-foreground)] truncate">
                 {item.name}
               </h2>
 
               <div className="flex items-center gap-2 mt-1.5">
                 {item.size && (
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-surface-alt border border-muted text-muted">
+                  <span className="text-xs px-2 py-0.5 rounded-full bg-[var(--color-surface)] border border-[var(--color-border)] text-[var(--color-muted)]">
                     Talle {item.size}
                   </span>
                 )}
                 {item.color && (
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-surface-alt border border-muted text-muted">
+                  <span className="text-xs px-2 py-0.5 rounded-full bg-[var(--color-surface)] border border-[var(--color-border)] text-[var(--color-muted)]">
                     {item.color}
                   </span>
                 )}
-                <span className="text-xs text-muted">x{item.quantity}</span>
+                <span className="text-xs text-[var(--color-muted)]">x{item.quantity}</span>
               </div>
 
-              <p className="text-sm font-semibold text-foreground mt-2">
+              <p className="text-sm font-semibold text-[var(--color-foreground)] mt-2">
                 ${item.price.toLocaleString("es-AR")}
               </p>
             </div>
@@ -102,7 +102,7 @@ export default function CartList({ items, total }: any) {
             <button
               onClick={() => setItemToDelete(item.id)}
               disabled={removingId === item.id}
-              className="p-2.5 rounded-lg text-muted hover:text-danger hover:bg-surface-alt transition disabled:opacity-50 flex-shrink-0"
+              className="p-2.5 rounded-xl text-[var(--color-muted)] hover:text-[var(--color-danger)] hover:bg-[var(--color-surface)] transition disabled:opacity-50 flex-shrink-0"
               aria-label="Eliminar producto"
             >
               {removingId === item.id ? (
@@ -115,10 +115,10 @@ export default function CartList({ items, total }: any) {
         ))}
       </div>
 
-      <div className="mt-8 border-t border-muted pt-6">
+      <div className="mt-8 border-t border-[var(--color-border)] pt-6">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold text-foreground">Total</h3>
-          <p className="text-2xl sm:text-3xl font-bold text-success">
+          <h3 className="text-lg font-semibold text-[var(--color-foreground)]">Total</h3>
+          <p className="text-2xl sm:text-3xl font-bold text-[var(--color-success)]">
             ${total.toFixed(2)}
           </p>
         </div>
@@ -126,7 +126,7 @@ export default function CartList({ items, total }: any) {
         <button
           onClick={handleOrder}
           disabled={isCheckingOut}
-          className="w-full inline-flex items-center justify-center gap-2 btn-success font-semibold py-3 px-4 rounded-xl transition disabled:opacity-50"
+          className="w-full inline-flex items-center justify-center gap-2 bg-[var(--color-success)] text-white font-semibold py-3 px-4 rounded-xl hover:bg-[var(--color-success-dark)] hover:shadow-lg hover:shadow-[var(--color-success)]/25 active:scale-[0.99] transition-all duration-200 disabled:opacity-50"
         >
           {isCheckingOut && <Loader2 className="w-4 h-4 animate-spin" />}
           {isCheckingOut ? "Redirigiendo..." : "Proceder al Pago"}
@@ -134,18 +134,18 @@ export default function CartList({ items, total }: any) {
       </div>
 
       {itemToDelete && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
-          <div className="bg-surface-alt border border-muted rounded-2xl p-6 w-full max-w-sm">
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-[var(--color-surface-alt)] border border-[var(--color-border)] rounded-2xl p-6 w-full max-w-sm shadow-xl animate-fade-in">
             <div className="flex items-center gap-3 mb-1">
-              <div className="p-2 rounded-full bg-surface text-danger">
+              <div className="p-2 rounded-full bg-[var(--color-surface)] text-[var(--color-danger)]">
                 <AlertTriangle className="w-5 h-5" />
               </div>
-              <h2 className="text-lg font-semibold text-foreground">
+              <h2 className="text-lg font-semibold text-[var(--color-foreground)]">
                 ¿Eliminar producto?
               </h2>
             </div>
 
-            <p className="text-sm text-muted mt-2 ml-[52px]">
+            <p className="text-sm text-[var(--color-muted)] mt-2 ml-[52px]">
               Esta acción no se puede deshacer.
             </p>
 
@@ -153,7 +153,7 @@ export default function CartList({ items, total }: any) {
               <button
                 onClick={() => setItemToDelete(null)}
                 disabled={removingId === itemToDelete}
-                className="px-4 py-2 rounded-lg border border-muted text-muted hover:text-foreground transition disabled:opacity-50"
+                className="px-4 py-2 rounded-xl border border-[var(--color-border)] text-[var(--color-muted)] hover:text-[var(--color-foreground)] hover:bg-[var(--color-surface)] transition disabled:opacity-50"
               >
                 Cancelar
               </button>
@@ -161,7 +161,7 @@ export default function CartList({ items, total }: any) {
               <button
                 onClick={confirmRemove}
                 disabled={removingId === itemToDelete}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg btn-danger disabled:opacity-50"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--color-danger)] text-white hover:bg-[var(--color-danger-dark)] transition disabled:opacity-50"
               >
                 {removingId === itemToDelete && (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -174,17 +174,17 @@ export default function CartList({ items, total }: any) {
       )}
 
       {successMessage && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-4 w-full max-w-sm sm:w-auto">
-          <div className="flex items-center gap-3 bg-surface-alt border border-success/20 shadow-lg rounded-xl px-4 py-3 pr-2">
-            <div className="p-1.5 rounded-full bg-success/10 text-success flex-shrink-0">
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-4 w-full max-w-sm sm:w-auto animate-fade-in">
+          <div className="flex items-center gap-3 bg-[var(--color-surface-alt)] border border-[var(--color-success)]/20 shadow-lg rounded-xl px-4 py-3 pr-2">
+            <div className="p-1.5 rounded-full bg-[var(--color-success)]/10 text-[var(--color-success)] flex-shrink-0">
               <CheckCircle className="w-4 h-4" />
             </div>
-            <p className="text-sm font-medium text-foreground">
+            <p className="text-sm font-medium text-[var(--color-foreground)]">
               {successMessage}
             </p>
             <button
               onClick={() => setSuccessMessage(null)}
-              className="p-1.5 rounded-lg text-muted hover:text-foreground hover:bg-surface transition flex-shrink-0"
+              className="p-1.5 rounded-lg text-[var(--color-muted)] hover:text-[var(--color-foreground)] hover:bg-[var(--color-surface)] transition flex-shrink-0"
               aria-label="Cerrar"
             >
               <X className="w-3.5 h-3.5" />

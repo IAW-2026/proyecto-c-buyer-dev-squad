@@ -102,7 +102,7 @@ export function SellerPopover({ seller }: { seller: Seller }) {
             disabled={loadingReviews}
             className="btn-secondary text-sm px-4 py-2 rounded-xl disabled:opacity-50"
           >
-            {loadingReviews ? "Generando link..." : "⭐ Ver opiniones"}
+            {loadingReviews ? "Generando link..." : "Ver opiniones"}
           </button>
         </div>
       )}

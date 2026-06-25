@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useRef, useCallback, useEffect } from "react";
+import { Filter } from "lucide-react";
 import { useLoading } from "./LoadingProvider";
 
 interface FiltersProps {
@@ -29,7 +30,7 @@ export default function Filters({ brands }: FiltersProps) {
         params.delete(key);
       }
       startTransition(() => {
-        router.push(`/home?${params.toString()}`);
+        router.push(`/tienda?${params.toString()}`);
       });
     }, 300);
   }, [router, searchParams, startTransition]);
@@ -42,46 +43,46 @@ export default function Filters({ brands }: FiltersProps) {
       } else {
         params.delete("brand");
       }
-      router.push(`/home?${params.toString()}`);
+      router.push(`/tienda?${params.toString()}`);
     });
   }, [router, searchParams, startTransition]);
 
   return (
-    <div className="relative flex flex-col sm:flex-row gap-4">
-      <select
-        onChange={(e) => updateBrand(e.target.value)}
-        className="bg-surface-alt text-foreground border border-muted p-2"
-      >
-        <option value="" className="bg-surface-alt text-foreground">
-          Todas las marcas </option>
-        {brands.map((brand) => (
-          <option key={brand} value={brand} className="bg-surface-alt text-foreground">
-            {brand.charAt(0).toUpperCase() + brand.slice(1)}
+    <div className="flex flex-col sm:flex-row gap-3 items-end">
+      <div className="relative w-full sm:w-auto">
+        <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--color-muted)] pointer-events-none" />
+        <select
+          onChange={(e) => updateBrand(e.target.value)}
+          className="w-full sm:w-48 pl-9 pr-8 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-alt)] text-[var(--color-foreground)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent transition-all appearance-none cursor-pointer"
+        >
+          <option value="" className="bg-[var(--color-surface-alt)] text-[var(--color-foreground)]">
+            Todas las marcas
           </option>
-        ))}
-      </select>
-      <div className="relative">
-        <span className="absolute left-2 top-1/2 -translate-y-1/2 text-muted">
-          $
-        </span>
+          {brands.map((brand) => (
+            <option key={brand} value={brand} className="bg-[var(--color-surface-alt)] text-[var(--color-foreground)]">
+              {brand.charAt(0).toUpperCase() + brand.slice(1)}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className="relative flex-1 w-full sm:w-auto">
+        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-[var(--color-muted)] font-medium pointer-events-none">$</span>
         <input
           type="number"
           min={0}
-          placeholder="Precio mínimo"
+          placeholder="Mín"
           onChange={(e) => updateFilterDebounced("minPrice", e.target.value)}
-          className="border border-muted bg-surface-alt text-foreground p-2 pl-6"
+          className="w-full sm:w-32 px-4 py-2.5 pl-7 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-alt)] text-[var(--color-foreground)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
         />
       </div>
-      <div className="relative">
-        <span className="absolute left-2 top-1/2 -translate-y-1/2 text-muted">
-          $
-        </span>
+      <div className="relative flex-1 w-full sm:w-auto">
+        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-[var(--color-muted)] font-medium pointer-events-none">$</span>
         <input
           type="number"
           min={0}
-          placeholder="Precio máximo"
+          placeholder="Máx"
           onChange={(e) => updateFilterDebounced("maxPrice", e.target.value)}
-          className="border border-muted bg-surface-alt text-foreground p-2 pl-6"
+          className="w-full sm:w-32 px-4 py-2.5 pl-7 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-alt)] text-[var(--color-foreground)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
         />
       </div>
     </div>
