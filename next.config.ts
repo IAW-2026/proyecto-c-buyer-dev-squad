@@ -15,6 +15,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "cdn-images.farfetch-contents.com",
       },
+      {
+        protocol: "https",
+        hostname: "images.stockx.com",
+      },
     ],
   },
 };
