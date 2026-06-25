@@ -131,6 +131,12 @@ export async function clearCart(clerkId: string) {
   });
 }
 
+export async function clearCartByUserId(userId: string) {
+  return prisma.cartItem.deleteMany({
+    where: { userId },
+  });
+}
+
 export async function getCartCountService(
   clerkId: string
 ) {

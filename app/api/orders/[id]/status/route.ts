@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { updateOrderStatusService } from "@/lib/services/Orders.service";
 //Shipping y payments utilizarán este endpoint
 export async function PATCH(
   req: Request,
@@ -14,10 +14,7 @@ export async function PATCH(
   const body = await req.json();
   const { status } = body;
 
-  const order = await prisma.order.update({
-    where: { id },
-    data: { status },
-  });
+  const order = await updateOrderStatusService(id, status);
 
   return Response.json(order);
 }

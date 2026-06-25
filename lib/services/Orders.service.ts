@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { OrderItem, OrderStatusType } from "@/app/types/order";
 import { getOrCreateUser, getUserByClerkId } from "./User.service";
+import { clearCartByUserId } from "./Cart.service";
 
 type GetOrdersParams = {
   clerkId?: string;
@@ -235,10 +236,16 @@ export async function updateOrderStatusService(
   orderId: string,
   status: OrderStatusType
 ) {
-  return prisma.order.update({
+  const order = await prisma.order.update({
     where: { id: orderId },
     data: { status },
   });
+
+  if (status === "PAID") {
+    await clearCartByUserId(order.userId);
+  }
+
+  return order;
 }
 
 export async function updateOrderService(
@@ -253,7 +260,7 @@ export async function updateOrderService(
     items: { quantity: number; price: number }[];
   }
 ) {
-  await prisma.order.update({
+  const order = await prisma.order.update({
     where: { id: orderId },
     data: {
       total: data.total,
@@ -262,10 +269,9 @@ export async function updateOrderService(
     },
   });
 
-  const order = await prisma.order.findUnique({
-    where: { id: orderId },
-    select: { userId: true },
-  });
+  if (data.status === "PAID") {
+    await clearCartByUserId(order.userId);
+  }
 
   if (order) {
     await prisma.user.update({

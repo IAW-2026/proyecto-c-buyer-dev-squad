@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { getOrders } from "@/lib/services/Orders.service";
+import { clearCartByUserId } from "@/lib/services/Cart.service";
 
 // Apis externas pueden consumir una orden puntual por id
 export async function GET(
@@ -56,6 +57,10 @@ export async function PATCH(
     where: { id },
     data,
   });
+
+  if (data.status === "PAID") {
+    await clearCartByUserId(order.userId);
+  }
 
   return Response.json(order);
 }
