@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
 import type { Seller } from "../types/seller";
 import { SellerPopover } from "./SellerPopover";
 import CartButton from "./CartButton";
@@ -15,12 +16,13 @@ export default function SellerInfo({
   productId: string;
 }) {
   const router = useRouter();
+  const { resolvedTheme } = useTheme();
   const [loadingReviews, setLoadingReviews] = useState(false);
 
   const handleViewReviews = async () => {
     setLoadingReviews(true);
     try {
-      const url = await getProductReviewsUrl(productId);
+      const url = await getProductReviewsUrl(productId, resolvedTheme);
       router.push(url);
     } catch (err) {
       console.error("No se pudo generar el link de reseñas:", err);

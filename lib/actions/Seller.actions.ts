@@ -3,7 +3,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { generateSellerToken } from "@/lib/SellerToken";
 
-export async function getSellerDashboardUrl() {
+export async function getSellerDashboardUrl(theme?: string) {
   const { userId: clerkId } = await auth();
 
   if (!clerkId) {
@@ -14,5 +14,7 @@ export async function getSellerDashboardUrl() {
     clerkId,
   });
 
-  return `${process.env.NEXT_PUBLIC_SELLER_URL}/auth/handoff?token=${token}`;
+  const themeParam = theme ? `&theme=${encodeURIComponent(theme)}` : "";
+
+  return `${process.env.NEXT_PUBLIC_SELLER_URL}/auth/handoff?token=${token}${themeParam}`;
 }

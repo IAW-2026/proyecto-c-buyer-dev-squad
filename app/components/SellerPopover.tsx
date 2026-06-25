@@ -2,11 +2,13 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
 import type { Seller } from "../types/seller";
 import { getSellerReviewsUrl } from "@/lib/actions/handoff.actions";
 
 export function SellerPopover({ seller }: { seller: Seller }) {
   const router = useRouter();
+  const { resolvedTheme } = useTheme();
   const [open, setOpen] = useState(false);
   const [loadingReviews, setLoadingReviews] = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
@@ -24,7 +26,7 @@ export function SellerPopover({ seller }: { seller: Seller }) {
   const handleViewReviews = async () => {
     setLoadingReviews(true);
     try {
-      const url = await getSellerReviewsUrl(seller.id);
+      const url = await getSellerReviewsUrl(seller.id, resolvedTheme);
       router.push(url);
     } catch (err) {
       console.error("No se pudo generar el link de opiniones:", err);

@@ -3,6 +3,7 @@
 import { useUser, useClerk } from "@clerk/nextjs";
 import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
 import { getNavbarUserAction } from "@/lib/actions/User.actions";
 import { getSellerDashboardUrl } from "@/lib/actions/Seller.actions";
 import Loader from "./Loader";
@@ -28,6 +29,7 @@ export default function Navbar() {
   const router = useRouter();
   const { isSignedIn, isLoaded, user } = useUser();
   const { openSignIn } = useClerk();
+  const { resolvedTheme } = useTheme();
   const [dbUser, setDbUser] = useState<DbUser | null>(null);
   const [isPending, startTransition] = useTransition();
   const [loadingSellerUrl, setLoadingSellerUrl] = useState(false);
@@ -61,7 +63,7 @@ export default function Navbar() {
 
     setLoadingSellerUrl(true);
     try {
-      const url = await getSellerDashboardUrl();
+      const url = await getSellerDashboardUrl(resolvedTheme);
       router.push(url);
     } catch (err) {
       console.error("No se pudo generar el link del seller dashboard:", err);

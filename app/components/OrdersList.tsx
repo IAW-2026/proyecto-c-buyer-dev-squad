@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
 
 import { getFiveMoreOrders } from "@/lib/actions/Order.actions";
 import { getShipmentTrackingUrl } from "@/lib/actions/Shipment.actions";
@@ -28,6 +29,7 @@ export default function OrdersList({
   initialOrders: any[];
 }) {
   const router = useRouter();
+  const { resolvedTheme } = useTheme();
   const [orders, setOrders] = useState(initialOrders);
   const [hasMore, setHasMore] = useState(initialOrders.length === 5);
   const [isPending, startTransition] = useTransition();
@@ -57,7 +59,7 @@ export default function OrdersList({
   const handleTrackShipment = async (orderId: string) => {
     setLoadingOrderId(orderId);
     try {
-      const url = await getShipmentTrackingUrl(orderId);
+      const url = await getShipmentTrackingUrl(orderId, resolvedTheme);
       router.push(url);
     } catch (err) {
       console.error("No se pudo generar el link de tracking:", err);
@@ -78,7 +80,7 @@ export default function OrdersList({
   ) => {
     setLoadingReviewKey(key);
     try {
-      const url = await getCreateReviewUrl(tipo, targetId);
+      const url = await getCreateReviewUrl(tipo, targetId, resolvedTheme);
       router.push(url);
     } catch (err) {
       console.error("No se pudo generar el link de reseña:", err);

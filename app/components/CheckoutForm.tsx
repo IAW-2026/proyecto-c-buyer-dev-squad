@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
 import { submitCheckout } from "@/lib/actions/Checkout.actions";
 import type { CheckoutFormData } from "@/lib/services/Checkout.service";
 //es un tipo
@@ -19,6 +20,7 @@ export default function CheckoutPage({
   paymentsApiUrl,
 }: Props) {
   const router = useRouter();
+  const { resolvedTheme } = useTheme();
   const [isPending, startTransition] = useTransition();
 
 const [errors, setErrors] = useState<Partial<Record<keyof CheckoutFormData, string>>>({});
@@ -80,7 +82,7 @@ const [errors, setErrors] = useState<Partial<Record<keyof CheckoutFormData, stri
       const { orderId } = await submitCheckout(cartItems, form);
       if (paymentsApiUrl) {
         const { getPaymentsUrl } = await import("@/lib/actions/Payments.action");
-        const url = await getPaymentsUrl(orderId)
+        const url = await getPaymentsUrl(orderId, resolvedTheme)
         window.location.href = url
       } else {
         router.push(`/order-confirmation/${orderId}`)
