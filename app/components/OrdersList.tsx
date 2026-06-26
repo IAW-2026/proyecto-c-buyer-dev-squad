@@ -98,20 +98,25 @@ export default function OrdersList({
   const handleCreateReview = async (
     tipo: "product" | "seller",
     targetId: string,
-    key: string
+    productId?: string,
+    key?: string
   ) => {
     if (!isSignedIn) {
       openSignIn();
       return;
     }
-    setLoadingReviewKey(key);
+    const reviewKey = key ?? `${tipo}-${targetId}`;
+    setLoadingReviewKey(reviewKey);
     try {
-      const url = await getCreateReviewUrl(tipo, targetId, resolvedTheme);
+      const url = await getCreateReviewUrl(tipo, targetId, productId, resolvedTheme);
       router.push(url);
     } catch (err) {
       console.error("No se pudo generar el link de reseña:", err);
+      const productParam = productId && tipo === "seller"
+        ? `&productId=${encodeURIComponent(productId)}`
+        : "";
       router.push(
-        `${process.env.NEXT_PUBLIC_FEEDBACK_URL}/dashboard/crear-resena?tipo=${tipo}&id=${targetId}`
+        `${process.env.NEXT_PUBLIC_FEEDBACK_URL}/dashboard/crear-resena?tipo=${tipo}&id=${targetId}${productParam}`
       );
     } finally {
       setLoadingReviewKey(null);
@@ -226,6 +231,7 @@ export default function OrdersList({
                                 handleCreateReview(
                                   "product",
                                   item.productId,
+                                  undefined,
                                   productKey
                                 )
                               }
@@ -249,6 +255,7 @@ export default function OrdersList({
                                   handleCreateReview(
                                     "seller",
                                     item.product.seller.id,
+                                    item.productId,
                                     sellerKey
                                   )
                                 }

@@ -28,12 +28,13 @@ async function getKey(secret: string) {
 type HandoffPayload = {
   clerkId: string;
   targetId: string;
+  productId?: string;
   exp: number;
 };
 
 export async function generateToken(
   secret: string,
-  data: { clerkId: string; targetId: string },
+  data: { clerkId: string; targetId: string; productId?: string },
   ttlSeconds = 180
 ): Promise<string> {
   const payload: HandoffPayload = {

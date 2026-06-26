@@ -8,7 +8,13 @@ import { useClerk } from "@clerk/nextjs";
 import type { Seller } from "../types/seller";
 import { getSellerReviewsUrl } from "@/lib/actions/handoff.actions";
 
-export function SellerPopover({ seller }: { seller: Seller }) {
+export function SellerPopover({
+  seller,
+  productId,
+}: {
+  seller: Seller;
+  productId?: string;
+}) {
   const router = useRouter();
   const { resolvedTheme } = useTheme();
   const { isSignedIn } = useUser();
@@ -34,13 +40,14 @@ export function SellerPopover({ seller }: { seller: Seller }) {
     }
     setLoadingReviews(true);
     try {
-      const url = await getSellerReviewsUrl(seller.id, resolvedTheme);
+      const url = await getSellerReviewsUrl(seller.id, productId, resolvedTheme);
       router.push(url);
     } catch (err) {
       console.error("No se pudo generar el link de opiniones:", err);
       // Fallback: misma página, sin token.
+      const productParam = productId ? `?productId=${encodeURIComponent(productId)}` : "";
       router.push(
-        `${process.env.NEXT_PUBLIC_FEEDBACK_URL}/explorar/vendedor/${seller.id}`
+        `${process.env.NEXT_PUBLIC_FEEDBACK_URL}/explorar/vendedor/${seller.id}${productParam}`
       );
     } finally {
       setLoadingReviews(false);

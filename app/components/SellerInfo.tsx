@@ -45,7 +45,7 @@ export default function SellerInfo({
 
   return (
     <div className="mt-2 flex gap-2 flex-wrap items-center">
-      <SellerPopover seller={seller} />
+      <SellerPopover seller={seller} productId={productId} />
       <button
         onClick={handleViewReviews}
         disabled={loadingReviews}
