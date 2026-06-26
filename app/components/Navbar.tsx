@@ -49,9 +49,9 @@ export default function Navbar() {
   const containerClasses = "max-w-6xl mx-auto flex items-center justify-between px-2 sm:px-4 md:px-6 h-14 sm:h-16 md:h-20";
 
   const Logo = (
-    <Link href="/home" className="scale-90 sm:scale-100 md:scale-110">
+    <div className="scale-90 sm:scale-100 md:scale-110">
       <ThemedLogo />
-    </Link>
+    </div>
   );
 
   if (dbUser?.status === "SUSPENDED") {

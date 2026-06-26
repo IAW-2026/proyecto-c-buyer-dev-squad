@@ -5,7 +5,7 @@ const categories = [
     title: "Hombre",
     slug: "hombre",
     description: "Colección completa para hombre",
-    image: "/images/nike-air.jpg",
+    image: "/images/nike-dunk.jpg",
   },
   {
     title: "Mujer",

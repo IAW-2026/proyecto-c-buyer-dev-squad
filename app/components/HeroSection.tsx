@@ -10,9 +10,9 @@ import Link from "next/link";
 const SELLER_URL = `${process.env.NEXT_PUBLIC_SELLER_URL}/dashboard`;
 
 const heroImages = [
-  "/images/adidas.jpg",
-  "/images/ultraboost.jpg",
-  "/images/nike.jpg",
+  "/images/portada1.jpg",
+  "/images/portada2.jpg",
+  "/images/portada3.jpg",
 ];
 
 export default function HeroSection() {
