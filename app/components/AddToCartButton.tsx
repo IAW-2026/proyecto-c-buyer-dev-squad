@@ -113,7 +113,7 @@ export default function AddToCartButton({
       <button
         onClick={handleClick}
         disabled={isDisabled}
-        className={`w-full flex items-center justify-center gap-2 px-5 py-2 rounded font-medium transition-colors duration-200
+        className={`w-full flex items-center justify-center gap-2 px-4 py-1.5 rounded font-medium text-sm transition-colors duration-200
           ${
             isAdded
               ? "btn-success"

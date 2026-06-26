@@ -8,14 +8,14 @@ type Props = {
 
 export default function SizeSelector({ sizes, selected, onSelect }: Props) {
   return (
-    <div className="mt-6">
-      <h2 className="font-semibold mb-2">Talle</h2>
-      <div className="flex gap-2 flex-wrap">
+    <div className="mt-3">
+      <h2 className="font-semibold text-sm mb-1">Talle</h2>
+      <div className="flex gap-1.5 flex-wrap">
         {sizes.map((size) => (
           <button
             key={size}
             onClick={() => onSelect(size)}
-            className={`w-12 h-12 border rounded-lg font-medium transition-colors
+            className={`w-10 h-10 border rounded-lg font-medium text-sm transition-colors
               ${selected === size
                 ? "bg-primary text-on-primary border-primary"
                 : "bg-surface text-muted hover:border-primary hover:bg-surface"

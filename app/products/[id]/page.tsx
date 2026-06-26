@@ -25,46 +25,46 @@ export default async function ProductPage({ params }: Props) {
   const seller = await getSellerById(product.sellerId);
 
   return (
-    <main className="min-h-screen px-4 md:px-8 py-4 max-w-6xl mx-auto">
-      <Link href="/" className="text-sm text-muted underline">
+    <main className="px-4 md:px-8 pb-4 max-w-6xl mx-auto">
+      <Link href="/tienda" className="text-sm text-muted underline">
         ← Volver
       </Link>
 
-      <div className="grid md:grid-cols-2 gap-6 mt-4">
+      <div className="grid md:grid-cols-2 gap-4 mt-2">
         <div className="flex items-start md:items-center justify-center">
           <img
             src={product.image}
             alt={product.name}
-            className="w-full max-h-[350px] object-cover rounded-xl"
+            className="w-full max-h-[280px] object-cover rounded-xl"
           />
         </div>
 
         <div className="flex flex-col">
-          <h1 className="text-2xl md:text-3xl font-bold">
+          <h1 className="text-xl md:text-2xl font-bold">
             {product.name}
           </h1>
 
-          <p className="text-muted text-sm mt-1 capitalize">
+          <p className="text-muted text-xs mt-1 capitalize">
             {product.brand} · {product.category}
           </p>
 
-          <p className="text-xl md:text-2xl font-bold mt-3">
+          <p className="text-lg md:text-xl font-bold mt-2">
             ${product.price}
           </p>
 
-          <div className="mt-4 p-4 border border-muted rounded-xl bg-surface">
-            <h2 className="font-semibold mb-1 text-sm">Descripción</h2>
-            <p className="text-muted text-sm">
+          <div className="mt-3 p-3 border border-muted rounded-xl bg-surface">
+            <h2 className="font-semibold mb-1 text-xs">Descripción</h2>
+            <p className="text-muted text-xs">
               {product.description}
             </p>
           </div>
 
-          <div className="mt-3 p-4 border border-muted rounded-xl bg-surface">
-            <h2 className="font-semibold mb-1 text-sm">Dirección</h2>
-            <p className="text-muted text-sm">{product.direction}</p>
+          <div className="mt-2 p-3 border border-muted rounded-xl bg-surface">
+            <h2 className="font-semibold mb-1 text-xs">Dirección</h2>
+            <p className="text-muted text-xs">{product.direction}</p>
           </div>
 
-          <div className="mt-4">
+          <div className="mt-2">
             <ProductActions
               sizes={product.sizes}
               colors={product.colors}

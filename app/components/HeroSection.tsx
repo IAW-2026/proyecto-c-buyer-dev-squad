@@ -55,7 +55,7 @@ export default function HeroSection() {
   if (!mounted) return null;
 
   return (
-    <section className="relative w-full min-h-[90vh] md:min-h-[85vh] flex items-center overflow-hidden bg-[var(--color-background)]">
+    <section className="relative w-full min-h-[90vh] md:min-h-[85vh] flex items-start overflow-hidden bg-[var(--color-background)] pt-20 md:pt-24">
       {heroImages.map((src, i) => (
         <div
           key={src}

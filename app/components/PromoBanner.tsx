@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function PromoBanner() {
   return (
-    <section className="w-full py-12 md:py-16">
+    <section className="w-full py-8 md:py-12">
       <div className="max-w-7xl mx-auto px-6 md:px-16 lg:px-24">
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-primary-dark)]">
           <div className="absolute inset-0 opacity-[0.05]">

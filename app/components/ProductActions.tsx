@@ -27,7 +27,7 @@ export default function ProductActions({ sizes, colors, productId }: Props) {
         selected={selectedColor}
         onSelect={setSelectedColor}
       />
-      <div className="mt-6 flex gap-3">
+      <div className="mt-3 flex gap-2">
         <AddToCartButton
           productId={productId}
           selectedSize={selectedSize}
