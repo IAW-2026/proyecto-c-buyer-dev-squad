@@ -1,0 +1,139 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String     @id @default(uuid())
+  clerkId   String     @unique
+  email     String     @unique
+  firstName String?
+  lastName  String?
+  phone     String?
+  address   String?
+  birthDate DateTime?
+  status    UserStatus @default(ACTIVE)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  cartItems CartItem[]
+  orders    Order[]
+
+  @@map("users")
+}
+
+model Seller {
+  id          String    @id @default(uuid())
+  clerkId     String    @unique
+  name        String
+  email       String    @unique
+  description String
+  avatarUrl   String    @map("avatar_url")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  products    Product[]
+
+  @@map("sellers")
+}
+
+model Product {
+  id          String      @id @default(uuid())
+  name        String
+  price       Float
+  image       String
+  brand       String
+  category    String
+  direction   String
+  description String
+  sizes       Int[]
+  colors      String[]
+  sellerId    String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  cartItems   CartItem[]
+  orderItems  OrderItem[]
+  seller      Seller      @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+
+  @@index([sellerId])
+  @@index([category])
+  @@index([brand])
+  @@index([price])
+  @@index([category, brand])
+  @@index([category, price])
+  @@map("products")
+}
+
+model CartItem {
+  id        String   @id @default(uuid())
+  productId String
+  userId    String
+  quantity  Int
+  size      Int
+  color     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId, size, color])
+  @@index([productId])
+  @@index([userId])
+  @@map("cart_items")
+}
+
+model Order {
+  id              String      @id @default(uuid())
+  userId          String
+  total           Float
+  discount        Float       @default(0)
+  shipping        Float       @default(0)
+  address         String?
+  originAddress   String?
+  status          OrderStatus @default(PENDING)
+  receiverName    String
+  receiverPhone   String
+  deliveryType    String
+  shippingAddress String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  items           OrderItem[]
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String   @id @default(uuid())
+  orderId   String
+  productId String
+  name      String
+  imageUrl  String   @default("")
+  sellerId  String   @default("")
+  quantity  Int
+  price     Float
+  size      Int
+  color     String
+  createdAt DateTime @default(now())
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@index([productId])
+  @@map("order_items")
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  SHIPPED
+  DELIVERED
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+}
