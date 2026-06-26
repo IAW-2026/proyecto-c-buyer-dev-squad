@@ -17,8 +17,8 @@ export function LogOutButton() {
       </button>
 
       {open && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-surface-alt border border-muted rounded-2xl p-6 w-[90%] max-w-sm">
+<div className="fixed inset-0 bg-black/40 flex items-center justify-center z-[9999] px-4 pt-0 mt-0">
+  <div className="bg-surface-alt border border-muted rounded-2xl p-6 w-[90%] max-w-sm my-auto">
             <h2 className="text-lg font-semibold text-foreground">
               ¿Cerrar sesión?
             </h2>
