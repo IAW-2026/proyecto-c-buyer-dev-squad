@@ -91,14 +91,14 @@ export default function CheckoutPage({
       {/* Header */}
       <div className="flex items-center gap-3 mb-4">
         <button
-          onClick={() => router.push("/cart")}
+          onClick={() => router.push("/tienda")}
           className="flex items-center gap-1.5 text-sm text-muted hover:text-foreground transition-colors"
           type="button"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
           </svg>
-          Volver al carrito
+          Volver
         </button>
         <span className="text-muted/40 select-none">|</span>
         <h2 className="text-lg font-bold">Completá tus datos</h2>
