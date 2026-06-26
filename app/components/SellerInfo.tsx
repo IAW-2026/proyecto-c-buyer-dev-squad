@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
+import { useUser } from "@clerk/nextjs";
+import { useClerk } from "@clerk/nextjs";
 import type { Seller } from "../types/seller";
 import { SellerPopover } from "./SellerPopover";
 import CartButton from "./CartButton";
@@ -17,9 +19,15 @@ export default function SellerInfo({
 }) {
   const router = useRouter();
   const { resolvedTheme } = useTheme();
+  const { isSignedIn } = useUser();
+  const { openSignIn } = useClerk();
   const [loadingReviews, setLoadingReviews] = useState(false);
 
   const handleViewReviews = async () => {
+    if (!isSignedIn) {
+      openSignIn();
+      return;
+    }
     setLoadingReviews(true);
     try {
       const url = await getProductReviewsUrl(productId, resolvedTheme);

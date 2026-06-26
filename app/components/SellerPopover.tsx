@@ -3,12 +3,16 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
+import { useUser } from "@clerk/nextjs";
+import { useClerk } from "@clerk/nextjs";
 import type { Seller } from "../types/seller";
 import { getSellerReviewsUrl } from "@/lib/actions/handoff.actions";
 
 export function SellerPopover({ seller }: { seller: Seller }) {
   const router = useRouter();
   const { resolvedTheme } = useTheme();
+  const { isSignedIn } = useUser();
+  const { openSignIn } = useClerk();
   const [open, setOpen] = useState(false);
   const [loadingReviews, setLoadingReviews] = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
@@ -24,6 +28,10 @@ export function SellerPopover({ seller }: { seller: Seller }) {
   }, [open]);
 
   const handleViewReviews = async () => {
+    if (!isSignedIn) {
+      openSignIn();
+      return;
+    }
     setLoadingReviews(true);
     try {
       const url = await getSellerReviewsUrl(seller.id, resolvedTheme);

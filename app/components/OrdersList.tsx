@@ -3,6 +3,8 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
+import { useUser } from "@clerk/nextjs";
+import { useClerk } from "@clerk/nextjs";
 import {
   Clock,
   CreditCard,
@@ -47,6 +49,8 @@ export default function OrdersList({
 }) {
   const router = useRouter();
   const { resolvedTheme } = useTheme();
+  const { isSignedIn } = useUser();
+  const { openSignIn } = useClerk();
   const [orders, setOrders] = useState(initialOrders);
   const [hasMore, setHasMore] = useState(initialOrders.length === 5);
   const [isPending, startTransition] = useTransition();
@@ -96,6 +100,10 @@ export default function OrdersList({
     targetId: string,
     key: string
   ) => {
+    if (!isSignedIn) {
+      openSignIn();
+      return;
+    }
     setLoadingReviewKey(key);
     try {
       const url = await getCreateReviewUrl(tipo, targetId, resolvedTheme);
