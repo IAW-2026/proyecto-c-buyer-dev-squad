@@ -24,7 +24,6 @@ export default async function CartPage() {
   return (
     <main className="max-w-2xl mx-auto px-4 py-4 text-foreground">
 
-      {/* Header */}
       <div className="flex items-center gap-3 mb-4">
         <BackButton />
         <span className="text-muted/40 select-none">|</span>
@@ -41,7 +40,7 @@ export default async function CartPage() {
             Agregá productos para verlos aquí
           </p>
           <Link
-            href="/"
+            href="/tienda"
             className="btn-primary px-5 py-2 rounded-xl text-sm font-semibold transition-opacity"
           >
             Ir a la tienda

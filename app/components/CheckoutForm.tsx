@@ -208,7 +208,7 @@ export default function CheckoutPage({
                 type="text"
                 value={form.address}
                 onChange={(e) => setForm({ ...form, address: e.target.value })}
-                placeholder="Av. Corrientes 1234"
+                placeholder="Av. Corrientes 1234, CABA"
                 className={`admin-input w-full ${errors.address ? "border-red-500 focus:ring-red-500" : ""}`}
               />
             </Field>
